@@ -4,7 +4,7 @@ mod camera;
 mod hittable;
 mod png;
 mod ray;
-// Seeded randomness for the scattering and sampling the plans add.
+// Seeded randomness.
 #[allow(dead_code)]
 mod rng;
 mod sphere;
@@ -84,7 +84,8 @@ fn main() -> io::Result<()> {
         .flat_map(|p| [to_byte(p.x), to_byte(p.y), to_byte(p.z)])
         .collect();
     let mut out = io::BufWriter::new(File::create("render.png")?);
-    png::write_png(&mut out, WIDTH, HEIGHT, &rgb)
+    png::write_png(&mut out, WIDTH, HEIGHT, &rgb)?;
+    out.flush()
 }
 
 #[cfg(test)]
