@@ -18,7 +18,7 @@
 | A1 | Diffuse and metal materials | not applicable | standard | A1r | - | covered by A1r | A1r carries this phase |
 | A2 | Glass | done | standard | A1r | `done/A2-glass.md` | a glass sphere refracts | gates green, rendered image shows a glass sphere |
 | A3 | Samples per pixel | done | standard | A1r + A2 | `done/A3-samples-per-pixel.md` | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
-| Z1 | Closing survey and user acceptance | active | minimal | A1r + A2 + A3 | `phases/Z1-closing-survey-and-user-acceptance.md` | the user accepts the result | the user accepts |
+| Z1 | Closing survey and user acceptance | done | minimal | A1r + A2 + A3 | `done/Z1-closing-survey.md` | the user accepts the result | the user accepts |
 
 ## How to implement this plan
 
