@@ -169,7 +169,8 @@ and no second record construction path.
 - Changed: none. Deleted: none. The scene change adds no test function; the three tests above are the
   whole budget, and each covers one shape's hit and coordinates.
 - Fast gate: `cargo build`, `cargo test`, `cargo clippy -- -D warnings`, `cargo fmt --check`,
-  `git diff --check`, and `grep -rni "plan" src/` finds nothing.
+  `git diff --check`, and `grep -rniE "plans?\b|phase" src/` finds nothing. The pattern matches the
+  words plan, plans and phase only, so the new `plane`/`Plane` module it looks for is not a hit.
 - Conditional gate: rendered image, because `scene()` changed. Until the command-line phase lands,
   render with `cargo run --release > /tmp/opencode/render.ppm` and read the image as the `User test`
   below describes. One execution owner (the implementer), once on the tested head.
