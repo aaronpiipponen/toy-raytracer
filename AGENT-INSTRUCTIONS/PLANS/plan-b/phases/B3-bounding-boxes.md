@@ -268,8 +268,8 @@ nothing.
 - New: `src/hittable.rs` - `the_list_skips_an_object_when_the_ray_misses_its_box`: a probe object
   whose `hit` counts its calls in an `Rc<Cell<usize>>` and returns `None`, with a box from
   `(5, 5, -3)` to `(6, 6, -2)`. A ray from `(0.0, 0.0, 0.0)` along `(0.0, 0.0, -1.0)` leaves the
-  count at 0. A ray from `(5.5, 5.5, 0.0)` along `(0.0, 0.0, -1.0)` and a second `list.hit` call
-  bring the count to 1. The probe and its counter live inside the test module.
+  count at 0. A ray from `(5.5, 5.5, 0.0)` along `(0.0, 0.0, -1.0)` passes through the box and
+  raises the count to 1. The probe and its counter live inside the test module.
 - Changed/deleted: none. `src/main.rs`, `src/sphere.rs`, `src/plane.rs` and `src/triangle.rs`
   tests stay as written.
 - Fast gate, run in this order:

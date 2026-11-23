@@ -88,7 +88,7 @@
        r0 + (1.0 - r0) * (1.0 - cosine).powi(5)
    }
    ```
-   `direction` and `normal` are unit length and `normal` points against `direction`. `ratio` is the refractive index of the ray's side over that of the far side, so `schlick` returns the reflectance of a glass surface (about `0.04` head on and about `0.65` at 85 degrees for a ratio of `1.5` in either direction).
+   `direction` and `normal` are unit length and `normal` points against `direction`. `ratio` is the refractive index of the ray's side divided by that of the far side, and `schlick` takes that ratio as its second argument. For glass against air, `schlick` returns about `0.04` head on and about `0.65` at 85 degrees.
 4. `src/main.rs:16` - `use material::{Lambertian, Metal};` becomes `use material::{Dielectric, Lambertian, Metal};`.
 5. `src/main.rs`, `scene` - after the metal sphere's `world.add` at line 65, add a fourth sphere:
    ```rust
@@ -98,7 +98,9 @@
        Rc::new(Dielectric::new(1.5)),
    )));
    ```
-   It mirrors the metal sphere on the left: its centre is `2.2` left of the metal sphere, so the two spheres do not overlap, their surfaces are more than `0.2` apart, and its bottom at `y = -0.5` meets the ground surface.
+   It mirrors the metal sphere on the left: the two centres are `2.2` apart and both radii are
+   `0.4`, so the spheres do not overlap, and the glass sphere's bottom at `y = -0.5` meets the
+   ground surface.
 6. `src/material.rs`, tests - append the three tests listed under **Tests** to the existing `mod tests`, after the metal test. They use `Dielectric::new(1.5)`, `HitRecord::new`, `Ray::new` and `Rng::new`; no new imports are needed because the module already imports `Rc`, `super::*`, `Ray`, `Rng` and `Vec3`.
 7. `src/material.rs`, prose - doc comments follow `AGENT-INSTRUCTIONS/BUILDING/DOCUMENTATION-STYLE-GUIDE.md`. The trait and `scatter` docs stay as they are; the new type, constructor and private helpers follow the wording above. Do not add a comment naming plans, phases or history.
 8. No `docs/` page is created or changed. `docs/requirements.md` item 4 already states this behaviour and `README.md` stays accurate; read both before claiming the docs step complete.
@@ -194,10 +196,10 @@
 - 3. Observe in the opened image: the blue-white gradient sky, the yellow-green ground, the matte
   red-brown centre sphere and the grey metal sphere on the right keep their materials and general
   appearance. Their exact speckle and colour differ from A1r's because the scene and the generator
-  sequence changed. A fourth sphere sits to the left of the centre sphere. It is transparent: its interior shows the sky and the
-  ground bent and shifted rather than a flat colour, and its rim is brighter or darker than its
-  interior where total internal reflection turns the ray back. It does not look like a matte or
-  metal surface.
+  sequence changed. A fourth sphere sits to the left of the centre sphere. It is transparent: its
+  interior shows the sky and the ground bent and shifted rather than a flat colour, and its rim is
+  brighter or darker than its interior where total internal reflection turns the ray back. It does
+  not look like a matte or metal surface.
 - 4. The image keeps the expected single-sample speckle and neither sphere casts a shadow, as A1r
   left them. A3 removes the speckle, so it is not to be fixed here.
 
