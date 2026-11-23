@@ -109,7 +109,9 @@ constructor parameter. This phase only makes the loop correct whether or not the
   functions added/deleted).
 - [ ] Fast phase gate from `AGENT-INSTRUCTIONS/BUILDING/VERIFICATION-COMMITS-DEPLOY.md` §1 passes.
   No conditional or slow gate applies.
-- [ ] No `docs/` page changes, and no file refers to a plan or phase.
+- [ ] No `docs/` page changes, and this change adds no reference to a plan or phase. The
+  plan-naming comments already at `src/hittable.rs:11` and `src/main.rs:6` stay untouched here and
+  are deleted in B2.
 - [ ] Safety commit.
 - [ ] Revision-bound verification receipt exists.
 - [ ] On passing evidence: compress this file into
