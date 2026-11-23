@@ -36,8 +36,9 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
 - `src/main.rs:3-13` - the module list with `mod aabb;` first. `src/main.rs:36-46` - `scene()` with
   two spheres and one triangle.
 - Eleven test functions: `src/aabb.rs` 1, `src/hittable.rs` 1, `src/main.rs` 2, `src/plane.rs` 1,
-  `src/rng.rs` 1, `src/sphere.rs` 3, `src/triangle.rs` 2. B1 added three, B2 added three and B3 added
-  two; B2r added none.
+  `src/rng.rs` 1, `src/sphere.rs` 3, `src/triangle.rs` 2. B1 added one function and extended an
+  existing one, B2 added three and B3 added two, so six functions were added in total; B2r added
+  none.
 - `AGENT-INSTRUCTIONS/LOCAL/project.md:5` - the repository map names every `src/` module, including
   `aabb.rs`.
 - `docs/requirements.md:21-30` - items 7 to 10, the geometry requirements this plan implements.
@@ -108,7 +109,7 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
    - the hard invariants: `Cargo.toml` has no dependency, all randomness comes from the seeded
      `src/rng.rs`, `src/` uses no `unsafe` and no thread type, and two identical renders write
      identical bytes;
-   - the test budget: eight functions added across B1, B2 and B3, at most three per phase, and no
+   - the test budget: six functions added across B1, B2 and B3, at most three per phase, and no
      changed or deleted function;
    - documentation accuracy: the repository map names every module and no permanent document or code
      comment names a plan.

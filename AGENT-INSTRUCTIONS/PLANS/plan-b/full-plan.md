@@ -68,5 +68,4 @@ Render the scene, compare it with the requirements, and ask the user to accept.
 
 ## Carry-overs
 
-- B2: delete the plan-naming comments at `src/hittable.rs:11` and `src/main.rs:6` (frozen in
-  `done/B1-face-side-and-texture-coordinates.md`).
+None. The B2 comment deletion landed with B2.
