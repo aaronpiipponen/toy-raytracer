@@ -40,14 +40,15 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
 - `Cargo.toml` - the empty `[dependencies]` table this phase leaves untouched.
 
 **Build plan:**
-1. `src/png.rs` (create) - module header `//! Encode an image as a PNG file.` then:
+1. `src/png.rs` (create) - module header `//! Encode an image as a PNG file.`, then
+   `use std::io::{self, Write};`, then:
    - `const SIGNATURE: [u8; 8] = [0x89, b'P', b'N', b'G', 0x0d, 0x0a, 0x1a, 0x0a];`
    - `const MAX_STORED_BLOCK: usize = 65535;`
    - `pub fn write_png(out: &mut impl Write, width: usize, height: usize, rgb: &[u8]) -> io::Result<()>`
      with a doc comment stating that `rgb` holds `width * height * 3` bytes, three per pixel, row
      by row from the top, and that the PNG is 8-bit RGB with no interlacing. It writes the
-     signature, the `IHDR` chunk, one `IDAT` chunk and an empty `IEND` chunk through
-     `write_chunk`, using `crate::vec3` nowhere (pixel conversion stays in `main`).
+     signature, the `IHDR` chunk, one `IDAT` chunk holding `zlib_stream(&scanlines(width, height, rgb))`
+     and an empty `IEND` chunk, each through `write_chunk`.
    - `fn write_chunk(out: &mut impl Write, kind: &[u8; 4], data: &[u8]) -> io::Result<()>` writing
      the big-endian data length, the 4 kind bytes, the data, then the big-endian CRC-32 of the
      kind bytes followed by the data bytes.
@@ -84,8 +85,12 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
    above it, because `main` stops calling it until the format option selects it. Write no
    comment about why it is unused.
 5. `src/png.rs`, tests - add `#[cfg(test)] mod tests` with the two tests in the `Tests` section.
-6. `README.md` - replace the run example so it states that `cargo run` writes `render.png`, keeping
-   `cargo test` in the sample and the sentence about `docs/requirements.md`. No PPM example stays.
+6. `README.md` - keep the file's present shape and change only the run example: the code fence
+   becomes `cargo run` followed by `cargo test`, and the sentence before `docs/requirements.md`
+   states that `cargo run` writes `render.png`. `AGENT-INSTRUCTIONS/LOCAL/documentation-pages.md`
+   names `README.md` as the only page that carries the usage, and the guide named there gives the
+   README no other page set to update. Load the `readme-guide` skill before editing and keep the
+   documentation style wording.
 7. `AGENT-INSTRUCTIONS/LOCAL/project.md` - extend the repository map line in
    `## Project sources of truth` with `png.rs` (the PNG encoding). Load the `agent-instructions`
    skill before editing this file, because the edit is outside `PLANS/`.
@@ -128,6 +133,8 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
   fallback for a write error. A write error returns from `main` with `?`.
 - Do not validate, clamp or reject dimensions and lengths. `render` supplies the bytes and the
   size.
+- Do not restructure `README.md`, add new sections to it, or change `docs/requirements.md`; the
+  run example is the only README text this phase changes.
 - Do not mention plans, phases or future work in source comments, module headers, the README or
   test names. Comments state what the code does now.
 - Single-threaded, no `unsafe`.
@@ -165,21 +172,20 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
 - Test budget: 2 new test functions, within the 3 allowed, with none deleted.
 - Fast gate: `cargo test` (both new tests plus the two existing ones), `cargo build`,
   `cargo clippy -- -D warnings`, `cargo fmt --check`, `git diff --check`.
-- Conditional gates: rendered image, required because the output format changes. Run
-  `cargo run --release` in the worktree, then open `render.png` with the image reader and confirm
-  the sphere over the sky gradient appears at 200 by 100. The command-line form of this gate
-  waits for the phase that adds options.
+- Conditional gates: rendered image, required because the output format changes. Sole execution
+  owner is the implementer, once on the tested revision. Run `cargo run --release` in the
+  worktree, confirm it exits 0, writes `render.png` and prints nothing on standard output, then
+  inspect the file: `python3 -c "d=open('render.png','rb').read();print(d[:8]==bytes([137,80,78,71,13,10,26,10]), d[16:24].hex())"`
+  must print `True 000000c800000064`, and opening `render.png` with the image reader must show the
+  sphere over the sky gradient at 200 by 100. Remove `render.png` after the check. The
+  command-line form of this gate waits for the phase that adds options.
 - Slow gate (>2 minutes): none.
 
 **User test (acceptance):**
-- **Executor:** agent.
-- 1. Run `cargo run --release` in the worktree. Expected: the process exits with status 0 and
-  writes `render.png` with no output on standard output.
-- 2. Run `python3 -c "import struct,zlib;d=open('render.png','rb').read();print(d[:8]==bytes([137,80,78,71,13,10,26,10]), d[16:24].hex())"`.
-  Expected: `True 000000c800000064`, the 200 by 100 dimensions.
-- 3. Open `render.png` with the image reader. Expected: a 200 by 100 image with the sphere in the
-  centre and the sky gradient above it.
-- 4. Remove `render.png` after the check.
+- **Executor:** not required.
+- Not required - automated phase gates prove acceptance. The rendered-image conditional gate
+  above already runs the program once and inspects the written file, so a separate acceptance run
+  would repeat the same command and the same observation.
 
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied for `standard`.
@@ -198,7 +204,8 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
   `AGENT-INSTRUCTIONS/LOCAL/project.md` lists `png.rs`. No named page is stale and none refers to
   a plan.
 - [ ] Safety commit.
-- [ ] Revision-bound verification receipt exists; the user test has passing evidence from the agent.
+- [ ] Revision-bound verification receipt exists; the rendered-image gate has passing evidence on
+  the tested head, including the decoded dimensions and the image inspection.
 - [ ] On passing evidence: compress this file into `done/C1-png-writer.md` (frozen contract only)
   and flip the `full-plan.md` status row to `done`.
 
