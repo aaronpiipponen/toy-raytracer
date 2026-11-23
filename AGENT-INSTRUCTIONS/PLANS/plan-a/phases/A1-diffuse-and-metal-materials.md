@@ -27,8 +27,9 @@ beside the new path.
   `ray_colour(&camera.ray(u, v), &world)` per pixel.
 - `src/main.rs:54` - `fn to_byte(channel: f64) -> u8` returns
   `(255.999 * channel.clamp(0.0, 1.0)) as u8`, with no gamma correction.
-- `src/main.rs:6` - `mod rng;` carries `#[allow(dead_code)]`; `src/hittable.rs:11` carries
-  `#[allow(dead_code)]` above `point`. Both markers exist because those items are unused.
+- `src/main.rs:7` - `#[allow(dead_code)]` above `mod rng;` on line 8, with a plan-referencing
+  comment on line 6; `src/hittable.rs:11` carries `#[allow(dead_code)]` above `point`. Both markers
+  exist because those items are unused.
 - `src/hittable.rs:7` - `#[derive(Clone, Copy, Debug)] pub struct HitRecord` holds `t: f64`,
   `point: Vec3`, `normal: Vec3`. `HittableList::hit` reads `nearest.map_or(t_max, |hit| hit.t)` at
   line 37, which moves the record out of the `Option`.
@@ -96,10 +97,10 @@ beside the new path.
    `HitRecord` gains `material: Rc::clone(&self.material)`. Both existing tests pass a material of
    their own (see **Tests**).
 4. `src/main.rs` - `mod material;` in the module list, then `mod rng;` without its
-   `#[allow(dead_code)]`. Delete the comment line above `mod rng;` (`// Seeded randomness for the
-   scattering and sampling the plans add.`), because code carries no plan reference. Imports gain
-   `use std::rc::Rc;`, `use material::{Lambertian, Metal};` and `use rng::Rng;` (keep the existing
-   imports).
+   `#[allow(dead_code)]` on line 7. Delete the comment line above `mod rng;` on line 6 (`// Seeded
+   randomness for the scattering and sampling the plans add.`), because the phase edits that
+   comment's line. Imports gain `use std::rc::Rc;`, `use material::{Lambertian, Metal};` and
+   `use rng::Rng;` (keep the existing imports).
 5. `src/main.rs` - add `const MAX_BOUNCES: usize = 50;` and `const RNG_SEED: u64 = 2024;`.
    `ray_colour` changes from `fn ray_colour(ray: &Ray, world: &dyn Hittable) -> Colour` to
    `fn ray_colour(ray: Ray, world: &dyn Hittable, rng: &mut Rng) -> Colour`. Its body becomes:
@@ -110,8 +111,8 @@ beside the new path.
      `Some((factor, scattered))`, which sets
      `attenuation = attenuation * factor; ray = scattered;`, and `None`, which returns
      `Colour::new(0.0, 0.0, 0.0)`;
-   - on `None`, compute the existing sky gradient from `ray.direction.unit().y` (the three lines at
-     `src/main.rs:28` to `src/main.rs:29` move into this arm unchanged) and return
+   - on `None`, compute the existing sky gradient from `ray.direction.unit().y` (the two lines at
+     `src/main.rs:28` and `src/main.rs:29` move into this arm unchanged) and return
      `attenuation * sky`;
    - after the loop, return `Colour::new(0.0, 0.0, 0.0)`, which makes a ray that uses all 50 bounces
      black.
@@ -140,7 +141,7 @@ beside the new path.
 - `src/main.rs:48` - the `ray_colour` call gains the generator and passes the ray by value.
 - `src/main.rs:26` - the normal-colour return is deleted; nothing else reads `hit.normal` for
   display.
-- `src/sphere.rs:50` and `src/sphere.rs:62` - both existing tests gain a material argument.
+- `src/sphere.rs:51` and `src/sphere.rs:63` - both existing tests gain a material argument.
 - `src/hittable.rs:37` - `map_or` becomes `as_ref().map_or`.
 - `src/main.rs:7` and `src/hittable.rs:11` - the two `#[allow(dead_code)]` markers are removed.
 
@@ -175,10 +176,11 @@ beside the new path.
   linear colours.
 - Do not add `#[allow(dead_code)]` to silence a warning. If the change leaves an item unused, delete
   the item or wire it, do not suppress the warning.
-- Keep `#[allow(dead_code)]` on `Vec3::cross` in `src/vec3.rs`; that function stays unused in this
-  phase.
-- No comment or doc comment mentions a plan, a phase or the history of the code. Prose follows
-  `AGENT-INSTRUCTIONS/BUILDING/DOCUMENTATION-STYLE-GUIDE.md`.
+- Keep `#[allow(dead_code)]` and its comment on `Vec3::cross` in `src/vec3.rs`; that function and
+  its geometry-plan comment are outside this phase, and an existing comment this phase does not
+  edit is not a reason to touch the file.
+- No comment or doc comment this phase writes or edits mentions a plan, a phase or the history of
+  the code. Prose follows `AGENT-INSTRUCTIONS/BUILDING/DOCUMENTATION-STYLE-GUIDE.md`.
 - Do not touch `src/camera.rs`, `src/ray.rs`, `src/rng.rs` or `src/vec3.rs`.
 
 **Tests:**
@@ -207,24 +209,24 @@ beside the new path.
   - `src/sphere.rs` - `a_ray_through_the_center_hits_the_near_surface` and
     `a_ray_beside_the_sphere_misses` keep their assertions and pass
     `Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5)))` to `Sphere::new`.
-- Fast gate: the named tests above (run the module tests first:
-  `~/.cargo/bin/cargo test material`, `~/.cargo/bin/cargo test main`, `~/.cargo/bin/cargo test sphere`),
-  then for code changes:
-  `~/.cargo/bin/cargo build`, `~/.cargo/bin/cargo test`,
+- Fast gate: `~/.cargo/bin/cargo build`, `~/.cargo/bin/cargo test`,
   `~/.cargo/bin/cargo clippy -- -D warnings`, `~/.cargo/bin/cargo fmt --check`,
-  `git diff --check`. Use `cargo` directly when it is on `PATH`; this shell keeps the toolchain in
-  `~/.cargo/bin`.
+  `git diff --check`. The whole suite is the targeted run for this crate (eight unit-test functions
+  in one binary, finishing in well under a second); when one test fails, rerun it by node id, for
+  example `~/.cargo/bin/cargo test tests::the_center_pixel_shows_the_diffuse_sphere`. Use `cargo`
+  directly when it is on `PATH`; this shell keeps the toolchain in `~/.cargo/bin`.
 - Conditional gates: Rendered image, required because the render loop, both materials, the camera
-  usage through `render` and the output values change. Run it once:
+  usage through `render` and the output values change. The single run is
   `~/.cargo/bin/cargo run --release > /tmp/opencode/a1-render.ppm` (the command line is the output
-  plan's work, so standard output is the image). Then convert and inspect it as the **User test**
-  below describes. No other conditional gate applies.
+  plan's work, so standard output is the image); User test step 1 reuses that file and does not run
+  the render a second time. No other conditional gate applies.
 - Slow gate (>2 minutes): none. The release render of the default 200 by 100 image takes under a
   second.
 
 **User test (acceptance):**
 - **Executor:** agent. It runs the commands and opens the image.
-- 1. Run `~/.cargo/bin/cargo run --release > /tmp/opencode/a1-render.ppm`.
+- 1. Use the image already written by the rendered-image conditional gate at
+  `/tmp/opencode/a1-render.ppm`; do not render a second time.
 - 2. Convert it with the throwaway script below (keep it in `/tmp/opencode`, never in the
   repository) and open the resulting PNG with the image reader:
   ```python
