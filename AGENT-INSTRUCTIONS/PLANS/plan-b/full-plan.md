@@ -55,7 +55,7 @@ triangle.
 Settle the overlap with the materials plan: `PLANS/shared/plan-a-A1+plan-b-B2.md` is the agreed
 design. This plan changes `HittableList::hit` in `src/hittable.rs` to read the nearest distance
 through `nearest.as_ref()`, so the scene list works once the hit record stops being `Copy` and
-carries its material. Nothing else. B2 is re-detailed from that state before its implementer.
+carries its material. Nothing else.
 
 ### B3 - Bounding boxes
 

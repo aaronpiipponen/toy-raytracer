@@ -2,18 +2,27 @@
 
 ## Next action
 
-Start the A1 implementer; the coordinator hold on pair plan-a-A1+plan-b-B2 is expected to refuse
-the start, in which case report one line and end the turn.
+Await `DETAIL READY` from the phase-advancer detailing resolution phase A1r, then run the
+orchestrator acceptance check on `phases/A1r-*.md` and reply to the plan-b orchestrator with its
+path. The channel closes when plan-b's check of both resolution files passes; implementers stay
+held until `RESOLVED` arrives.
 
 ## Current state
 
-A1 is detailed at `phases/A1-diffuse-and-metal-materials.md` (`DETAIL READY`) and passed the
-orchestrator acceptance check; the rundown was posted to the user. A2, A3 and Z1 remain planned.
-Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
+Pair plan-a-A1+plan-b-B2: held. Agreed design is `PLANS/shared/plan-a-A1+plan-b-B2.md` (plan-b
+leads). No commits move between branches and no branch is merged into another; plan-a writes its
+own side on branch `plan-a` and the releases merge both later. plan-a's A1r = its own
+`HitRecord::new` (t, point, normal, material last), `Clone` only, `as_ref()` in
+`HittableList::hit`, `ray_colour` scattering, sphere materials; no `front_face`, `u`, `v`, ray or
+outward-normal argument. No plane/triangle materials unit exists or is needed. A2, A3, Z1 remain
+planned.
 
-Work kind: every phase is product work (gate level `standard`, Z1 `minimal`).
+Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
+Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
 
 ## Learned rules
 
 - A3 makes the sample count a parameter of `render` with 16 as the internal default; the output plan
   later exposes `--samples`.
+- No cross-branch code transfer and no branch merges another; a shared design only aligns what each
+  side writes on its own branch, and the release merges both into main.

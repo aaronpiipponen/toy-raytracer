@@ -5,7 +5,8 @@ committed on its branch. Both plans read this one file; it is the only copy of t
 
 ## Target shape of the shared code
 
-One record, one constructor, for every shape:
+This is the shape after both plans' releases merge into `main`; each branch lands only its own part
+of it (below). One record, one constructor, for every shape:
 
 ```rust
 use std::rc::Rc;
@@ -52,44 +53,46 @@ impl HitRecord {
 
 ## Which plan changes what
 
-**plan-b** (this plan's resolution phase, `B2r`):
+Each plan writes its own side of the target shape on its own branch. **Commits never move between
+plan branches, and no plan branch is merged, rebased or cherry-picked onto another.** The releases
+merge both branches into `main` later and resolve the textual conflicts by this design. Each branch
+therefore passes its own gates alone, with its own code, and neither branch waits for the other's
+code to exist.
+
+**plan-b** (this plan, resolution phase `B2r`):
 
 1. `src/hittable.rs`, `HittableList::hit`: the `as_ref()` reference form above. Behaviour-neutral and
    correct with or without `Copy`.
-2. Nothing else. Its plane and triangle shapes are written against the constructor as it exists on
-   the branch (no material argument yet) and do not touch `src/main.rs`, `src/sphere.rs` or the
-   sphere/main tests.
+2. Nothing else. Its record and constructor already carry `t`, `point`, `normal`, `front_face`, `u`,
+   `v` and no material; its plane and triangle shapes call the constructor as it exists on its
+   branch, and it does not touch `src/main.rs`, `src/sphere.rs` or the sphere/main tests.
 
-**plan-a** (its resolution phase for A1):
+**plan-a** (its resolution phase for A1, on plan-a's branch):
 
-1. Owns the `Material` trait, `Rc<dyn Material>`, the `material` field, and the seventh constructor
-   parameter.
-2. Updates **every** `HitRecord::new` call site on its rebased tree in one change, including
-   `src/plane.rs` and `src/triangle.rs` when the geometry work is on that tree. It keeps no second
-   constructor and no parallel construction path.
-3. Owns `src/main.rs` `ray_colour` (scattering) and the material side of the sphere tests. It keeps
-   plan-b's existing sphere assertions passing (`front_face`, `u == 0.75`, `v == 0.5`, the
-   near-surface normal), adapted only for how the sphere now receives its material.
-4. Keeps a `#[allow(dead_code)]` attribute only on fields no non-test build reads yet, and removes
+1. Writes its **own** `HitRecord::new` constructor with the fields plan-a's branch has, plus
+   `material: Rc<dyn Material>` as the **last** parameter, and derives `Clone` only. One constructor,
+   no struct literal anywhere on its branch.
+2. It does **not** add `front_face`, `u`, `v`, the ray argument or the outward-normal argument; those
+   arrive with plan-b at the merge.
+3. Adds the `as_ref()` form to `HittableList::hit` on its branch, for the same reason.
+4. Owns `src/main.rs` `ray_colour` (scattering) and the material side of its sphere tests.
+5. Keeps a `#[allow(dead_code)]` attribute only on fields no non-test build reads yet, and removes
    one as soon as a real build reads the field.
 
 ## What each side may rely on
 
 - plan-b may rely on: `HitRecord` keeps `t`, `point`, `normal`, `front_face`, `u`, `v` with the same
-  meanings; `HitRecord::new` keeps its first six parameters in that order; the material arrives last.
-- plan-a may rely on: `HitRecord::new` exists with the six-parameter signature and owns the
-  face-side/normal logic; `Plane` and `Triangle` both construct records through it; no shape builds a
-  record itself.
+  meanings; `HitRecord::new` exists and is the only construction; the material, when it arrives,
+  comes last in the parameter list.
+- plan-a may rely on: it needs no plan-b code. At the merge, `HitRecord` is the union of both sides'
+  fields, the derive is `Clone` only, and the single constructor takes plan-b's face-side arguments
+  followed by the material.
 
 ## Merge rule
 
-Whichever branch lands second adapts the constructor call sites that exist on the merged tree. The
-record shape, derive list and constructor signature above are the target on both sides. Neither
-branch keeps a parallel construction path or a second record type.
+Neither branch keeps a parallel construction path or a second record type. At the merge into `main`
+the release resolves the conflicting hunks by this design: one `HitRecord` holding both sides'
+fields, `Clone` only, and one `HitRecord::new` whose parameters are plan-b's face-side arguments with
+the material last. The material stays the last parameter in the merged constructor. Both branches
+carry the same `as_ref()` line in `HittableList::hit`, so that hunk reconciles to identical content.
 
-## Precondition
-
-plan-a's tree has no `HitRecord::new`: phase B1 is committed only on plan-b's branch. plan-a cannot
-implement the target shape without duplicating that work. The coordinator must bring plan-b's B1 (or
-its B1 + B2 tip) onto plan-a's branch, or authorize plan-a to merge or rebase onto it, before plan-a's
-resolution phase can be implemented.
