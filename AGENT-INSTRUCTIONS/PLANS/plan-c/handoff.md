@@ -2,15 +2,14 @@
 
 ## Next action
 
-Spawn a fresh `phase-implementer` for phase C1 via `phase_subagent`.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for phase C1 with the implementer's
+receipt.
 
 ## Current state
 
-Phase C1 (PNG writer) is detailed in `phases/C1-png-writer.md` and passed the orchestrator
-acceptance check; no implementation exists yet. The phase adds `src/png.rs`, points `main` at
-`render.png`, keeps `write_ppm`, and updates `README.md`, `LOCAL/project.md` and the interim
-rendered-image command in `LOCAL/gates.md`. C2 and C3 stay untouched. Work happens in the `plan-c`
-worktree on branch `plan-c`; the plan is linked to the coordinator.
+C1 implementation is at tested head `30f857f0b6b1b3f9df2026793d3d6ec3f015c9db` (base `e180476`),
+review loop finished with no open finding, fast and rendered-image gates passed. Completion,
+compression to `done/` and promotion of C2 belong to the advancer.
 
 ## Learned rules
 
