@@ -2,25 +2,24 @@
 
 ## Next action
 
-Wait for the user's acceptance of the closing survey. On acceptance, spawn a fresh `phase-advancer`:
+Spawn a fresh `phase-advancer` to complete Z1:
 
-`REVIEW AND ADVANCE: Review and advance phase Z1 of plan-b. Implementer verification receipt: not applicable; Z1 was executed by the orchestrator (ten read-only ops-scout areas plus one cross-check) and wrote AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/survey-2026-11-23.md. Relevant implementer comments: none. User-specific test result: the user accepted the survey results.`
+`REVIEW AND ADVANCE: Review and advance phase Z1 of plan-b. Implementer verification receipt: not applicable; Z1 was executed by the orchestrator (ten read-only ops-scout areas plus one cross-check) and wrote AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/survey-2026-11-23.md; renders verified byte-identical, 20003 lines, header ok, lines 4/7441/10104 as recorded. Relevant implementer comments: none. User-specific test result: the user accepted the survey as it stands and directed that the two coverage findings (F9, F10) must NOT be fixed and no test is to be added; the findings stay recorded in the note.`
 
-If the user names changes instead, they become a later remediation/survey round and Z1 stays active.
-Do not archive the plan without the user's explicit closure authorization.
+After it returns, verify the status table shows the plan complete and report the outcome. The release
+follows and closes the plan; do not archive it.
 
 ## Current state
 
 - B1 `done` `6eb43e09`; B2r `done` `5204447`; B2 `done` `a5c6665`; B3 `done` `2b4e2b7`.
-- Z1: `active`. Survey complete: note written at `benchmarks/survey-2026-11-23.md`; ten areas, one
-  cross-check; two area claims refuted; two coverage gaps found that the areas missed (F9 nearest-hit
-  selection untested, F10 sphere/triangle boxes untested). No product finding is a defect. Two stale
-  plan statements corrected as bookkeeping (phase test count 6 not 8; `full-plan.md` carry-over).
-- Renders verified: two runs byte-identical, 20003 lines, header ok, line 4 `165 201 255`, line 7441
-  `127 127 255`, line 10104 `129 126 255`. PPM kept at `/tmp/opencode/survey-a.ppm`; a PNG copy for
-  the user is at `/tmp/opencode/survey-a.png`.
-- Awaiting the user's acceptance or change list. Plan completion/archival needs explicit user
-  authorization.
+- Z1: `active`, survey complete, note written, **user accepted 2026-11-23 with no changes**. The user
+  explicitly declined the two coverage tests (F9 nearest-hit selection, F10 shape boxes); they stay
+  recorded in the note only. This is a settled user decision: no remediation unit, no new test.
+- Earlier stale plan statements corrected as bookkeeping (phase test count six, not eight; the
+  `full-plan.md` carry-over removed).
+- Renders: PPM kept at `/tmp/opencode/survey-a.ppm`, PNG copy at `/tmp/opencode/survey-a.png`.
+- Remaining work after Z1: the release, which updates documentation and closes the plan. This session
+  does not archive the plan.
 - Autonomous mode on; standing authorization for phase commits exists.
 
 ## Learned rules
