@@ -3,11 +3,11 @@
 mod aabb;
 mod camera;
 mod hittable;
+mod material;
 #[allow(dead_code)]
 mod plane;
 mod png;
 mod ray;
-#[allow(dead_code)]
 mod rng;
 mod sphere;
 mod triangle;
@@ -16,10 +16,13 @@ mod vec3;
 use std::fs::File;
 use std::io::{self, Write};
 use std::path::Path;
+use std::rc::Rc;
 
 use camera::Camera;
 use hittable::{Hittable, HittableList};
+use material::{Dielectric, Lambertian, Metal};
 use ray::Ray;
+use rng::Rng;
 use sphere::Sphere;
 use triangle::Triangle;
 use vec3::{Colour, Vec3};
@@ -28,44 +31,78 @@ const WIDTH: usize = 400;
 const HEIGHT: usize = 200;
 const DEFAULT_SAMPLES: usize = 16;
 const DEFAULT_OUTPUT: &str = "render.png";
+const MAX_BOUNCES: usize = 50;
+const RNG_SEED: u64 = 2024;
 
-/// The colour seen along a ray: the surface normal where it hits, the sky gradient otherwise.
-fn ray_colour(ray: &Ray, world: &dyn Hittable) -> Colour {
-    if let Some(hit) = world.hit(ray, 0.001, f64::INFINITY) {
-        return (hit.normal + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
+/// The colour seen along a ray after its bounces, with the sky gradient on a miss.
+fn ray_colour(ray: Ray, world: &dyn Hittable, rng: &mut Rng) -> Colour {
+    let mut attenuation = Colour::new(1.0, 1.0, 1.0);
+    let mut ray = ray;
+    for _ in 0..MAX_BOUNCES {
+        if let Some(hit) = world.hit(&ray, 0.001, f64::INFINITY) {
+            match hit.material.scatter(&ray, &hit, rng) {
+                Some((factor, scattered)) => {
+                    attenuation = attenuation * factor;
+                    ray = scattered;
+                }
+                None => return Colour::new(0.0, 0.0, 0.0),
+            }
+        } else {
+            let t = 0.5 * (ray.direction.unit().y + 1.0);
+            let sky = Vec3::new(1.0, 1.0, 1.0) * (1.0 - t) + Vec3::new(0.5, 0.7, 1.0) * t;
+            return attenuation * sky;
+        }
     }
-    let t = 0.5 * (ray.direction.unit().y + 1.0);
-    Vec3::new(1.0, 1.0, 1.0) * (1.0 - t) + Vec3::new(0.5, 0.7, 1.0) * t
+    Colour::new(0.0, 0.0, 0.0)
 }
 
 fn scene() -> HittableList {
     let mut world = HittableList::default();
-    world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
-    world.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)));
+    world.add(Box::new(Sphere::new(
+        Vec3::new(0.0, 0.0, -1.0),
+        0.5,
+        Rc::new(Lambertian::new(Vec3::new(0.8, 0.3, 0.3))),
+    )));
+    world.add(Box::new(Sphere::new(
+        Vec3::new(0.0, -100.5, -1.0),
+        100.0,
+        Rc::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))),
+    )));
+    world.add(Box::new(Sphere::new(
+        Vec3::new(1.1, -0.1, -1.0),
+        0.4,
+        Rc::new(Metal::new(Vec3::new(0.8, 0.8, 0.8), 0.3)),
+    )));
+    world.add(Box::new(Sphere::new(
+        Vec3::new(-1.1, -0.1, -1.0),
+        0.4,
+        Rc::new(Dielectric::new(1.5)),
+    )));
     world.add(Box::new(Triangle::new(
         Vec3::new(-3.5, 0.0, -2.0),
         Vec3::new(-1.5, 0.0, -2.0),
         Vec3::new(-2.5, 1.5, -2.0),
+        Rc::new(Lambertian::new(Vec3::new(0.7, 0.7, 0.7))),
     )));
     world
 }
 
-/// Return every pixel's colour, row by row from the top. A progress line on standard error reports
-/// the share of rows done.
+/// Return every pixel's colour averaged over `samples` jittered rays, row by row from the top. A
+/// progress line on standard error reports the share of rows done.
 fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
     let world = scene();
     let camera = Camera::new(width as f64 / height as f64);
+    let mut rng = Rng::new(RNG_SEED);
     let mut pixels = Vec::with_capacity(width * height);
     for (done, row) in (0..height).rev().enumerate() {
         for column in 0..width {
-            let u = column as f64 / (width - 1) as f64;
-            let v = row as f64 / (height - 1) as f64;
-            let ray = camera.ray(u, v);
-            let mut colour = Colour::new(0.0, 0.0, 0.0);
+            let mut total = Colour::new(0.0, 0.0, 0.0);
             for _ in 0..samples {
-                colour = colour + ray_colour(&ray, &world);
+                let u = (column as f64 + rng.next_f64()) / width as f64;
+                let v = (row as f64 + rng.next_f64()) / height as f64;
+                total = total + ray_colour(camera.ray(u, v), &world, &mut rng);
             }
-            pixels.push(colour / samples as f64);
+            pixels.push(total / samples as f64);
         }
         eprint!("\r{:3}%", (done + 1) * 100 / height);
     }
@@ -74,7 +111,7 @@ fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
 }
 
 fn to_byte(channel: f64) -> u8 {
-    (255.999 * channel.clamp(0.0, 1.0)) as u8
+    (255.999 * channel.clamp(0.0, 1.0).sqrt()) as u8
 }
 
 fn write_ppm(
@@ -214,10 +251,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn the_center_pixel_shows_the_sphere_facing_the_camera() {
+    fn the_center_pixel_shows_the_diffuse_sphere() {
         let pixels = render(WIDTH, HEIGHT, 1);
         let center = pixels[(HEIGHT / 2) * WIDTH + WIDTH / 2];
-        assert!(center.z > 0.9, "the normal faces the camera: {center:?}");
+        assert!(
+            center.x > center.y && center.x > center.z && center.x > 0.1,
+            "the centre sphere is red-brown: {center:?}"
+        );
     }
 
     #[test]
@@ -262,5 +302,32 @@ mod tests {
     fn an_unknown_option_is_rejected() {
         let config = Config::parse(["--bogus".to_string()].into_iter());
         assert!(config.is_err());
+    }
+
+    #[test]
+    fn a_pixel_averages_four_jittered_samples() {
+        let world = scene();
+        let camera = Camera::new(1.0);
+        let mut rng = Rng::new(RNG_SEED);
+        let mut total = Colour::new(0.0, 0.0, 0.0);
+        for _ in 0..4 {
+            let u = rng.next_f64();
+            let v = rng.next_f64();
+            total = total + ray_colour(camera.ray(u, v), &world, &mut rng);
+        }
+        let expected = total / 4.0;
+        let actual = render(1, 1, 4)[0];
+        assert_eq!(
+            actual, expected,
+            "the pixel is the mean of its four jittered samples"
+        );
+    }
+
+    #[test]
+    fn a_mid_grey_pixel_is_written_with_gamma_two() {
+        let mut out = Vec::new();
+        write_ppm(&mut out, 1, 1, &[Vec3::new(0.25, 0.25, 0.25)]).expect("the image is written");
+        let text = String::from_utf8(out).expect("the image is text");
+        assert!(text.ends_with("127 127 127\n"), "{text:?}");
     }
 }

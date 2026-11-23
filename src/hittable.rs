@@ -1,30 +1,40 @@
 //! Anything a ray can hit, and the record of where it hit.
 
+use std::rc::Rc;
+
 use crate::aabb::Aabb;
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
 /// Where a ray hit a surface: the distance along the ray, the point, the normal against the
-/// ray, the face side and the texture coordinates.
-#[derive(Clone, Copy, Debug)]
+/// ray, the face side, the texture coordinates and the material of the object hit.
+#[derive(Clone)]
 pub struct HitRecord {
     pub t: f64,
-    #[allow(dead_code)]
     pub point: Vec3,
     pub normal: Vec3,
-    // Read by the tests only.
-    #[allow(dead_code)]
     pub front_face: bool,
     #[allow(dead_code)]
     pub u: f64,
     #[allow(dead_code)]
     pub v: f64,
+    pub material: Rc<dyn Material>,
 }
 
 impl HitRecord {
-    /// Return a hit at distance `t` and position `point`, with texture coordinates `(u, v)` and a
-    /// normal facing `ray`. `outward_normal` is unit length and points away from the surface.
-    pub fn new(t: f64, point: Vec3, u: f64, v: f64, ray: &Ray, outward_normal: Vec3) -> Self {
+    /// Return a hit at distance `t` and position `point`, with texture coordinates `(u, v)`, a
+    /// normal facing `ray`, and the material of the object hit. `outward_normal` is unit length and
+    /// points away from the surface.
+    pub fn new(
+        t: f64,
+        point: Vec3,
+        u: f64,
+        v: f64,
+        ray: &Ray,
+        outward_normal: Vec3,
+        material: Rc<dyn Material>,
+    ) -> Self {
         let front_face = ray.direction.dot(outward_normal) < 0.0;
         let normal = if front_face {
             outward_normal
@@ -38,6 +48,7 @@ impl HitRecord {
             front_face,
             u,
             v,
+            material,
         }
     }
 }

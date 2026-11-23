@@ -1,19 +1,27 @@
 //! Spheres.
 
+use std::f64::consts::PI;
+use std::rc::Rc;
+
 use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
-use std::f64::consts::PI;
 
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f64,
+    pub material: Rc<dyn Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f64) -> Self {
-        Sphere { center, radius }
+    pub fn new(center: Vec3, radius: f64, material: Rc<dyn Material>) -> Self {
+        Sphere {
+            center,
+            radius,
+            material,
+        }
     }
 }
 
@@ -39,7 +47,15 @@ impl Hittable for Sphere {
         let outward_normal = (point - self.center) / self.radius;
         let u = 0.5 + outward_normal.z.atan2(outward_normal.x) / (2.0 * PI);
         let v = 0.5 - outward_normal.y.asin() / PI;
-        Some(HitRecord::new(t, point, u, v, ray, outward_normal))
+        Some(HitRecord::new(
+            t,
+            point,
+            u,
+            v,
+            ray,
+            outward_normal,
+            Rc::clone(&self.material),
+        ))
     }
 
     fn bounding_box(&self) -> Option<Aabb> {
@@ -51,10 +67,15 @@ impl Hittable for Sphere {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::material::Lambertian;
 
     #[test]
     fn a_ray_through_the_center_hits_the_near_surface() {
-        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let sphere = Sphere::new(
+            Vec3::new(0.0, 0.0, -2.0),
+            0.5,
+            Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))),
+        );
         let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         let hit = sphere
             .hit(&ray, 0.001, f64::INFINITY)
@@ -68,7 +89,11 @@ mod tests {
 
     #[test]
     fn a_ray_from_inside_the_sphere_flips_the_normal() {
-        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let sphere = Sphere::new(
+            Vec3::new(0.0, 0.0, -2.0),
+            0.5,
+            Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))),
+        );
         let ray = Ray::new(Vec3::new(0.0, 0.0, -2.0), Vec3::new(0.0, 0.0, 1.0));
         let hit = sphere
             .hit(&ray, 0.001, f64::INFINITY)
@@ -79,7 +104,11 @@ mod tests {
 
     #[test]
     fn a_ray_beside_the_sphere_misses() {
-        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let sphere = Sphere::new(
+            Vec3::new(0.0, 0.0, -2.0),
+            0.5,
+            Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))),
+        );
         let ray = Ray::new(Vec3::new(1.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         assert!(sphere.hit(&ray, 0.001, f64::INFINITY).is_none());
     }

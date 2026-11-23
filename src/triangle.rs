@@ -1,7 +1,10 @@
 //! Triangles.
 
+use std::rc::Rc;
+
 use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
@@ -10,13 +13,14 @@ pub struct Triangle {
     pub a: Vec3,
     pub b: Vec3,
     pub c: Vec3,
+    pub material: Rc<dyn Material>,
 }
 
 impl Triangle {
     /// Create a triangle with vertices `a`, `b` and `c`.
     /// The vertex order sets the outward normal that decides the face side.
-    pub fn new(a: Vec3, b: Vec3, c: Vec3) -> Self {
-        Triangle { a, b, c }
+    pub fn new(a: Vec3, b: Vec3, c: Vec3, material: Rc<dyn Material>) -> Self {
+        Triangle { a, b, c, material }
     }
 }
 
@@ -47,7 +51,15 @@ impl Hittable for Triangle {
         }
         let point = ray.at(t);
         let outward_normal = edge1.cross(edge2).unit();
-        Some(HitRecord::new(t, point, u, v, ray, outward_normal))
+        Some(HitRecord::new(
+            t,
+            point,
+            u,
+            v,
+            ray,
+            outward_normal,
+            Rc::clone(&self.material),
+        ))
     }
 
     fn bounding_box(&self) -> Option<Aabb> {
@@ -69,6 +81,11 @@ impl Hittable for Triangle {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::material::Lambertian;
+
+    fn diffuse() -> Rc<dyn Material> {
+        Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5)))
+    }
 
     #[test]
     fn a_ray_hits_the_triangle_with_barycentric_texture_coordinates() {
@@ -76,6 +93,7 @@ mod tests {
             Vec3::new(0.0, 0.0, -2.0),
             Vec3::new(1.0, 0.0, -2.0),
             Vec3::new(0.0, 1.0, -2.0),
+            diffuse(),
         );
         let ray = Ray::new(Vec3::new(0.25, 0.25, 0.0), Vec3::new(0.0, 0.0, -1.0));
         let hit = triangle
@@ -95,6 +113,7 @@ mod tests {
             Vec3::new(0.0, 0.0, -2.0),
             Vec3::new(1.0, 0.0, -2.0),
             Vec3::new(0.0, 1.0, -2.0),
+            diffuse(),
         );
         let ray = Ray::new(Vec3::new(2.0, 2.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         assert!(triangle.hit(&ray, 0.001, f64::INFINITY).is_none());
