@@ -14,7 +14,8 @@
 
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
-| A1 | Diffuse and metal materials | active | standard | - | - | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
+| A1r | Materials on the shared hit record | active | standard | - | `phases/A1r-materials-on-the-shared-hit-record.md` | plan-a's half of the shared design is live | gates green, rendered image shows matte and metal spheres |
+| A1 | Diffuse and metal materials | planned | standard | - | - | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
 | A2 | Glass | planned | standard | A1 | - | a glass sphere refracts | gates green, rendered image shows a glass sphere |
 | A3 | Samples per pixel | planned | standard | A1 | - | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
 | Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the user accepts the result | the user accepts |
