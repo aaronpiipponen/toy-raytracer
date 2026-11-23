@@ -2,16 +2,15 @@
 
 ## Next action
 
-Resume the A1r implementer (session `ses_df5c575d1ffe7pohdqPykjTX2c`) after the released hold:
-finish the review loop, commit and return the receipt. Then run `REVIEW AND ADVANCE` for A1r.
+Run `REVIEW AND ADVANCE` for A1r at `b7af7f8a0ad52671c92b1ca62d0825feb4fbb13f`; on advancement,
+take its next-phase handoff and run the acceptance check before detailing/implementing A2.
 
 ## Current state
 
-A1r is active and implemented but uncommitted: branch head `e180476`, dirty tree with
-`src/material.rs` (new), `src/hittable.rs`, `src/sphere.rs`, `src/main.rs`; fast gate green, rendered
-image inspected. The A1r/C3 coordinator hold was released (it was armed after the implementer had
-started); the coordinator will re-examine the plan-c overlap on the implemented A1r. A1 is
-`not applicable` (carried by A1r); A2, A3 and Z1 are planned.
+A1r implemented and committed (`e180476..b7af7f8`), fast gate and rendered-image gate green, one
+review pass with no findings, user test not required. A1 `not applicable` (carried by A1r). A2
+(glass), A3 (samples) and Z1 planned. The coordinator may re-examine the plan-c overlap on the
+implemented A1r; that is outside this phase and must not change it.
 
 Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
 Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
