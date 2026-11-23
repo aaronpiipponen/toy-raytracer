@@ -6,7 +6,7 @@
 triangle, one module each, both building their record through `HitRecord::new`. The fixed scene's
 ground becomes a plane and the scene gains a triangle, so the rendered image shows both. B2 also
 removes the `#[allow(dead_code)]` on `Vec3::cross`, which both new shapes call. It adds no material,
-no bounding box and no texture lookup; B3 owns boxes and the merged materials plan owns materials.
+no bounding box and no texture lookup; B3 owns boxes, and the merge obligation below owns materials.
 **Gate level:** standard - two new self-contained hit routines in a single-threaded renderer, with no
 durable state, no configuration and no external boundary. The rendered-image conditional gate
 applies because the fixed scene changes.
@@ -17,6 +17,14 @@ validated; `(u, v)` are never clamped; a triangle is hit from both sides and the
 records the face side; the plane's two in-plane axes are derived per hit and never cached. It adds no
 epsilon tuning beyond the exact-zero determinant test Möller–Trumbore requires, no back-face culling,
 and no second record construction path.
+
+**Merge obligation:** this branch keeps both shapes geometry-only. `Plane` and `Triangle` hold no
+material and build their records through the six-argument `HitRecord::new`. The merged tree gives each
+shape `pub material: Rc<dyn Material>` as its last field and constructor parameter and passes it as
+the seventh `HitRecord::new` argument, per `## Shapes and materials (B2 and A1r)` in
+`shared-plan-a+plan-b.md`. The merged `scene()` also differs from this branch's: it shifts the
+triangle to `x` 1.6..2.3 at `z = -1.2` so the merged metal sphere does not occlude it. Both changes
+are the coordinator's merge step, not this phase's work, and no file on this branch makes them.
 
 **Current state (verified):**
 - `src/hittable.rs:6-42` - `HitRecord` holds `t`, `point`, `normal`, `front_face`, `u`, `v`, derives
@@ -48,6 +56,10 @@ and no second record construction path.
   obligation that B3 owns.
 
 **Read first (do not invent):**
+- `shared-plan-a+plan-b.md`, `## Shapes and materials (B2 and A1r)` - settles the shape and material
+  contract: this branch's `Plane` and `Triangle` are geometry-only, build through the six-argument
+  `HitRecord::new` and hold no `Rc`; the field, the constructor parameter and the seventh argument
+  arrive only at merge. Read it for the merge shape; it changes nothing in this branch's code.
 - `src/hittable.rs` - `HitRecord::new` is the only way to build a record; a shape never fills the
   fields itself.
 - `src/sphere.rs` - the `hit` shape this phase copies, including the `t_min..t_max` rejection.
@@ -137,8 +149,10 @@ and no second record construction path.
 **Rules / MUST NOT:**
 - Build every record through `HitRecord::new`; do not construct a `HitRecord` literal and do not
   change `HitRecord`, its derive, its fields or its allowances.
-- Do not add a material, an `Rc`, an `Aabb`, a `bounding_box` method or a box test; B3 and the merged
-  materials plan own those.
+- Do not add a material, an `Rc<dyn Material>`, an `Aabb`, a `bounding_box` method or a box test on
+  this branch; B3 owns boxes and the merge obligation above owns the material field.
+- Do not name plan-a's new symbols (`Material`, `Lambertian`, `Metal`, `Rc<dyn Material>`) in this
+  branch's source, comments or test names; the merge step adds them.
 - Do not read `hit.u`, `hit.v`, `hit.front_face` or `hit.point` in production code, and do not add a
   texture lookup; nothing consumes texture coordinates yet, so their allowances stay.
 - Do not clamp `u` or `v`, and do not scale them; the plane uses `f64::rem_euclid(1.0)` and the
