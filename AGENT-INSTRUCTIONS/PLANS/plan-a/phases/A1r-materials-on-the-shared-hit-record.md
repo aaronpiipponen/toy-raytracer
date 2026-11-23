@@ -2,7 +2,7 @@
 
 **Status:** active.
 **Depends on:** none.
-**Scope:** plan-a's half of `shared-plan-a+plan-b.md`. It adds the `material` field to `HitRecord`, gives `Sphere` a material and puts it on the record, adds `src/material.rs` with the `Material` trait, a diffuse and a metal material, and replaces the normal-colouring loop in `src/main.rs` with the scatter loop and gamma 2 output. It does not add `front_face`, `u`, `v`, a `HitRecord` constructor, or any change to how the normal is computed; plan-b's B1r owns those.
+**Scope:** plan-a's half of `shared-plan-a+plan-b.md`. It adds the `material` field to `HitRecord`, gives `Sphere` a material and puts it on the record, adds `src/material.rs` with the `Material` trait, a diffuse and a metal material, and replaces the normal-colouring loop in `src/main.rs` with the scatter loop and gamma 2 output. It does not add `front_face`, `u`, `v`, a `HitRecord` constructor, or any change to how the normal is computed; plan-b's B1r owns those. This phase supersedes plan row `A1`, which carries the same material scope and must not be detailed or implemented again; plan row `A1r` is the authoritative one.
 **Gate level:** standard - the phase changes runtime rendering behaviour across the record, the shape and the render loop, with no durable state, security or migration surface.
 **Simplicity statement:** the trait object is shared as `Rc<dyn Material>` with no generic parameter and no lifetime. The bounce limit is a fixed constant, the seed is a fixed constant, and a ray that reaches either is returned as produced, not retried. There is no path tracer accumulator, no sampling average, no clamping of material parameters and no second colouring path; the normal-colouring code is deleted, not kept beside the new loop. No legacy format and no defensive re-check is added.
 
@@ -10,7 +10,7 @@
 - `src/hittable.rs` - `pub struct HitRecord { pub t: f64, pub point: Vec3, pub normal: Vec3 }` with `#[derive(Clone, Copy, Debug)]`; `point` carries `#[allow(dead_code)]`.
 - `src/hittable.rs` - `impl Hittable for HittableList::hit` uses `nearest.map_or(t_max, |hit| hit.t)`, which needs `Copy`.
 - `src/sphere.rs` - `pub struct Sphere { pub center: Vec3, pub radius: f64 }`, `pub fn new(center: Vec3, radius: f64) -> Self`, and `hit` builds `HitRecord { t, point, normal: (point - self.center) / self.radius }`.
-- `src/sphere.rs` tests - both call `Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5)` and assert the hit distance and the outward normal.
+- `src/sphere.rs` tests - both call `Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5)`; `a_ray_through_the_center_hits_the_near_surface` asserts the hit distance and the outward normal, `a_ray_beside_the_sphere_misses` asserts a miss.
 - `src/main.rs` - `fn ray_colour(ray: &Ray, world: &dyn Hittable) -> Colour` returns `(hit.normal + Vec3::new(1.0, 1.0, 1.0)) * 0.5` on a hit and the sky gradient otherwise.
 - `src/main.rs` - `scene()` adds two spheres, `render()` calls `ray_colour` once per pixel, `to_byte(channel)` returns `(255.999 * channel.clamp(0.0, 1.0)) as u8`, and `mod rng` carries `#[allow(dead_code)]` because nothing uses it.
 - `src/main.rs` tests - `the_center_pixel_shows_the_sphere_facing_the_camera` asserts `center.z > 0.9`; `the_top_row_is_sky` asserts `pixels[0].z > pixels[0].x`.
@@ -29,10 +29,10 @@
 - `src/vec3.rs` - the operator set the new code multiplies and reflects with.
 
 **Build plan:**
-1. `src/material.rs` - create the module with header `//! Materials: how a surface scatters the ray that hit it.` and these exact public items:
-   - `pub trait Material` with `fn scatter(&self, ray: &Ray, hit: &HitRecord, rng: &mut Rng) -> Option<(Colour, Ray)>`; the doc comment states that the pair is the attenuation and the scattered ray, and that `None` means the ray is absorbed.
-   - `pub struct Lambertian { pub albedo: Colour }` with `pub fn new(albedo: Colour) -> Self`; `impl Material for Lambertian` computes `let direction = hit.normal + random_in_unit_sphere(rng);` and returns `Some((self.albedo, Ray::new(hit.point, direction.unit())))`. The `ray` parameter is named `_ray`.
-   - `pub struct Metal { pub albedo: Colour, pub fuzz: f64 }` with `pub fn new(albedo: Colour, fuzz: f64) -> Self`; `impl Material for Metal` computes `let unit = ray.direction.unit();`, `let reflected = unit - hit.normal * (2.0 * unit.dot(hit.normal));`, `let direction = reflected + random_in_unit_sphere(rng) * self.fuzz;`, and returns `Some((self.albedo, Ray::new(hit.point, direction)))` when `direction.dot(hit.normal) > 0.0`, otherwise `None`.
+1. `src/material.rs` - create the module with header `//! Materials: how a surface scatters the ray that hit it.` and these exact public items. Every public item carries a doc comment in the style guide's form; the wording below is the minimum:
+   - `pub trait Material` with `fn scatter(&self, ray: &Ray, hit: &HitRecord, rng: &mut Rng) -> Option<(Colour, Ray)>`; doc comment: "Scatter `ray` at a hit, returning the attenuation and the scattered ray, or nothing when the material absorbs the ray."
+   - `pub struct Lambertian { pub albedo: Colour }` with doc comment "A diffuse surface that scatters in a random direction around the normal." and `pub fn new(albedo: Colour) -> Self` with doc comment "Build a diffuse material with the given albedo."; `impl Material for Lambertian` computes `let direction = hit.normal + random_in_unit_sphere(rng);` and returns `Some((self.albedo, Ray::new(hit.point, direction.unit())))`. The `ray` parameter is named `_ray`.
+   - `pub struct Metal { pub albedo: Colour, pub fuzz: f64 }` with doc comment "A reflective surface, the reflection blurred by `fuzz` in 0..=1." and `pub fn new(albedo: Colour, fuzz: f64) -> Self` with doc comment "Build a metal material with the given albedo and fuzz factor."; `impl Material for Metal` computes `let unit = ray.direction.unit();`, `let reflected = unit - hit.normal * (2.0 * unit.dot(hit.normal));`, `let direction = reflected + random_in_unit_sphere(rng) * self.fuzz;`, and returns `Some((self.albedo, Ray::new(hit.point, direction)))` when `direction.dot(hit.normal) > 0.0`, otherwise `None`.
    - `fn random_in_unit_sphere(rng: &mut Rng) -> Vec3` draws three coordinates with `2.0 * rng.next_f64() - 1.0` in a loop and returns the first whose `dot` with itself is `< 1.0`.
    - Imports: `crate::hittable::HitRecord`, `crate::ray::Ray`, `crate::rng::Rng`, `crate::vec3::{Colour, Vec3}`.
    - No `Debug` bound on `Material` and no interior mutability; the `&mut Rng` parameter is the only randomness path.
@@ -92,14 +92,19 @@
   - Deleted: none.
   - Two new test functions; within the three-function phase cap.
 - Fast gate: `cargo build`, `cargo test`, `cargo clippy -- -D warnings`, `cargo fmt --check`, `git diff --check`.
-- Conditional gates: rendered image, because a material and the render loop changed. Run `cargo run --release > /tmp/opencode/render.ppm` and confirm the file is a `P3` PPM with header `200 100` and `255`, then inspect it as the User test describes. Run once; the same render is the acceptance evidence.
+- Conditional gates: rendered image, because a material and the render loop changed. Run `cargo run --release > /tmp/opencode/render.ppm` once; the file is text (P3 PPM), so acceptance reads named pixel lines rather than opening a viewer. This same render is the acceptance evidence.
 - Slow gate (>2 minutes): none.
 
 **User test (acceptance):**
 - **Executor:** agent.
-- 1. Run `cargo run --release > /tmp/opencode/render.ppm`. Expected: exit status 0 and a `P3` PPM whose first three non-comment lines are `P3`, `200 100`, `255`.
-- 2. Open the image. Expected: a matte red sphere at the centre, a matte yellow ground, and a small reflective metal sphere to the right of the centre showing blurred sky and ground reflections. No normal-coloured (rainbow) sphere remains.
-- 3. Run the render a second time to a different path and compare the two files with `cmp`. Expected: identical bytes, proving the fixed seed reproduces the image.
+- The output is a text P3 PPM: header lines 1 to 3 are `P3`, `200 100` and `255`, and pixel `k` (counted from the top-left, row by row) is line `4 + k`. Pixels are read directly from the text, so no viewer or conversion is needed.
+- 1. Run `cargo run --release > /tmp/opencode/render.ppm`. Expected: exit status 0 and header lines `P3`, `200 100`, `255`.
+- 2. Read the centre pixel with `sed -n '10104p' /tmp/opencode/render.ppm` (pixel index `50*200+100`). Expected: three integers with the first (red) largest, showing the diffuse red sphere.
+- 3. Read the metal-sphere pixel with `sed -n '9749p' /tmp/opencode/render.ppm` (pixel index `48*200+145`) and a sky pixel same column with `sed -n '2149p' /tmp/opencode/render.ppm` (pixel index `10*200+145`). Expected: the metal pixel's third (blue) value is at most 150 while the sky pixel's third value is 255, because the metal albedo's blue of 0.2 caps the metal blue after gamma.
+- 4. Read a ground pixel with `sed -n '16024p' /tmp/opencode/render.ppm` (pixel index `80*200+20`). Expected: three integers whose third (blue) is `0`, because the yellow ground albedo has no blue and every later bounce keeps blue at `0`.
+- 5. Read the top-left pixel with `sed -n '4p' /tmp/opencode/render.ppm`. Expected: three integers with the third (blue) largest, the sky.
+- 6. Run the render again to `/tmp/opencode/render2.ppm` and run `cmp /tmp/opencode/render.ppm /tmp/opencode/render2.ppm`. Expected: no output, so the fixed seed reproduces the image byte for byte.
+- 7. For a visual check the agent may convert `/tmp/opencode/render.ppm` to PNG in `/tmp/opencode` with a throwaway standard-library script and open it with the image reader; the blocking evidence is steps 1 to 6.
 
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied: targeted tests, fast gate, affected conditional gate, docs checked.
@@ -113,7 +118,7 @@
 - [ ] Fast phase gate and the rendered-image conditional gate pass; no slow gate applies.
 - [ ] `docs/requirements.md` and `README.md` were re-read and need no change; no docs page refers to a plan.
 - [ ] Safety commit.
-- [ ] Revision-bound verification receipt exists; the agent acceptance render was observed and the second render matched byte for byte.
-- [ ] On passing evidence: compress this file into `done/A1r-materials-on-the-shared-hit-record.md` (frozen contract only) and flip the `full-plan.md` status row to `done`.
+- [ ] Revision-bound verification receipt exists; the agent acceptance render passed steps 1 to 6 and the second render matched byte for byte.
+- [ ] On passing evidence: compress this file into `done/A1r-materials-on-the-shared-hit-record.md` (frozen contract only) and flip the `full-plan.md` status row to `done`; leave `A1` planned and superseded, not re-implemented.
 
 **Exit:** every sphere and the ground carry a material, the record carries it without `Copy`, and the rendered image is the scatter loop with gamma 2, showing a red diffuse sphere, a yellow diffuse ground and a metal sphere.

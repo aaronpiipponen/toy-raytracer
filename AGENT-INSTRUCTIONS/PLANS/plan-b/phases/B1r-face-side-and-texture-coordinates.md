@@ -2,7 +2,7 @@
 
 **Status:** active.
 **Depends on:** none.
-**Scope:** plan-b's half of `shared-plan-a+plan-b.md`. It adds `front_face`, `u` and `v` to `HitRecord`, adds the one `HitRecord::new` constructor that sets the normal against the ray, and fills `(u, v)` in `Sphere::hit` from latitude and longitude. It adds no material, no `Rc` and no change to `src/main.rs`; plan-a's A1r owns those, and the merged constructor gains `material` as its last parameter at merge.
+**Scope:** plan-b's half of `shared-plan-a+plan-b.md`. It adds `front_face`, `u` and `v` to `HitRecord`, adds the one `HitRecord::new` constructor that sets the normal against the ray, and fills `(u, v)` in `Sphere::hit` from latitude and longitude. It adds no material, no `Rc` and no change to `src/main.rs`; plan-a's A1r owns those, and the merged constructor gains `material` as its last parameter at merge. This phase supersedes plan row `B1`, which carries the same geometry scope and must not be detailed or implemented again; plan row `B1r` is the authoritative one.
 **Gate level:** standard - the phase changes the shared record contract and the sphere hit, with no durable state, security or migration surface.
 **Simplicity statement:** there is one construction path, `HitRecord::new`, and every shape uses it. The helper does not validate `(u, v)`, does not clamp the normal and does not handle a degenerate ray. `front_face`, `u` and `v` carry `#[allow(dead_code)]` because the normal-colouring renderer does not read them, and the phase adds no reader to justify their use. No material, no second record and no texture mapping is built here.
 
@@ -16,7 +16,7 @@
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/shared-plan-a+plan-b.md` - the settled shared design this phase implements on the plan-b branch.
 
 **Read first (do not invent):**
-- `AGENT-INSTRUCTIONS/PLANS/plan-b/shared-plan-a+plan-b.md` - the exact field order, the helper signature, the `Clone, Copy, Debug` derive to keep, the dead-code allowances, and the ownership split; this phase is plan-b's half.
+- `AGENT-INSTRUCTIONS/PLANS/plan-b/shared-plan-a+plan-b.md` - the exact field order, the helper signature, the `Clone, Copy, Debug` derive to keep, the dead-code allowances, and the ownership split; this phase is plan-b's half. The shared text writes `outward_normal.dot(&ray.direction)`; `Vec3::dot` takes its argument by value (`src/vec3.rs:17`), so step 2's `outward_normal.dot(ray.direction)` is the compiling form and overrides that line.
 - `docs/requirements.md` items 7 and 8 - what `front_face`, the against-ray normal and `(u, v)` must mean.
 - `src/hittable.rs` - the record, its derive, and the one construction site that moves to the helper.
 - `src/sphere.rs` - the hit body and both tests.
@@ -74,8 +74,8 @@
 
 **Tests:**
 - New/changed/deleted:
-  - `src/sphere.rs` - `a_ray_inside_the_sphere_hits_the_back_face_with_the_normal_against_it`: a ray from the sphere's centre along `(0, 0, 1)` hits the surface at `t` `0.5`, records `front_face == false`, and records `normal == Vec3::new(0.0, 0.0, -1.0)`.
-  - `src/sphere.rs` - `a_sphere_hit_reports_latitude_and_longitude_texture_coordinates`: a ray from `(0, 0, 0)` along `(0, 0, -1)` hits the sphere centred at `(0, 0, -2)` with radius `0.5` at `(0, 0, -1.5)`, and records `u` near `0.25` and `v` near `1.0`.
+  - `src/sphere.rs` - `a_ray_inside_the_sphere_hits_the_back_face_with_the_normal_against_it`: the sphere is `Sphere::new(Vec3::new(0.0, 0.0, 0.0), 0.5)` and the ray starts at its centre `Vec3::new(0.0, 0.0, 0.0)` along `Vec3::new(0.0, 0.0, 1.0)`; the hit is at `t` `0.5`, records `front_face == false`, and records `normal == Vec3::new(0.0, 0.0, -1.0)`.
+  - `src/sphere.rs` - `a_sphere_hit_reports_latitude_and_longitude_texture_coordinates`: a ray from `(0, 0, 0)` along `(0, 0, -1)` hits the sphere centred at `(0, 0, -2)` with radius `0.5` at `(0, 0, -1.5)`, whose outward normal is `(0, 0, 1)`, so `theta` is `PI/2`; records `u` near `0.25` and `v` near `0.5`.
   - Changed: none; both existing tests keep their assertions.
   - Deleted: none.
   - Two new test functions; within the three-function phase cap.
