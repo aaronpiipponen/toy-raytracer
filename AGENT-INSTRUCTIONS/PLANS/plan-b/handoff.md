@@ -8,14 +8,15 @@ Spawn `phase-implementer` with `phase_subagent` for the active phase B3.
 
 - B1: `done` at `6eb43e09`.
 - B2r: `done` at `5204447`.
-- B2: implemented at `a5c6665`, pending review/advance. Receipt: base `5204447`, head `a5c6665`;
-  `cargo test plane` 1 passed, `cargo test triangle` 2 passed, `cargo test` 9 passed, build, clippy
-  `-D warnings`, fmt and diff check all pass; rendered image differs from the pre-change PPM and
-  line 7441 reads `127 127 255` (triangle) where it was `182 211 255` (sky); test budget 3 added /
-  0 deleted; review loop 2 rounds (2 real findings fixed, then none). User test: not required.
-- B3: `planned`, next to detail. Bounding boxes: an `Aabb` type, `Hittable::bounding_box` returning
-  `Option<Aabb>`, `HittableList` testing a box before its object.
-- Z1: `planned`.
+- B2: `done` at `a5c6665`; contract `done/B2-planes-and-triangles.md`.
+- B3: `active`, detailed and orchestrator-accepted at `phases/B3-bounding-boxes.md`; not
+  implemented. Adds `src/aabb.rs`, `Hittable::bounding_box`, boxes on sphere/triangle, `None` for
+  plane and list, and a box pre-test in `HittableList::hit`. Two new tests (one slab test, one probe
+  that proves the list skips). Rendered image must stay byte-identical.
+- Z1: `planned` (closing survey and user acceptance).
+- Out-of-scope observation: `AGENT-INSTRUCTIONS/LOCAL/project.md:5` still names `png.rs` and a
+  command line that do not exist in this worktree; another plan's forward edit in the shared root.
+  B3 preserves every existing entry and adds `aabb.rs` only.
 - The `AGENT-INSTRUCTIONS/LOCAL/project.md` repository-map edit is in the shared workspace root, not
   in the project commit. No workflow reload is needed: agents read it at session start and the
   plugin commits the root after each round.
