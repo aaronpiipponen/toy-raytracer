@@ -27,9 +27,9 @@ and the phase deletes the stale plan-naming comments listed under carry-overs.
   which records the face side and points `normal` against the ray. The constructor on this branch
   takes six parameters and no material argument.
 - `src/hittable.rs:45-48` - `pub trait Hittable { fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>; }`.
-- `src/hittable.rs:62-72` - `HittableList` holds `pub objects: Vec<Box<dyn Hittable>>`, `add` pushes,
+- `src/hittable.rs:50-73` - `HittableList` holds `pub objects: Vec<Box<dyn Hittable>>`, `add` pushes,
   and `hit` keeps the nearest record by comparing `hit.t`, read through
-  `nearest.as_ref().map_or(t_max, |hit| hit.t)`. This phase does not touch it.
+  `nearest.as_ref().map_or(t_max, |hit| hit.t)` at line 66. This phase does not touch it.
 - `src/sphere.rs:19-43` - the one existing `impl Hittable`, which shows the shape of a hit
   implementation and calls `HitRecord::new`.
 - `src/main.rs:3-10` - the module list, `mod rng;` carrying `#[allow(dead_code)]`.
@@ -215,10 +215,12 @@ and the phase deletes the stale plan-naming comments listed under carry-overs.
    section below. Do not add a test to `src/main.rs`, to `src/sphere.rs` or to any other module.
 
 7. `AGENT-INSTRUCTIONS/LOCAL/project.md:5` - the repository map names every module of `src/`, so
-   add the two new ones. Before:
-   `` - **Repository map:** `src/` - `main.rs` (scene, render loop, output, command line), `vec3.rs`, `ray.rs`, `camera.rs`, `hittable.rs` (hit record, the `Hittable` trait, the scene list), `sphere.rs`, `rng.rs` (seeded randomness).``
+   add the two new ones and keep every entry already on the line, including `png.rs`. Before:
+   `` - **Repository map:** `src/` - `main.rs` (scene, render loop, output, command line), `png.rs` (PNG encoding), `vec3.rs`, `ray.rs`, `camera.rs`, `hittable.rs` (hit record, the `Hittable` trait, the scene list), `sphere.rs`, `rng.rs` (seeded randomness).``
    After:
-   `` - **Repository map:** `src/` - `main.rs` (scene, render loop, output, command line), `vec3.rs`, `ray.rs`, `camera.rs`, `hittable.rs` (hit record, the `Hittable` trait, the scene list), `sphere.rs`, `plane.rs`, `triangle.rs`, `rng.rs` (seeded randomness).``
+   `` - **Repository map:** `src/` - `main.rs` (scene, render loop, output, command line), `png.rs` (PNG encoding), `vec3.rs`, `ray.rs`, `camera.rs`, `hittable.rs` (hit record, the `Hittable` trait, the scene list), `sphere.rs`, `plane.rs`, `triangle.rs`, `rng.rs` (seeded randomness).``
+   Match the current line exactly before editing; if it differs, keep every entry it names and add
+   only `plane.rs` and `triangle.rs`.
    This file is agent material under `AGENT-INSTRUCTIONS/`, so load the `agent-instructions` skill
    before editing it, as `AGENTS.md` requires. Change only the one line.
 

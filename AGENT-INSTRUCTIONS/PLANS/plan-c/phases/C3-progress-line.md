@@ -14,7 +14,7 @@
 - `src/main.rs:50-59` - the column loop, the `(width - 1)`/`(height - 1)` mapping, the `samples` averaging loop and `pixels.push(colour / samples as f64);`.
 - `src/main.rs:60-61` - the row loop's closing brace and `pixels`.
 - `src/main.rs:174-196` - `main`, which parses the options, calls `render(config.width, config.height, config.samples)` and writes the chosen file; neither its options nor its two writers change.
-- `src/main.rs:202-212` - `the_center_pixel_shows_the_sphere_facing_the_camera` and `the_top_row_is_sky`, which call `render(WIDTH, HEIGHT, 1)`; the test harness captures their standard error, so their assertions and names do not change.
+- `src/main.rs:202-213` - `the_center_pixel_shows_the_sphere_facing_the_camera` and `the_top_row_is_sky`, which call `render(WIDTH, HEIGHT, 1)`; the test harness captures their standard error, so their assertions and names do not change.
 - `README.md:18` - the sentence `` `cargo run` with no options writes `render.png` at 400 by 200 with 16 samples. ``, after which the progress sentence belongs.
 - `docs/requirements.md:41` - item 13, `While rendering, a progress line on standard error shows the share of rows done.`, which this phase implements and leaves unchanged.
 - `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the fast phase gate and the rendered-image conditional gate, whose command writes `/tmp/opencode/render.png`.
@@ -22,7 +22,7 @@
 
 **Read first (do not invent):**
 - `src/main.rs` - the whole file, especially `render`, `main` and the test module; this phase edits only the row loop and one doc comment.
-- `docs/requirements.md:32-41` - items 11 to 13 and 14.
+- `docs/requirements.md:32-41, 44-45` - items 11 to 13 and 14.
 - `README.md` - the page's present shape, so the addition is one sentence in it.
 - `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the fast gate and the rendered-image conditional gate.
 - `Cargo.toml` - the empty `[dependencies]` table this phase leaves untouched.
@@ -106,7 +106,7 @@
 **Tests:**
 - New/changed/deleted: none. The progress line has no return value a unit test can read, and capturing the standard error inside a test would need a subprocess or a new seam for no extra confidence beyond the conditional gate. The existing tests keep covering the render result, and REPO-RULES §3a allows zero new functions when none is justified.
 - Test budget: 0 new test functions, 0 changed, 0 deleted.
-- Fast gate, run in this order: `cargo test`, `cargo build`, `cargo clippy -- -D warnings`, `cargo fmt --check`, `git diff --check`.
+- Fast gate, run in this order: `cargo build`, `cargo test`, `cargo clippy -- -D warnings`, `cargo fmt --check`, `git diff --check`.
 - Conditional gates: rendered image, required because the render loop changed.
   1. `cargo build --release`, then run the binary directly so cargo's own messages stay out of the captured stream:
      ```bash
