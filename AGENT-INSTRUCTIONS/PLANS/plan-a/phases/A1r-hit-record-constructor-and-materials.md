@@ -329,9 +329,8 @@ unnecessary are deleted, not kept beside the new path.
 - [ ] Revision-bound verification receipt exists; the agent's rendered-image observation is recorded
   in it.
 - [ ] On passing evidence: compress this file into
-  `done/A1r-hit-record-constructor-and-materials.md` (frozen contract only) and flip the
-  `full-plan.md` status row to `done`. Leave the `A1` row planned: it is re-detailed from the code
-  this phase lands.
+  `done/A1r-hit-record-constructor-and-materials.md` (frozen contract only), flip the `full-plan.md`
+  `A1r` status row to `done`, and keep the `A1` row `not applicable` because A1r carries it.
 
 **Exit:** every scene object carries a material, `HitRecord::new` is the only way a record is built,
 a ray follows material scatters up to 50 bounces and turns black at the limit, output is gamma 2
