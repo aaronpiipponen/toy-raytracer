@@ -2,40 +2,29 @@
 
 ## Next action
 
-Plan-b is HELD: the B2 implementer start was refused with `COORDINATOR HOLD` (overlap with plan-a
-A1 on `HitRecord`/`Sphere::hit`). Start nothing, retry nothing. Wait for the coordinator's
-`CHANNEL OPEN`; then settle through `channel_send` and write
-`AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md`,
-spawn `DETAIL RESOLUTION: Pair plan-a-A1+plan-b-B2. Plans plan-b (held phase B2) and plan-a (held
-phase A1). Shared design: PLANS/shared/plan-a-A1+plan-b-B2.md.`, run the orchestrator acceptance
-check on both resolution phase files, `channel_close`, then continue the loop with plan-b's
-resolution phase. After the resolution, detail B2 fresh before its implementer.
+Spawn `phase-advancer` in DETAIL RESOLUTION mode:
+
+`DETAIL RESOLUTION: Pair plan-a-A1+plan-b-B2. Plans plan-b (held phase B2) and plan-a (held phase A1). Shared design: PLANS/shared/plan-a-A1+plan-b-B2.md.`
+
+Then run the orchestrator acceptance check on both resolution phase files (`plan-b` B2r and `plan-a`
+A1r), call `channel_close` naming plan-a's resolution phase file, and continue with B2r.
 
 ## Current state
 
-- B1: `done` at `6eb43e09`; frozen contract `done/B1-face-side-and-texture-coordinates.md`.
-- B2: `active`, detailed and accepted by the orchestrator at
-  `phases/B2-planes-and-triangles.md`; no implementation; blocked by the coordinator hold.
-- B3 (bounding boxes) and Z1 (closing survey and user acceptance): `planned`.
-- `scope.md` is final. Autonomous mode is on; standing authorization for phase commits exists.
-- No open user decision. Nothing deferred to the release, so no `docs-pass.md` yet.
-
-**Coordinator hold reason (corrected by the user):** both plans rewrite `HitRecord` in
-`src/hittable.rs` and `Sphere::hit` in `src/sphere.rs`. plan-b B1 (committed) adds
-`front_face`/`u`/`v`, keeps `#[derive(Clone, Copy, Debug)]`, and makes `HitRecord::new` the only
-construction; plan-a A1 adds `material: Rc<dyn Material>`, drops `Copy`, and builds the record with a
-struct literal in `Sphere::hit`. `src/main.rs:ray_colour` and the sphere tests change under both.
-plan-b leads because B1 is committed.
-
-**Orchestrator's settlement intent (implementation detail, to agree in the channel):** keep exactly
-one constructor. The material rides through it as one more argument supplied by the shape, which
-holds its own material: `HitRecord::new(t, point, u, v, ray, outward_normal, material)`. The derive
-becomes `Clone, Debug` (a shared material handle is not copyable). `HittableList::hit` must stop
-relying on `Copy`: with a non-copy record, `nearest.map_or(t_max, |hit| hit.t)` moves the nearest
-record out of the loop, so it must read the distance through a reference (`nearest.as_ref()`).
-plan-a owns the material type, the field and the scattering; plan-b owns the record shape, the
-constructor and the plane/triangle shapes that call it; the sphere is the shared file and ends up
-holding its material and passing it through.
+- B1: `done` at `6eb43e09`; `done/B1-face-side-and-texture-coordinates.md` amended so its derive list
+  and `HittableList` line point at the shared design as superseded.
+- B2: `planned` again (held before implementation, so no B2 tip exists); its phase document predates
+  the resolution and must be re-detailed after B2r before any implementer.
+- B2r: `active`, resolution phase, not yet detailed. Changes only `HittableList::hit` to
+  `nearest.as_ref().map_or(t_max, |hit| hit.t)`.
+- B3, Z1: `planned`.
+- Shared design written: `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md`. Agreed with the
+  plan-a orchestrator: `Clone` only (no `Copy`, no `Debug`), material last in `HitRecord::new`, one
+  constructor, `as_ref` in the list, plan-a owns the material field/parameter/call sites.
+- The plan-a orchestrator agreed to take B1 across now, not B2, and to add a small later unit for
+  materials on planes and triangles. **Coordinator approval for the B1 cross-branch hand-off is
+  still required** (tip `6eb43e09`); I cannot authorise it myself. The user has been told.
+- Autonomous mode on; standing authorization for phase commits exists. No open user decision.
 
 ## Learned rules
 
@@ -46,3 +35,6 @@ holding its material and passing it through.
   detail it, and unrelated phases stay blocked too once the hold is armed.
 - Deleting comments that name a plan or a later stage (REPO-RULES §4.13) is legitimate work inside a
   phase that already touches the file; keep it to the comment lines only.
+- A `Rc<dyn Trait>` field kills `Copy` and `Debug` on a derived struct; do not add `Debug` as a trait
+  supertrait just to keep a derive when no reader prints the value.
+- Never offer an uncommitted tip as a cross-branch hand-off; state exactly which commit is available.
