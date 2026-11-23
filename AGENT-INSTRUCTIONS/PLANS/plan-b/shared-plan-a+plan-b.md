@@ -57,15 +57,51 @@ changes exactly once, at merge; no branch ever names the other branch's new symb
   each new field `#[allow(dead_code)]` with a one-line comment in the style `point` already uses.
   The merged tree keeps those allowances until a real reader appears.
 
+## Shapes and materials (B2 and A1r)
+
+Every shape owns its material and no shape owns a renderer decision. `Sphere`, `Plane` and
+`Triangle` each hold `pub material: Rc<dyn Material>` as their last field and build their record
+through the merged `HitRecord::new(t, point, outward_normal, ray, u, v, material)`, passing
+`Rc::clone(&self.material)` as the last argument. `main`'s scene shares one material across the
+shapes that need it.
+
+Branch forms:
+
+- B2 creates `Plane::new(point, normal)` and `Triangle::new(vertex0, vertex1, vertex2)` with
+  geometry only and no `Rc`; both call the six-argument `HitRecord::new` that B1r landed.
+- A1r leaves `Plane` and `Triangle` alone and gives only `Sphere` its material.
+- Merge adds the material field and the last constructor parameter to `Plane` and `Triangle`,
+  stores it, and adds the seventh helper argument at the three shape call sites.
+
+Merged `scene()` in `src/main.rs`, the one scene both plans' exit states require:
+
+- `let ground: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0)));` and
+  `Plane::new(Vec3::new(0.0, -0.5, 0.0), Vec3::new(0.0, 1.0, 0.0), Rc::clone(&ground))`; this
+  replaces the ground sphere.
+- `Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, Rc::clone(&red))` and
+  `Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.3, Rc::clone(&metal))`, exactly as A1r details them.
+- `let triangle_material: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(0.3, 0.5, 0.8)));`
+  and `Triangle::new(Vec3::new(1.6, -0.5, -1.2), Vec3::new(2.3, -0.5, -1.2), Vec3::new(1.95, 0.15, -1.2), Rc::clone(&triangle_material))`.
+
+B2's own branch keeps its triangle at `x` 0.5..1.2; the merge shifts it right so the metal sphere,
+which projects to `x` 0.7..1.3 at `z = -1`, does not occlude it. The shifted triangle projects to
+1.333..1.917, inside the frame, and keeps the metal, centre and ground acceptance pixels unchanged.
+
+The merged module list is alphabetical: `camera`, `hittable`, `material`, `plane`, `ray`, `rng`,
+`sphere`, `triangle`, `vec3`, with the union of both branches' imports.
+
 ## Merge checklist
 
 1. `HitRecord` ends as `Clone` only, with all seven fields and one construction helper carrying
    `material` as its last parameter.
 2. `Sphere` ends holding centre, radius and material, and builds its record through the helper.
 3. `src/main.rs` ends with the scatter loop, not the normal-colouring loop.
-4. B1's `Sphere::new(center, radius)` call in the sphere test becomes
-   `Sphere::new(center, radius, material)`; the centre-pixel normal test stays valid because the
-   fixed scene hits front faces only.
+4. Every shape test builds through the material-carrying constructors: the four `Sphere::new` calls
+   in `src/sphere.rs` (two from B1's original tests, two from B1r's), the two `Plane::new` calls in
+   `src/plane.rs` and the one `Triangle::new` call in `src/triangle.rs`, each with a test material
+   (`Rc::new(Lambertian::new(colour))`). The plane and triangle test modules gain
+   `use std::rc::Rc;` and `use crate::material::Lambertian;`. Every sphere in the merged scene is
+   hit on its front face, so the sphere and centre-pixel assertions stay valid.
 5. Nobody reruns the other plan's move-on gate; each verifies its own on its own branch, and the
    merge follows this checklist.
 6. Test helpers that build a record follow the merged shape: the materials test helper in
@@ -75,6 +111,18 @@ changes exactly once, at merge; no branch ever names the other branch's new symb
    asserts; as a literal the fields must be that same self-consistent triple (`front_face: true`,
    the test's normal, and any `(u, v)` in 0..=1). No test-only construction path keeps the
    four-field shape.
+7. `Plane` and `Triangle` hold `pub material: Rc<dyn Material>` as their last field, their
+   constructors take it as the last parameter, and every shape builds its record through the
+   seven-argument `HitRecord::new`.
+8. Merged `scene()` is exactly the one in `## Shapes and materials (B2 and A1r)`.
+9. The merged module list is alphabetical (`camera`, `hittable`, `material`, `plane`, `ray`, `rng`,
+   `sphere`, `triangle`, `vec3`) with the union of both branches' imports.
+10. The repository-map line in `AGENT-INSTRUCTIONS/LOCAL/project.md` names every module: `main.rs`
+    (scene, render loop, output, command line), `vec3.rs`, `ray.rs`, `camera.rs`, `hittable.rs` (hit
+    record, the `Hittable` trait, the scene list), `material.rs` (the `Material` trait and its
+    materials), `plane.rs` (infinite planes), `sphere.rs`, `triangle.rs` (triangles), `rng.rs`
+    (seeded randomness). Each plan adds its own names when it lands; the merged line carries all
+    three additions and nothing else changes.
 
 ## What each plan may rely on
 
