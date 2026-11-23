@@ -2,21 +2,26 @@
 
 ## Next action
 
-Z1 is active and orchestrator-owned. Dispatch the ten read-only `ops-scout` area surveys in parallel,
-then one cross-check `ops-scout`, then write
-`AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/survey-2026-11-23.md` myself, then report to the user and
-wait for acceptance. Do not hand Z1 to `phase_subagent`, do not fix any finding, and do not archive
-the plan without explicit closure authorization.
+Wait for the user's acceptance of the closing survey. On acceptance, spawn a fresh `phase-advancer`:
+
+`REVIEW AND ADVANCE: Review and advance phase Z1 of plan-b. Implementer verification receipt: not applicable; Z1 was executed by the orchestrator (ten read-only ops-scout areas plus one cross-check) and wrote AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/survey-2026-11-23.md. Relevant implementer comments: none. User-specific test result: the user accepted the survey results.`
+
+If the user names changes instead, they become a later remediation/survey round and Z1 stays active.
+Do not archive the plan without the user's explicit closure authorization.
 
 ## Current state
 
 - B1 `done` `6eb43e09`; B2r `done` `5204447`; B2 `done` `a5c6665`; B3 `done` `2b4e2b7`.
-- Z1: `active`, detailed at `phases/Z1-closing-survey-and-user-acceptance.md` and accepted by the
-  orchestrator: ten survey areas, one scout each, one cross-check, note written by the orchestrator,
-  user acceptance is the move-on gate. `benchmarks/` does not exist yet.
-- Plan code head `2b4e2b7`; 11 test functions; `Cargo.toml` dependency-free.
-- No `/workflow-reload` needed for the `LOCAL/project.md` edits.
-- Autonomous mode on; standing authorization for phase commits exists. No open user decision.
+- Z1: `active`. Survey complete: note written at `benchmarks/survey-2026-11-23.md`; ten areas, one
+  cross-check; two area claims refuted; two coverage gaps found that the areas missed (F9 nearest-hit
+  selection untested, F10 sphere/triangle boxes untested). No product finding is a defect. Two stale
+  plan statements corrected as bookkeeping (phase test count 6 not 8; `full-plan.md` carry-over).
+- Renders verified: two runs byte-identical, 20003 lines, header ok, line 4 `165 201 255`, line 7441
+  `127 127 255`, line 10104 `129 126 255`. PPM kept at `/tmp/opencode/survey-a.ppm`; a PNG copy for
+  the user is at `/tmp/opencode/survey-a.png`.
+- Awaiting the user's acceptance or change list. Plan completion/archival needs explicit user
+  authorization.
+- Autonomous mode on; standing authorization for phase commits exists.
 
 ## Learned rules
 
