@@ -8,7 +8,7 @@
 **Simplicity statement:** dimensions and sample counts come from the user and are validated once in `Config::parse`; width and height must be at least 2 because `render` divides by `width - 1` and `height - 1`, and samples must be at least 1. A missing value, a non-numeric value, an unknown option, and an output path whose extension is neither `png` nor `ppm` each produce a clear error message and the usage line, then exit with status 2. The format is derived from the output extension only when `--format` is absent. Duplicate options are allowed and the last one wins. The parser stores no history, no file list and no default beyond the five requirement values. The averaging loop traces the same deterministic camera ray per sample until the materials plan adds jitter; that is the sample-count plumbing this phase owns, not a second shading path.
 
 **Current state (verified):**
-- `src/main.rs:1` - the module header `//! Render a fixed scene and write it as a PNG image.`
+- `src/main.rs:1` - the module header `//! Render a fixed scene and write it as a PNG image.`, which step 1 updates to name both formats.
 - `src/main.rs:3-11` - the module list ends `mod png;`, `mod ray;`, `#[allow(dead_code)] mod rng;`, `mod sphere;`, `mod vec3;`.
 - `src/main.rs:13-14` - imports `use std::fs::File;` and `use std::io::{self, Write};`.
 - `src/main.rs:16-20` - `use camera::Camera;`, `use hittable::{Hittable, HittableList};`, `use ray::Ray;`, `use sphere::Sphere;`, `use vec3::{Colour, Vec3};`.
@@ -38,7 +38,10 @@
 
 **Build plan:**
 
-1. `src/main.rs:22-23` - change the defaults to the requirement values and add the constant names the parser uses:
+1. `src/main.rs:1` and `src/main.rs:22-23` - change the module header to
+   `//! Render a fixed scene and write it as a PNG or PPM image.`, because `main` writes either
+   format after step 6. Change the defaults to the requirement values and add the constant names
+   the parser uses:
    ```rust
    const WIDTH: usize = 400;
    const HEIGHT: usize = 200;
