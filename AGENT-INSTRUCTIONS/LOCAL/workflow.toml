@@ -1,0 +1,47 @@
+# Permission capabilities for the toy raytracer workspace.
+#
+# A role names one capability per action (`write: docs`, `shell: review`), and the generator
+# expands it, including each pattern's absolute forms in the root and every worktree.
+
+[write.code]
+allow = ["*"]
+
+[write.docs]
+allow = ["docs/**", "README.md"]
+
+[write.comments]
+deny = ["docs/**", "AGENT-INSTRUCTIONS/**", ".opencode/**", "Cargo.toml", "Cargo.lock"]
+
+[write.reports]
+allow = ["docs/**"]
+
+# Read-only inspection: reading, searching and Git history.
+[shell.review]
+allow = ["cat *", "ls *", "head *", "tail *", "wc *", "grep *", "sed -n *", "git status *",
+         "git log *", "git show *", "git diff *", "git grep *", "git rev-parse *",
+         "git rev-list *", "git blame *", "git ls-files *"]
+
+[shell.docs]
+allow = ["cat *", "ls *", "head *", "tail *", "wc *", "grep *", "sed -n *", "git status *",
+         "git log *", "git show *", "git diff *", "git grep *"]
+
+[shell.comments]
+allow = ["cat *", "ls *", "head *", "tail *", "grep *", "sed -n *", "git status *", "git log *",
+         "git show *", "git diff *", "git grep *", "cargo fmt *", "~/.cargo/bin/cargo fmt *"]
+
+[shell.reports]
+allow = ["cat *", "ls *", "grep *", "git status *", "git diff *"]
+
+# Read-only inspection of the project repository from the workspace root, where the coordinator
+# and its conflict investigator run.
+[shell.investigate]
+allow = ["cat *", "ls *", "grep *", "git --git-dir=project.git merge-tree *",
+         "git --git-dir=project.git diff *", "git --git-dir=project.git log *",
+         "git --git-dir=project.git show *", "git --git-dir=project.git merge-base *",
+         "git --git-dir=project.git branch *"]
+
+[shell.full]
+allow = ["*"]
+
+[external.renders]
+allow = ["/tmp/opencode/renders/*"]

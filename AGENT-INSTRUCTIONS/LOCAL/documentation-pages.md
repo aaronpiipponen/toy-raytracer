@@ -1,0 +1,1 @@
+The toy raytracer's documentation is `README.md` and `docs/requirements.md`. A phase that changes the command line updates the usage in `README.md`; no other page set, index, screenshot or report exists.

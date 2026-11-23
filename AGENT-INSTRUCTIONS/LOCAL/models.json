@@ -1,0 +1,17 @@
+{
+  "_comment": "Every role of the toy project runs DeepSeek V4.1 Flash on the low variant.",
+  "opencode": {
+    "seam-scout": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "invariant-reviewer": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "phase-spec-auditor": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "phase-implementation-reviewer": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "ops-scout": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "phase-advancer": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "phase-implementer": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "document-writer": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "comment-writer": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "report-writer": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "coordinator": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "conflict-investigator": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" }
+  }
+}
