@@ -193,8 +193,12 @@ path.
     `127 127 127\n`.
 - Changed existing tests, no new functions:
   - `src/main.rs` - `the_center_pixel_shows_the_sphere_facing_the_camera` is renamed to
-    `the_center_pixel_shows_the_diffuse_sphere` and asserts the centre pixel after `render` has its
-    largest channel on red and that channel above 0.1, because the centre sphere is now diffuse.
+    `the_center_pixel_shows_the_diffuse_sphere`. It asserts the centre pixel after `render` has red
+    as its largest channel and red above 0.1, because the centre sphere is a red-brown diffuse
+    material: each bounce multiplies blue by at most 0.3 and red by at least 0.5 of a sky value of
+    0.5 or a ground value of 0.8, so red dominates unless the ray uses the bounce limit. If that
+    assertion fails for the chosen seed, the bounce loop is wrong: report the value and fix the
+    loop, never weaken the assertion.
   - `src/main.rs` - `the_top_row_is_sky` stays as written and still holds; the top row misses the
     scene and the sky comparison survives gamma.
   - `src/sphere.rs` - `a_ray_through_the_center_hits_the_near_surface` and
