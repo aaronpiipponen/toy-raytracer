@@ -17,7 +17,7 @@ impl Aabb {
         Aabb { min, max }
     }
 
-    /// Return whether the ray meets the box with `t` in `t_min..t_max`.
+    /// Return whether the ray meets the box with `t` in `t_min..=t_max`.
     pub fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> bool {
         let mut t_near = t_min;
         let mut t_far = t_max;

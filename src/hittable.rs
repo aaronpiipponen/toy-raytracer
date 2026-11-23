@@ -22,8 +22,8 @@ pub struct HitRecord {
 }
 
 impl HitRecord {
-    /// Return a hit at distance `t` and `point`, with texture coordinates `(u, v)` and a normal
-    /// facing `ray`. `outward_normal` is unit length and points away from the surface.
+    /// Return a hit at distance `t` and position `point`, with texture coordinates `(u, v)` and a
+    /// normal facing `ray`. `outward_normal` is unit length and points away from the surface.
     pub fn new(t: f64, point: Vec3, u: f64, v: f64, ray: &Ray, outward_normal: Vec3) -> Self {
         let front_face = ray.direction.dot(outward_normal) < 0.0;
         let normal = if front_face {
@@ -46,7 +46,8 @@ pub trait Hittable {
     /// The nearest hit with `t` in `t_min..t_max`, if any.
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
 
-    /// The box used to skip objects the ray misses, or `None` when every ray must test the object.
+    /// Return the box used to skip objects the ray misses, or `None` when every ray must test the
+    /// object.
     fn bounding_box(&self) -> Option<Aabb>;
 }
 

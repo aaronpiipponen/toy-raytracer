@@ -41,7 +41,7 @@ impl Hittable for Plane {
     }
 }
 
-/// Two unit axes in the plane, perpendicular to each other and to `normal`.
+/// Return two unit axes in the plane, perpendicular to each other and to `normal`.
 fn plane_axes(normal: Vec3) -> (Vec3, Vec3) {
     // The helper is the world axis least aligned with the normal, so the two are never
     // parallel and the cross product is never zero.
