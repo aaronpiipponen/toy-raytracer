@@ -89,9 +89,11 @@ unnecessary are deleted, not kept beside the new path.
        }
    }
    ```
-   This is the only place that builds a `HitRecord` value. It takes no ray and no outward normal:
-   those arguments and the face-side fields belong to plan-b and arrive at the merge. It carries no
-   second constructor and no `Default`.
+   This is the only place that builds a `HitRecord` value. `normal` is the surface's outward
+   geometric normal on this branch, passed through unchanged: there is no ray argument, no
+   face-side decision and no flipping of the normal against the ray. Those arguments and the
+   `front_face`, `u` and `v` fields belong to plan-b and arrive at the merge. It carries no second
+   constructor and no `Default`.
 3. `src/hittable.rs`, `impl Hittable for HittableList` - change line 37 to
    `let limit = nearest.as_ref().map_or(t_max, |hit| hit.t);`, because `HitRecord` is no longer
    `Copy` and the value form would move the record out of the loop.
@@ -202,9 +204,11 @@ unnecessary are deleted, not kept beside the new path.
 - `Cargo.toml` gains no dependency. Use `std` only: `Rc`, `f64` maths. No `rand`, no threads.
 - Do not add `unsafe`. Rendering stays single-threaded.
 - Do not add a second `HitRecord` constructor and do not build a `HitRecord` with a struct literal
-  anywhere, in product code or in a test. `HitRecord::new` is the only construction.
-- Do not add `front_face`, `u`, `v`, a ray argument or an outward-normal argument to the constructor
-  or the record. Those belong to plan-b and arrive at the merge.
+  outside `HitRecord::new`, in product code or in a test. `HitRecord::new` is the only construction.
+- Do not add `front_face`, `u`, `v`, a ray argument, or an outward-normal argument with face
+  flipping to the constructor or the record. The constructor's `normal` is the outward geometric
+  normal passed through unchanged. The face-side arguments and fields belong to plan-b and arrive
+  at the merge.
 - Do not keep the record `Copy` or add `Debug` as a `Material` supertrait. `Rc<dyn Material>` on the
   record is the agreed contract, so `HitRecord` is `Clone` only and `HittableList::hit` borrows it.
 - Do not store `&dyn Material` or a boxed material; shared materials are `Rc<dyn Material>` and
