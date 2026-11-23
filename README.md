@@ -1,8 +1,6 @@
 # toy-raytracer
 
-A small, dependency-free Rust raytracer. It is the test project for a parallel plan workflow: three
-plans (materials, geometry, output) start from this state on their own branches and run at the
-same time.
+A small, dependency-free Rust raytracer that renders one fixed scene.
 
 ```sh
 cargo run > image.ppm
