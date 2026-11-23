@@ -4,6 +4,7 @@ use crate::hittable::{HitRecord, Hittable};
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
+/// A triangle from three vertices, in the order that sets its outward normal.
 pub struct Triangle {
     pub a: Vec3,
     pub b: Vec3,
@@ -11,6 +12,8 @@ pub struct Triangle {
 }
 
 impl Triangle {
+    /// Create a triangle with vertices `a`, `b` and `c`.
+    /// The vertex order sets the outward normal that decides the face side.
     pub fn new(a: Vec3, b: Vec3, c: Vec3) -> Self {
         Triangle { a, b, c }
     }

@@ -4,13 +4,15 @@ use crate::hittable::{HitRecord, Hittable};
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
+/// An infinite plane through a point, with a unit normal.
 pub struct Plane {
     pub point: Vec3,
     pub normal: Vec3,
 }
 
 impl Plane {
-    /// A plane through `point` with `normal`; `normal` is unit length.
+    /// Create a plane through `point` with `normal`.
+    /// `normal` is unit length.
     pub fn new(point: Vec3, normal: Vec3) -> Self {
         Plane { point, normal }
     }
