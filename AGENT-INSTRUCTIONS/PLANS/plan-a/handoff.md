@@ -2,17 +2,17 @@
 
 ## Next action
 
-Run `REVIEW AND ADVANCE` for A2 at `d079bb0`; on advancement take its next-phase handoff and run the
-acceptance check before A3 (samples per pixel).
+Implement A3 from `phases/A3-samples-per-pixel.md`; on its receipt run `REVIEW AND ADVANCE` for A3,
+then Z1 (closing survey).
 
 ## Current state
 
-A1r done (`b7af7f8`). A2 implemented and committed (`b7af7f8..d079bb0`): glass material, glass
-sphere, three tests, 11 tests green, rendered image observed, one review pass with no problems, user
-test not required. A1 `not applicable`. A3 and Z1 planned.
+A1r and A2 done (`b7af7f8`, `d079bb0`). A3 active and detailed (passed the orchestrator acceptance
+check): `SAMPLES = 16`, `render(width, height, samples)` averaging jittered rays from the one seeded
+generator, one new exact-average test, two test calls adapted. Z1 remains planned.
 
 Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
-Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
+Work kind: product work (A3 `standard`, Z1 `minimal`).
 
 ## Learned rules
 
