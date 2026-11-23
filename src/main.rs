@@ -21,6 +21,7 @@ use vec3::{Colour, Vec3};
 
 const WIDTH: usize = 200;
 const HEIGHT: usize = 100;
+const SAMPLES: usize = 16;
 const MAX_BOUNCES: usize = 50;
 const RNG_SEED: u64 = 2024;
 
@@ -71,17 +72,21 @@ fn scene() -> HittableList {
     world
 }
 
-/// Every pixel's colour, row by row from the top.
-fn render(width: usize, height: usize) -> Vec<Colour> {
+/// Every pixel's colour averaged over `samples` jittered rays, row by row from the top.
+fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
     let world = scene();
     let camera = Camera::new(width as f64 / height as f64);
     let mut rng = Rng::new(RNG_SEED);
     let mut pixels = Vec::with_capacity(width * height);
     for row in (0..height).rev() {
         for column in 0..width {
-            let u = column as f64 / (width - 1) as f64;
-            let v = row as f64 / (height - 1) as f64;
-            pixels.push(ray_colour(camera.ray(u, v), &world, &mut rng));
+            let mut total = Colour::new(0.0, 0.0, 0.0);
+            for _ in 0..samples {
+                let u = (column as f64 + rng.next_f64()) / width as f64;
+                let v = (row as f64 + rng.next_f64()) / height as f64;
+                total = total + ray_colour(camera.ray(u, v), &world, &mut rng);
+            }
+            pixels.push(total / samples as f64);
         }
     }
     pixels
@@ -111,7 +116,7 @@ fn write_ppm(
 }
 
 fn main() -> io::Result<()> {
-    let pixels = render(WIDTH, HEIGHT);
+    let pixels = render(WIDTH, HEIGHT, SAMPLES);
     write_ppm(&mut io::stdout().lock(), WIDTH, HEIGHT, &pixels)
 }
 
@@ -121,7 +126,7 @@ mod tests {
 
     #[test]
     fn the_center_pixel_shows_the_diffuse_sphere() {
-        let pixels = render(WIDTH, HEIGHT);
+        let pixels = render(WIDTH, HEIGHT, 1);
         let center = pixels[(HEIGHT / 2) * WIDTH + WIDTH / 2];
         assert!(
             center.x > center.y && center.x > center.z && center.x > 0.1,
@@ -131,8 +136,27 @@ mod tests {
 
     #[test]
     fn the_top_row_is_sky() {
-        let pixels = render(WIDTH, HEIGHT);
+        let pixels = render(WIDTH, HEIGHT, 1);
         assert!(pixels[0].z > pixels[0].x, "the sky is bluer than it is red");
+    }
+
+    #[test]
+    fn a_pixel_averages_four_jittered_samples() {
+        let world = scene();
+        let camera = Camera::new(1.0);
+        let mut rng = Rng::new(RNG_SEED);
+        let mut total = Colour::new(0.0, 0.0, 0.0);
+        for _ in 0..4 {
+            let u = rng.next_f64();
+            let v = rng.next_f64();
+            total = total + ray_colour(camera.ray(u, v), &world, &mut rng);
+        }
+        let expected = total / 4.0;
+        let actual = render(1, 1, 4)[0];
+        assert_eq!(
+            actual, expected,
+            "the pixel is the mean of its four jittered samples"
+        );
     }
 
     #[test]
