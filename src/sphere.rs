@@ -1,5 +1,7 @@
 //! Spheres.
 
+use std::f64::consts::PI;
+
 use crate::hittable::{HitRecord, Hittable};
 use crate::ray::Ray;
 use crate::vec3::Vec3;
@@ -34,11 +36,12 @@ impl Hittable for Sphere {
             }
         }
         let point = ray.at(t);
-        Some(HitRecord {
-            t,
-            point,
-            normal: (point - self.center) / self.radius,
-        })
+        let outward_normal = (point - self.center) / self.radius;
+        let theta = (-outward_normal.y).acos();
+        let phi = (-outward_normal.z).atan2(outward_normal.x) + PI;
+        let u = phi / (2.0 * PI);
+        let v = theta / PI;
+        Some(HitRecord::new(t, point, outward_normal, ray, u, v))
     }
 }
 
@@ -62,5 +65,28 @@ mod tests {
         let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
         let ray = Ray::new(Vec3::new(1.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         assert!(sphere.hit(&ray, 0.001, f64::INFINITY).is_none());
+    }
+
+    #[test]
+    fn a_ray_inside_the_sphere_hits_the_back_face_with_the_normal_against_it() {
+        let sphere = Sphere::new(Vec3::new(0.0, 0.0, 0.0), 0.5);
+        let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, 1.0));
+        let hit = sphere
+            .hit(&ray, 0.001, f64::INFINITY)
+            .expect("the ray hits");
+        assert!((hit.t - 0.5).abs() < 1e-9);
+        assert!(!hit.front_face);
+        assert_eq!(hit.normal, Vec3::new(0.0, 0.0, -1.0));
+    }
+
+    #[test]
+    fn a_sphere_hit_reports_latitude_and_longitude_texture_coordinates() {
+        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
+        let hit = sphere
+            .hit(&ray, 0.001, f64::INFINITY)
+            .expect("the ray hits");
+        assert!((hit.u - 0.25).abs() < 1e-9);
+        assert!((hit.v - 0.5).abs() < 1e-9);
     }
 }
