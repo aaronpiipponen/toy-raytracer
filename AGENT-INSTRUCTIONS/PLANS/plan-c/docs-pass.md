@@ -8,3 +8,7 @@ once it is resolved.
   each departure from the guide with its reason. The workspace names no logo, badges,
   published pages or screenshot capture scripts for this repository, so the guide's header and image
   elements have no sources here.
+- `README.md` never states that an unknown option or a bad value prints the usage line and exits
+  non-zero. Add one sentence at the release.
+- The repository has no licence file and no licence section, by the owner's decision. The release
+  records that departure from the README guide instead of adding one.
