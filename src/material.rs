@@ -39,7 +39,8 @@ pub struct Metal {
 }
 
 impl Metal {
-    /// A metal material that attenuates by `albedo` and blurs its reflection by `fuzz` in `0.0..=1.0`.
+    /// A metal material that attenuates by `albedo` and blurs its reflection by `fuzz` in
+    /// `0.0..=1.0`.
     pub fn new(albedo: Colour, fuzz: f64) -> Self {
         Metal { albedo, fuzz }
     }
