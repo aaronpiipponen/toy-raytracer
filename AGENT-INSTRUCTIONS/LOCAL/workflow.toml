@@ -23,7 +23,8 @@ allow = ["cat *", "ls *", "head *", "tail *", "wc *", "grep *", "sed -n *", "git
 
 [shell.docs]
 allow = ["cat *", "ls *", "head *", "tail *", "wc *", "grep *", "sed -n *", "git status *",
-         "git log *", "git show *", "git diff *", "git grep *"]
+         "git log *", "git show *", "git diff *", "git grep *",
+         "/tmp/opencode/bin/render-svg *", "xmllint --noout *"]
 
 [shell.comments]
 allow = ["cat *", "ls *", "head *", "tail *", "grep *", "sed -n *", "git status *", "git log *",
