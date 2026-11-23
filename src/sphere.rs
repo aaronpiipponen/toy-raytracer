@@ -1,17 +1,25 @@
 //! Spheres.
 
+use std::rc::Rc;
+
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f64,
+    pub material: Rc<dyn Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f64) -> Self {
-        Sphere { center, radius }
+    pub fn new(center: Vec3, radius: f64, material: Rc<dyn Material>) -> Self {
+        Sphere {
+            center,
+            radius,
+            material,
+        }
     }
 }
 
@@ -34,21 +42,27 @@ impl Hittable for Sphere {
             }
         }
         let point = ray.at(t);
-        Some(HitRecord {
+        Some(HitRecord::new(
             t,
             point,
-            normal: (point - self.center) / self.radius,
-        })
+            (point - self.center) / self.radius,
+            Rc::clone(&self.material),
+        ))
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::material::Lambertian;
 
     #[test]
     fn a_ray_through_the_center_hits_the_near_surface() {
-        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let sphere = Sphere::new(
+            Vec3::new(0.0, 0.0, -2.0),
+            0.5,
+            Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))),
+        );
         let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         let hit = sphere
             .hit(&ray, 0.001, f64::INFINITY)
@@ -59,7 +73,11 @@ mod tests {
 
     #[test]
     fn a_ray_beside_the_sphere_misses() {
-        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let sphere = Sphere::new(
+            Vec3::new(0.0, 0.0, -2.0),
+            0.5,
+            Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))),
+        );
         let ray = Ray::new(Vec3::new(1.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         assert!(sphere.hit(&ray, 0.001, f64::INFINITY).is_none());
     }

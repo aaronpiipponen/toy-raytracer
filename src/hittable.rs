@@ -1,16 +1,32 @@
 //! Anything a ray can hit, and the record of where it hit.
 
+use std::rc::Rc;
+
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
-/// Where a ray hit a surface: the distance along the ray, the point and the outward normal.
-#[derive(Clone, Copy, Debug)]
+/// Where a ray hit a surface: the distance along the ray, the point, the outward normal and the
+/// material of the object hit.
+#[derive(Clone)]
 pub struct HitRecord {
     pub t: f64,
-    // The origin of the bounce rays the materials plan adds.
-    #[allow(dead_code)]
     pub point: Vec3,
     pub normal: Vec3,
+    pub material: Rc<dyn Material>,
+}
+
+impl HitRecord {
+    /// Return a hit at distance `t` and `point`, with the outward `normal` and the material of the
+    /// object hit.
+    pub fn new(t: f64, point: Vec3, normal: Vec3, material: Rc<dyn Material>) -> Self {
+        HitRecord {
+            t,
+            point,
+            normal,
+            material,
+        }
+    }
 }
 
 pub trait Hittable {
@@ -34,7 +50,7 @@ impl Hittable for HittableList {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let mut nearest: Option<HitRecord> = None;
         for object in &self.objects {
-            let limit = nearest.map_or(t_max, |hit| hit.t);
+            let limit = nearest.as_ref().map_or(t_max, |hit| hit.t);
             if let Some(hit) = object.hit(ray, t_min, limit) {
                 nearest = Some(hit);
             }
