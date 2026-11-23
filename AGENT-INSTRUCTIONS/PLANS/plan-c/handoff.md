@@ -2,15 +2,15 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for phase C3 with the implementer's
-receipt.
+Run the Z1 closing survey: dispatch four read-only `ops-scout` area scouts in parallel, then one
+cross-check scout, then write `benchmarks/survey-2026-11-23.md` and report the user-review list.
 
 ## Current state
 
-C3 implementation is at tested head `525196b` (base `928af8e`), review returned no problem, fast and
-rendered-image gates passed, the image is byte-identical to the base. Completion, compression to
-`done/` and promotion of Z1 (closing survey and user acceptance) belong to the advancer. The release
-item list is `AGENT-INSTRUCTIONS/PLANS/plan-c/docs-pass.md`.
+C1, C2 and C3 are done. Z1 (closing survey and user acceptance) is detailed in
+`phases/Z1-closing-survey.md` and passed the orchestrator acceptance check; I execute it myself. The
+code head is `525196b`. Findings are reported to the user un-fixed. The release item list is
+`AGENT-INSTRUCTIONS/PLANS/plan-c/docs-pass.md`.
 
 ## Learned rules
 
