@@ -100,8 +100,8 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
    - the hard invariants: `Cargo.toml` has no dependency, all randomness comes from the seeded
      `src/rng.rs`, `src/` uses no `unsafe` and no thread type, and two identical renders write
      identical bytes;
-   - the test budget: eight functions added across B1, B2 and B3, at most three per phase, one
-     changed or deleted function none;
+   - the test budget: eight functions added across B1, B2 and B3, at most three per phase, and no
+     changed or deleted function;
    - documentation accuracy: the repository map names every module and no permanent document or code
      comment names a plan.
 6. Render the scene once for the comparison and the reproducibility check, from `~/.cargo/bin/cargo`

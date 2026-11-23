@@ -17,7 +17,7 @@
 | C1 | PNG writer | done | standard | - | `done/C1-png-writer.md` | the image can be written as a valid PNG | gates green, the PNG opens |
 | C2 | Command line | done | standard | C1 | `done/C2-command-line.md` | size, samples, output path and format come from options | gates green, a bad option prints usage |
 | C3 | Progress line | done | standard | C2 | `done/C3-progress-line.md` | rendering shows its progress on standard error | gates green |
-| Z1 | Closing survey and user acceptance | active | minimal | C1 + C2 + C3 | `phases/Z1-closing-survey.md` | the user accepts the result | the user accepts |
+| Z1 | Closing survey and user acceptance | done | minimal | C1 + C2 + C3 | `done/Z1-closing-survey.md` | the user accepts the result | the user accepts |
 
 ## How to implement this plan
 
