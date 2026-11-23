@@ -4,7 +4,6 @@ mod camera;
 mod hittable;
 mod png;
 mod ray;
-// Seeded randomness.
 #[allow(dead_code)]
 mod rng;
 mod sphere;
@@ -41,8 +40,8 @@ fn scene() -> HittableList {
     world
 }
 
-/// Every pixel's colour, row by row from the top. A progress line on standard error reports the
-/// share of rows done.
+/// Return every pixel's colour, row by row from the top. A progress line on standard error reports
+/// the share of rows done.
 fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
     let world = scene();
     let camera = Camera::new(width as f64 / height as f64);
@@ -115,7 +114,9 @@ impl Default for Config {
 }
 
 impl Config {
-    /// Parse the command-line options, rejecting a missing value, a bad number and an unknown option.
+    /// Parse the command-line options, rejecting an unknown option, a missing value and a value
+    /// the option cannot take, including an output path whose extension names no format when
+    /// `--format` is absent.
     fn parse(args: impl Iterator<Item = String>) -> Result<Config, String> {
         let mut config = Config::default();
         let mut explicit_format: Option<Format> = None;
