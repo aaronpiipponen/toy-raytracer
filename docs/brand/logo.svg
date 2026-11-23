@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" role="img"
+     aria-labelledby="title desc" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <title id="title">toy-raytracer</title>
+  <desc id="desc">Three overlapping orbs in coral, steel and translucent cyan, with the wordmark toy-raytracer on the right.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#26313d"/>
+      <stop offset="1" stop-color="#161d26"/>
+    </linearGradient>
+    <radialGradient id="coral" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#ff9d7a"/>
+      <stop offset="0.6" stop-color="#e8654a"/>
+      <stop offset="1" stop-color="#a93f30"/>
+    </radialGradient>
+    <radialGradient id="steel" cx="0.32" cy="0.28" r="0.85">
+      <stop offset="0" stop-color="#eef4fa"/>
+      <stop offset="0.28" stop-color="#a9bacb"/>
+      <stop offset="0.7" stop-color="#5e7489"/>
+      <stop offset="1" stop-color="#2f3d4b"/>
+    </radialGradient>
+    <radialGradient id="glass" cx="0.4" cy="0.35" r="0.8">
+      <stop offset="0" stop-color="#bdf4ff" stop-opacity="0.95"/>
+      <stop offset="0.65" stop-color="#54c6e0" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#1f7d97" stop-opacity="0.75"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="640" height="160" rx="20" fill="url(#bg)"/>
+  <rect x="0.75" y="0.75" width="638.5" height="158.5" rx="19.25" fill="none" stroke="#33404d" stroke-width="1.5"/>
+
+  <circle cx="66" cy="88" r="30" fill="url(#coral)"/>
+  <circle cx="94" cy="64" r="25" fill="url(#steel)"/>
+  <path d="M 82 60 A 25 25 0 0 1 104 42" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" opacity="0.85"/>
+
+  <circle cx="102" cy="98" r="28" fill="url(#glass)"/>
+  <circle cx="102" cy="98" r="28" fill="none" stroke="#a9f0ff" stroke-width="2.5" opacity="0.9"/>
+  <path d="M 84 108 A 20 20 0 0 1 92 84" fill="none" stroke="#e8fbff" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  <path d="M 108 116 A 14 14 0 0 0 120 104" fill="none" stroke="#2f8ea6" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+
+  <text x="180" y="98" font-size="46" font-weight="600" letter-spacing="-0.6" fill="#ecf3fa">toy-raytracer</text>
+</svg>

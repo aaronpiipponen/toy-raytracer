@@ -1,4 +1,6 @@
-<h1 align="center">toy-raytracer</h1>
+<p align="center">
+  <img src="/docs/brand/logo.svg" alt="toy-raytracer" width="420">
+</p>
 
 <p align="center">
   A Rust raytracer that renders one fixed scene to a PNG or PPM image and declares no dependencies.
