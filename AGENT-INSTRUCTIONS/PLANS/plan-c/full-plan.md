@@ -14,7 +14,7 @@
 
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
-| C1 | PNG writer | active | standard | - | `phases/C1-png-writer.md` | the image can be written as a valid PNG | gates green, the PNG opens |
+| C1 | PNG writer | done | standard | - | `done/C1-png-writer.md` | the image can be written as a valid PNG | gates green, the PNG opens |
 | C2 | Command line | planned | standard | C1 | - | size, samples, output path and format come from options | gates green, a bad option prints usage |
 | C3 | Progress line | planned | minimal | C2 | - | rendering shows its progress on standard error | gates green |
 | Z1 | Closing survey and user acceptance | planned | minimal | C1 + C2 + C3 | - | the user accepts the result | the user accepts |
@@ -59,4 +59,5 @@ Render the scene, compare it with the requirements, and ask the user to accept.
 
 ## Carry-overs
 
-None.
+- C2: delete the plan-naming comments at `src/hittable.rs:10` and `src/vec3.rs:21` (frozen in
+  `done/C1-png-writer.md`), keeping their `#[allow(dead_code)]` attributes.
