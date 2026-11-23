@@ -1,7 +1,8 @@
-//! Render a fixed scene and write it to standard output as a PPM image.
+//! Render a fixed scene and write it as a PNG image.
 
 mod camera;
 mod hittable;
+mod png;
 mod ray;
 // Seeded randomness for the scattering and sampling the plans add.
 #[allow(dead_code)]
@@ -9,6 +10,7 @@ mod rng;
 mod sphere;
 mod vec3;
 
+use std::fs::File;
 use std::io::{self, Write};
 
 use camera::Camera;
@@ -55,6 +57,7 @@ fn to_byte(channel: f64) -> u8 {
     (255.999 * channel.clamp(0.0, 1.0)) as u8
 }
 
+#[allow(dead_code)]
 fn write_ppm(
     out: &mut impl Write,
     width: usize,
@@ -76,7 +79,12 @@ fn write_ppm(
 
 fn main() -> io::Result<()> {
     let pixels = render(WIDTH, HEIGHT);
-    write_ppm(&mut io::stdout().lock(), WIDTH, HEIGHT, &pixels)
+    let rgb: Vec<u8> = pixels
+        .iter()
+        .flat_map(|p| [to_byte(p.x), to_byte(p.y), to_byte(p.z)])
+        .collect();
+    let mut out = io::BufWriter::new(File::create("render.png")?);
+    png::write_png(&mut out, WIDTH, HEIGHT, &rgb)
 }
 
 #[cfg(test)]
