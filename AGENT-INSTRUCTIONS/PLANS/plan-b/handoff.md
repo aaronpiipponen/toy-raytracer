@@ -2,18 +2,19 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in REVIEW AND ADVANCE mode for B2r with the receipt below. It should
-complete B2r (compress to `done/`, flip the row) and promote B2 to `active`, confirming its phase
-file is current against the post-B2r code.
+Spawn `phase-implementer` with `phase_subagent` for the active phase B2.
 
 ## Current state
 
 - B1: `done` at `6eb43e09`.
-- B2r: implemented at `5204447`, pending review/advance. Receipt: base `6eb43e0`, head `5204447`;
-  build, test (6 passed), clippy, fmt and diff check pass; render byte-identical before/after; test
-  budget 0/0; review loop 1 round, no finding. User test: not required.
-- B2: `planned`, detailed and accepted at `phases/B2-planes-and-triangles.md`.
+- B2r: `done` at `5204447`; contract `done/B2r-shared-hit-record-resolution.md`.
+- B2: `active`, detailed and orchestrator-accepted at `phases/B2-planes-and-triangles.md`; not
+  implemented. Three new test functions; rendered-image gate compares before/after and probes one
+  triangle pixel.
 - B3, Z1: `planned`.
+- Out-of-scope observation: `AGENT-INSTRUCTIONS/LOCAL/project.md:5` already names `png.rs` and a
+  command line, which do not exist in this worktree; that is another plan's forward edit in the
+  shared workspace root, not ours to fix. B2's step 7 preserves every existing entry.
 - The coordinator pair `plan-a-A1+plan-b-B2` is RESOLVED and the channel is closed. Shared design:
   `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md`, including the seven merge hunks. plan-a's
   A1r passed the same check; plan-a resumes its own loop.
