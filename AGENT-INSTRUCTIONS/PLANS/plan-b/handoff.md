@@ -2,16 +2,16 @@
 
 ## Next action
 
-Spawn `phase-implementer` with `phase_subagent` for the active phase B2r. After its receipt, spawn
-`phase-advancer` in REVIEW AND ADVANCE mode for B2r, which must also produce DETAIL READY for B2 (its
-phase file is already detailed and accepted; it only needs to be current after B2r).
+Spawn a fresh `phase-advancer` in REVIEW AND ADVANCE mode for B2r with the receipt below. It should
+complete B2r (compress to `done/`, flip the row) and promote B2 to `active`, confirming its phase
+file is current against the post-B2r code.
 
 ## Current state
 
 - B1: `done` at `6eb43e09`.
-- B2r: `active`, detailed and accepted at `phases/B2r-shared-hit-record-resolution.md`. One line:
-  `let limit = nearest.as_ref().map_or(t_max, |hit| hit.t);`. Gate minimal, zero new tests, no
-  conditional gate (output cannot change). Not implemented.
+- B2r: implemented at `5204447`, pending review/advance. Receipt: base `6eb43e0`, head `5204447`;
+  build, test (6 passed), clippy, fmt and diff check pass; render byte-identical before/after; test
+  budget 0/0; review loop 1 round, no finding. User test: not required.
 - B2: `planned`, detailed and accepted at `phases/B2-planes-and-triangles.md`.
 - B3, Z1: `planned`.
 - The coordinator pair `plan-a-A1+plan-b-B2` is RESOLVED and the channel is closed. Shared design:
