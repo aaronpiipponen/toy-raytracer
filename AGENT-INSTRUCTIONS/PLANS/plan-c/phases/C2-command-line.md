@@ -197,7 +197,7 @@
 
 9. Carry-overs from `done/C1-png-writer.md` - delete the comment `// The origin of the bounce rays the materials plan adds.` at `src/hittable.rs:10` and the comment `// For the triangle normals the geometry plan adds.` at `src/vec3.rs:21`. Keep both `#[allow(dead_code)]` attributes. Delete the comment lines only and change nothing else in either file.
 
-10. Docs - no page edit. `README.md` stays accurate because the default output is still `render.png` and `cargo run` still writes it. `docs/requirements.md` item 12 already states every option, default and the usage behavior. `AGENT-INSTRUCTIONS/LOCAL/project.md` already names the command line in its `main.rs` description. `AGENT-INSTRUCTIONS/LOCAL/gates.md` already holds the option-driven rendered-image command, which works after this phase. Read all four and leave them as written; report in the receipt that they are unchanged and accurate.
+10. Docs - no page edit. `README.md` lines 1 to 12 name only the product, the run commands and `render.png`, and never the image size, so the 400 by 200 default leaves them accurate; the default output is still `render.png` and `cargo run` still writes it. `docs/requirements.md` item 12 already states every option, default and the usage behavior. `AGENT-INSTRUCTIONS/LOCAL/project.md` already names the command line in its `main.rs` description. `AGENT-INSTRUCTIONS/LOCAL/gates.md` already holds the option-driven rendered-image command, which works after this phase. Read all four and leave them as written; report in the receipt that they are unchanged and accurate.
 
 **Callers / wiring to update:**
 - `src/main.rs:81` - `main` calls `render(config.width, config.height, config.samples)` instead of `render(WIDTH, HEIGHT)`.
