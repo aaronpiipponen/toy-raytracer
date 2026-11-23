@@ -63,7 +63,7 @@ impl Hittable for HittableList {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let mut nearest: Option<HitRecord> = None;
         for object in &self.objects {
-            let limit = nearest.map_or(t_max, |hit| hit.t);
+            let limit = nearest.as_ref().map_or(t_max, |hit| hit.t);
             if let Some(hit) = object.hit(ray, t_min, limit) {
                 nearest = Some(hit);
             }
