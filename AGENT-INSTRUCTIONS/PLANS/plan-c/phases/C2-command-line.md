@@ -80,7 +80,7 @@
    impl Config {
        fn parse(args: impl Iterator<Item = String>) -> Result<Config, String> {
            let mut config = Config::default();
-           let mut format: Option<Format> = None;
+           let mut explicit_format: Option<Format> = None;
            let mut args = args;
            while let Some(arg) = args.next() {
                match arg.as_str() {
@@ -89,7 +89,7 @@
                    "--samples" => config.samples = parse_number(args.next(), "--samples")?,
                    "--output" => config.output = parse_value(args.next(), "--output")?,
                    "--format" => {
-                       format = Some(match args.next().as_deref() {
+                       explicit_format = Some(match args.next().as_deref() {
                            Some("png") => Format::Png,
                            Some("ppm") => Format::Ppm,
                            _ => return Err("--format takes png or ppm".to_string()),
@@ -107,7 +107,7 @@
            if config.samples < 1 {
                return Err("--samples must be at least 1".to_string());
            }
-           config.format = match format {
+           config.format = match explicit_format {
                Some(format) => format,
                None => match Path::new(&config.output).extension().and_then(|e| e.to_str()) {
                    Some("png") => Format::Png,
