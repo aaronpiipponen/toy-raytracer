@@ -2,24 +2,18 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` to complete Z1:
-
-`REVIEW AND ADVANCE: Review and advance phase Z1 of plan-b. Implementer verification receipt: not applicable; Z1 was executed by the orchestrator (ten read-only ops-scout areas plus one cross-check) and wrote AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/survey-2026-11-23.md; renders verified byte-identical, 20003 lines, header ok, lines 4/7441/10104 as recorded. Relevant implementer comments: none. User-specific test result: the user accepted the survey as it stands and directed that the two coverage findings (F9, F10) must NOT be fixed and no test is to be added; the findings stay recorded in the note.`
-
-After it returns, verify the status table shows the plan complete and report the outcome. The release
-follows and closes the plan; do not archive it.
+Plan-b's phase work is complete; the release follows and closes the plan. Nothing is running. Hand off
+to the release with: branch `plan-b`, code head `2b4e2b7`, every status row `done`, survey note
+`benchmarks/survey-2026-11-23.md` accepted by the user, and the two coverage findings (F9, F10)
+recorded but deliberately not fixed.
 
 ## Current state
 
-- B1 `done` `6eb43e09`; B2r `done` `5204447`; B2 `done` `a5c6665`; B3 `done` `2b4e2b7`.
-- Z1: `active`, survey complete, note written, **user accepted 2026-11-23 with no changes**. The user
-  explicitly declined the two coverage tests (F9 nearest-hit selection, F10 shape boxes); they stay
-  recorded in the note only. This is a settled user decision: no remediation unit, no new test.
-- Earlier stale plan statements corrected as bookkeeping (phase test count six, not eight; the
-  `full-plan.md` carry-over removed).
-- Renders: PPM kept at `/tmp/opencode/survey-a.ppm`, PNG copy at `/tmp/opencode/survey-a.png`.
-- Remaining work after Z1: the release, which updates documentation and closes the plan. This session
-  does not archive the plan.
+- B1 `6eb43e09`, B2r `5204447`, B2 `a5c6665`, B3 `2b4e2b7`; Z1 done (survey note + user acceptance).
+- Every `full-plan.md` row reads `done`; `phases/` is gone; `done/` holds the five frozen contracts.
+- The plan is not archived: closure belongs to the release.
+- Settled user decisions: accept the survey as it stands; do not add the F9/F10 coverage tests.
+- No `docs-pass.md` exists because this plan deferred no page work to the release.
 - Autonomous mode on; standing authorization for phase commits exists.
 
 ## Learned rules
