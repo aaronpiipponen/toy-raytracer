@@ -88,6 +88,28 @@ code to exist.
   fields, the derive is `Clone` only, and the single constructor takes plan-b's face-side arguments
   followed by the material.
 
+## Shared hunks the merge must reconcile
+
+Both resolution phases are checked against this list:
+
+1. **`HitRecord` shape.** Merged: `t`, `point`, `normal`, `front_face`, `u`, `v`, `material`;
+   `#[derive(Clone)]` only. plan-b brings `front_face`/`u`/`v`, plan-a brings `material`.
+2. **`HitRecord::new`.** Merged: `(t, point, u, v, ray, outward_normal, material)`, the only
+   construction, deriving the ray-facing normal internally. plan-a's third argument (its `normal`)
+   occupies the `outward_normal` slot, so its call sites gain the ray argument and drop their own
+   normal argument; plan-b's call sites keep theirs and gain the material.
+3. **`HittableList::hit`.** Both branches write the same `nearest.as_ref().map_or(t_max, |hit|
+   hit.t)`, so the hunk reconciles to identical content.
+4. **`#[allow(dead_code)]` markers on `HitRecord::point` and on `mod rng;`.** plan-a removes them
+   because its code reads both; plan-b's B2 removes only their comments and keeps the attributes.
+   Merged result: both attributes gone, both comments gone.
+5. **`Sphere::hit`.** plan-a passes the material; plan-b computes `(u, v)` from the outward normal.
+   Merged: one call passing both.
+6. **`src/main.rs` tests.** plan-a adapts them for materials and gamma; plan-b does not touch them.
+   Merged: plan-a's version, plus whatever plan-b's scene triangle needs.
+7. **`Vec3::cross`.** plan-b removes its `#[allow(dead_code)]` and plan-naming comment because the
+   triangle calls it; plan-a leaves the file alone. Merged: plan-b's version.
+
 ## Merge rule
 
 Neither branch keeps a parallel construction path or a second record type. At the merge into `main`

@@ -2,20 +2,15 @@
 
 ## Next action
 
-Await `DETAIL READY` from the phase-advancer detailing resolution phase A1r, then run the
-orchestrator acceptance check on `phases/A1r-*.md` and reply to the plan-b orchestrator with its
-path. The channel closes when plan-b's check of both resolution files passes; implementers stay
-held until `RESOLVED` arrives.
+Implement A1r from `phases/A1r-hit-record-constructor-and-materials.md`; on its receipt, run
+`REVIEW AND ADVANCE` for A1r, then continue with A2.
 
 ## Current state
 
-Pair plan-a-A1+plan-b-B2: held. Agreed design is `PLANS/shared/plan-a-A1+plan-b-B2.md` (plan-b
-leads). No commits move between branches and no branch is merged into another; plan-a writes its
-own side on branch `plan-a` and the releases merge both later. plan-a's A1r = its own
-`HitRecord::new` (t, point, normal, material last), `Clone` only, `as_ref()` in
-`HittableList::hit`, `ray_colour` scattering, sphere materials; no `front_face`, `u`, `v`, ray or
-outward-normal argument. No plane/triangle materials unit exists or is needed. A2, A3, Z1 remain
-planned.
+Pair plan-a-A1+plan-b-B2 resolved and the channel is closed. plan-a writes only its own side on
+branch `plan-a`; no cross-branch transfer, no branch merges another, and the releases merge both
+into main later by `PLANS/shared/plan-a-A1+plan-b-B2.md`. A1r is active and detailed (passed the
+orchestrator acceptance check). A1 is `not applicable` (carried by A1r). A2, A3 and Z1 are planned.
 
 Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
 Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
@@ -26,3 +21,5 @@ Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
   later exposes `--samples`.
 - No cross-branch code transfer and no branch merges another; a shared design only aligns what each
   side writes on its own branch, and the release merges both into main.
+- A resolution phase carries the held phase's work; the held row becomes `not applicable` rather
+  than staying as an empty planned phase.
