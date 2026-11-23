@@ -128,7 +128,7 @@
 - Do not clamp, validate or reject the refractive index; use it as given, like the metal fuzz value.
 - Do not reseed or re-create `Rng` inside the material; the generator arrives as an argument and is drawn once per refraction-capable bounce.
 - Do not implement samples per pixel, jitter, shadow rays, Russian roulette, textures, new shapes, bounding boxes, or any PNG, command-line or progress work.
-- Do not change the existing tests' assertions. The added glass sphere does not change the centre pixel or the top row.
+- Do not change the existing tests' assertions. The added glass sphere shifts the generator sequence for the pixels after it, so the centre pixel and the metal sphere's pixels change their exact colour and speckle while their materials and the assertions' outcome stay the same. The top row is computed before any glass pixel and keeps its value.
 - Do not touch `src/camera.rs`, `src/ray.rs`, `src/rng.rs`, `src/vec3.rs`, `src/hittable.rs` or `src/sphere.rs`. Keep `#[allow(dead_code)]` and its comment on `Vec3::cross`.
 - No comment or doc comment this phase writes or edits mentions a plan, a phase or the history of the code. Prose follows `AGENT-INSTRUCTIONS/BUILDING/DOCUMENTATION-STYLE-GUIDE.md`.
 - At the release merge, plan-b's record makes `normal` point against the ray and adds `front_face`; the merged material reads `hit.front_face` and that `normal` in place of this branch's local flip and dot test. Do not anticipate that merge here.
@@ -192,8 +192,9 @@
   ```
   Run it as `python3 /tmp/opencode/ppm2png.py /tmp/opencode/a2-render.ppm /tmp/opencode/a2-render.png`.
 - 3. Observe in the opened image: the blue-white gradient sky, the yellow-green ground, the matte
-  red-brown centre sphere and the grey metal sphere on the right are unchanged. A fourth sphere
-  sits to the left of the centre sphere. It is transparent: its interior shows the sky and the
+  red-brown centre sphere and the grey metal sphere on the right keep their materials and general
+  appearance. Their exact speckle and colour differ from A1r's because the scene and the generator
+  sequence changed. A fourth sphere sits to the left of the centre sphere. It is transparent: its interior shows the sky and the
   ground bent and shifted rather than a flat colour, and its rim is brighter or darker than its
   interior where total internal reflection turns the ray back. It does not look like a matte or
   metal surface.
