@@ -2,19 +2,15 @@
 
 ## Next action
 
-Run `REVIEW AND ADVANCE` for Z1 with the user's acceptance so the advancer compresses
-`phases/Z1-closing-survey-and-user-acceptance.md` into `done/Z1-closing-survey.md` and flips its row.
-Then report the completed plan; the release follows and closes/archives it.
+None. The plan's work is complete and the user accepted the closing survey; the release follows and
+closes and archives the plan. Do not archive it here.
 
 ## Current state
 
-The user accepted the closing survey (`benchmarks/survey-2026-11-23.md`) as it stands and scheduled
-no changes; findings stay recorded. All implementation phases are done (A1r, A2, A3); A1 is
-`not applicable`. Code head `dca633c`, worktree clean. Remove `/tmp/opencode/survey-a.png` and
-`survey-a.ppm` after their reply.
-
-Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
-Work kind: product work (Z1 `minimal`).
+Every status row is `done` or `not applicable`: A1r, A2, A3 and Z1 done, A1 `not applicable` (carried
+by A1r). Code head `dca633c`, worktree clean, branch `plan-a`. Survey note at
+`benchmarks/survey-2026-11-23.md` with 21 findings recorded and none scheduled, as the user directed.
+Scratch renders in `/tmp/opencode` removed.
 
 ## Learned rules
 
@@ -27,7 +23,7 @@ Work kind: product work (Z1 `minimal`).
 - A coordinator hold armed after an implementer has already started is not valid; resume that same
   implementer session rather than restarting the phase.
 - Render artifacts left in `/tmp/opencode` are reused by a phase's user test, never written into the
-  repository.
+  repository, and are removed once the test is accepted.
 - The closing survey is mine to run: parallel area scouts, one cross-check scout, then I write the
   dated note; the plan closes only on the user's acceptance.
 - Workspace rule: rendering tests check a few pixels of a small image, never a whole image
