@@ -197,7 +197,31 @@
 
 9. Carry-overs from `done/C1-png-writer.md` - delete the comment `// The origin of the bounce rays the materials plan adds.` at `src/hittable.rs:10` and the comment `// For the triangle normals the geometry plan adds.` at `src/vec3.rs:21`. Keep both `#[allow(dead_code)]` attributes. Delete the comment lines only and change nothing else in either file.
 
-10. Docs - no page edit. `README.md` lines 1 to 12 name only the product, the run commands and `render.png`, and never the image size, so the 400 by 200 default leaves them accurate; the default output is still `render.png` and `cargo run` still writes it. `docs/requirements.md` item 12 already states every option, default and the usage behavior. `AGENT-INSTRUCTIONS/LOCAL/project.md` already names the command line in its `main.rs` description. `AGENT-INSTRUCTIONS/LOCAL/gates.md` already holds the option-driven rendered-image command, which works after this phase. Read all four and leave them as written; report in the receipt that they are unchanged and accurate.
+10. `README.md` - update the run usage to the five options, because the command line changed. Keep the page's present shape: the title, the one-line summary, the command block, the short note and the requirements line, with no new section, header, badge or image. Follow `AGENT-INSTRUCTIONS/BUILDING/README-GUIDE.md` and the documentation style, and keep plan references out of the page. Write exactly this content:
+````markdown
+# toy-raytracer
+
+A small, dependency-free Rust raytracer that renders one fixed scene.
+
+```sh
+cargo run -- --width 400 --height 200 --samples 16 --output render.png --format png
+cargo test
+```
+
+The options are:
+
+- `--width N` sets the image width in pixels. The default is 400.
+- `--height N` sets the image height in pixels. The default is 200.
+- `--samples N` sets the samples per pixel. The default is 16.
+- `--output PATH` sets the output file. The default is `render.png`.
+- `--format png|ppm` sets the output format. Without it the format comes from the output file's extension.
+
+`cargo run` with no options writes `render.png` at 400 by 200 with 16 samples.
+
+`docs/requirements.md` states what the finished program does.
+````
+
+    The other three files stay as written: `docs/requirements.md` item 12 already states every option, default and the usage behavior, `AGENT-INSTRUCTIONS/LOCAL/project.md` already names the command line in its `main.rs` description, and `AGENT-INSTRUCTIONS/LOCAL/gates.md` already holds the option-driven rendered-image command, which works after this phase. Read those three and report in the receipt that they are unchanged and accurate. If a read finds a real staleness, surface it rather than inventing an edit.
 
 **Callers / wiring to update:**
 - `src/main.rs:81` - `main` calls `render(config.width, config.height, config.samples)` instead of `render(WIDTH, HEIGHT)`.
@@ -214,6 +238,7 @@
 **Touched files:**
 <!-- touched-files:start -->
 - `src/main.rs` - changed: module header names both formats, default size and sample constants, `Format`/`Config` and the hand parser, `render` takes and averages the sample count, `main` parses and dispatches PNG or PPM to the parsed path, `write_ppm` loses `#[allow(dead_code)]`, two tests adapted, three tests added.
+- `README.md` - changed: the run usage shows the five options with their defaults and the extension-derived format, in the page's existing shape.
 - `src/hittable.rs` - changed: one plan-naming comment deleted above `point`.
 - `src/vec3.rs` - changed: one plan-naming comment deleted above `cross`.
 - Adds: nothing (no dependency, no config key, no migration, no generated file).
@@ -229,7 +254,8 @@
 - Do not add a second render function, a second scene, or a `render_png`/`render_ppm` pair. `render` returns the colours and `main` picks the writer.
 - Do not mention plans, phases or future work in source comments, module headers, the README or test names. Comments state what the code does now.
 - Do not add `unsafe`, threads or seeded randomness.
-- Do not touch `docs/requirements.md`, `README.md`, `AGENT-INSTRUCTIONS/LOCAL/project.md` or `AGENT-INSTRUCTIONS/LOCAL/gates.md`; verify they stay accurate.
+- Do not touch `docs/requirements.md`, `AGENT-INSTRUCTIONS/LOCAL/project.md` or `AGENT-INSTRUCTIONS/LOCAL/gates.md`; read them and verify they stay accurate, and surface a real staleness instead of editing around it. `README.md` is the one documentation edit this phase makes, and only in step 10's usage block.
+- Do not restructure `README.md` into the full guide shape or add sections, badges, images or links it does not have. Do not mention a plan or a later phase on the page.
 
 **Tests:**
 - New: `src/main.rs` - `the_defaults_are_400_by_200_with_16_samples`: `Config::parse(std::iter::empty::<String>())` returns `Ok` with `width == 400`, `height == 200`, `samples == 16`, `output == "render.png"` and `format == Format::Png`. This pins the five requirement defaults and the extension-derived default format.
@@ -261,10 +287,11 @@
 - [ ] The module header in `src/main.rs` names both PNG and PPM.
 - [ ] Test budget respected (REPO-RULES §3a); the receipt reports 3 functions added, 0 deleted and 2 existing tests adapted.
 - [ ] Fast phase gate and the rendered-image conditional gate pass, including both formats and the usage exit.
-- [ ] `README.md`, `docs/requirements.md`, `AGENT-INSTRUCTIONS/LOCAL/project.md` and `AGENT-INSTRUCTIONS/LOCAL/gates.md` were read and stay accurate; no page refers to a plan.
+- [ ] `README.md` run usage shows the five options with the defaults 400 by 200, 16 samples, `render.png` and the extension-derived format, in the page's existing shape and with no plan reference.
+- [ ] `docs/requirements.md`, `AGENT-INSTRUCTIONS/LOCAL/project.md` and `AGENT-INSTRUCTIONS/LOCAL/gates.md` were read and stay accurate, and the receipt says so; no page refers to a plan.
 - [ ] Both carry-over comments are deleted and no comment names a plan or a later phase.
 - [ ] Safety commit.
-- [ ] Revision-bound verification receipt exists with the rendered-image observations.
+- [ ] Revision-bound verification receipt exists with the rendered-image observations, the 3 added and 0 deleted test functions with 2 existing tests adapted, the `README.md` usage update, and the three other documentation files read unchanged.
 - [ ] On passing evidence: compress this file into `done/C2-command-line.md` (frozen contract only) and flip the `full-plan.md` status row to `done`.
 
 **Exit:** `cargo run -- --width W --height H --samples S --output PATH --format png|ppm` renders the fixed scene at the given size and sample count and writes a PNG or a PPM to `PATH`; a bad option or value prints the usage line and exits non-zero; the defaults are 400 by 200, 16 samples and `render.png`.
