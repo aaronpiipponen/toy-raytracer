@@ -2,15 +2,15 @@
 
 ## Next action
 
-Spawn a fresh `phase-implementer` for phase C2 via `phase_subagent`.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for phase C2 with the implementer's
+receipt.
 
 ## Current state
 
-C1 is done (`done/C1-png-writer.md`). C2 is detailed in `phases/C2-command-line.md`, the README
-usage correction is in, and the whole document passed the orchestrator acceptance check. C2 adds the
-hand parser, the defaults, PNG/PPM dispatch, `render(width, height, samples)` averaging without
-jitter, three tests, two adapted tests, the README usage block and the two carry-over comment
-deletions.
+C2 implementation is at tested head `928af8e` (base `30f857f`), tree clean, one review with no
+finding, fast and rendered-image gates passed. Completion, compression to `done/` and promotion of
+C3 belong to the advancer. The implementer surfaced a wording mismatch in
+`AGENT-INSTRUCTIONS/LOCAL/gates.md` line 39 that the advancer should judge.
 
 ## Learned rules
 
