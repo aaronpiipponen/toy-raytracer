@@ -58,8 +58,8 @@
    - a user-review list of every finding that needs the user's decision, and every finding the cross-check marked `UNCLEAR`.
    Drop every finding the cross-check marks `WRONG`. Do not record a finding without `file:line` evidence.
 5. Check the requirements and the hard invariants in the note:
-   - requirement 11: the default and an explicit `.png` path both write a valid PNG through `src/png.rs`; a `.ppm` path writes P3 PPM through `write_ppm`;
-   - requirement 12: the five options and their defaults from `Config::default`, the extension-derived format, and the usage line with a non-zero exit on a bad option;
+   - requirement 11: cite the recorded evidence in `done/C1-png-writer.md` and `done/C2-command-line.md` that the default and an explicit `.png` path write a valid PNG through `src/png.rs` and that a `.ppm` path writes P3 PPM through `write_ppm`; C3 touches neither writer nor the option path, so do not rerun those checks;
+   - requirement 12: cite the recorded evidence in `done/C2-command-line.md` for the five options, their defaults from `Config::default`, the extension-derived format, and the usage line with a non-zero exit on a bad option; do not rerun those cases;
    - requirement 13: the standard-error progress line ends at `100%` with a newline;
    - requirement 14 and the fast gate: the receipt at `525196b` already reports `cargo build`, `cargo test` (10 passed), `cargo clippy -- -D warnings`, `cargo fmt --check` and `git diff --check`, so do not rerun them on the unchanged revision;
    - the hard invariants: `Cargo.toml` has no dependency, `src/rng.rs` supplies all seeded randomness and two identical runs write identical bytes, and `src/` uses no `unsafe` and no thread.
