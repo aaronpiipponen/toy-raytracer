@@ -313,7 +313,7 @@ and the phase deletes the stale plan-naming comments listed under carry-overs.
 
 **User test (acceptance):**
 - **Executor:** not required.
-- Not required - automated phase gates prove acceptance: the two unit tests cover the plane hit,
+- Not required - automated phase gates prove acceptance: the three unit tests cover the plane hit,
   the modulo texture coordinate, the barycentric texture coordinate and the triangle's miss path,
   and the rendered-image gate above proves the scene now holds a triangle at the expected pixels
   while the existing pixel tests keep the sphere and the sky in place.

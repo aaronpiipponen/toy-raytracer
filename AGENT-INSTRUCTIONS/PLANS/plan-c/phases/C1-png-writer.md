@@ -104,6 +104,12 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
 7. `AGENT-INSTRUCTIONS/LOCAL/project.md` - extend the repository map line in
    `## Project sources of truth` with `png.rs` (the PNG encoding). Load the `agent-instructions`
    skill before editing this file, because the edit is outside `PLANS/`.
+8. `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the rendered-image gate's interim sentence
+   (`Until the command-line phase lands, cargo run --release > /tmp/opencode/render.ppm instead.`)
+   becomes wrong here, because `main` writes `render.png` and nothing on standard output. Replace
+   that sentence with `cargo run --release`, then inspect `render.png`. The command with options
+   stays as it is for the command-line phase. Load the `agent-instructions` skill before this edit
+   too.
 
 **Callers / wiring to update:**
 - `src/main.rs:77` - `fn main` is the only caller of `write_ppm` and the only new caller of
@@ -124,6 +130,7 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
 - `src/main.rs` - changed: module list, module header, `main` writes `render.png`, `write_ppm` marked unused.
 - `README.md` - changed: the run example writes `render.png`.
 - `AGENT-INSTRUCTIONS/LOCAL/project.md` - changed: the repository map lists `png.rs`.
+- `AGENT-INSTRUCTIONS/LOCAL/gates.md` - changed: the rendered-image gate runs `cargo run --release`.
 - Adds: nothing.
 <!-- touched-files:end -->
 
@@ -210,8 +217,9 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
 - [ ] Named tests pass.
 - [ ] Test budget respected (REPO-RULES §3a); the receipt reports 2 functions added and 0 deleted.
 - [ ] Fast phase gate and the rendered-image conditional gate pass.
-- [ ] `README.md` states the run writes `render.png`, and the repository map in
-  `AGENT-INSTRUCTIONS/LOCAL/project.md` lists `png.rs`. No named page is stale and none refers to
+- [ ] `README.md` states the run writes `render.png`, the repository map in
+  `AGENT-INSTRUCTIONS/LOCAL/project.md` lists `png.rs`, and the interim rendered-image command in
+  `AGENT-INSTRUCTIONS/LOCAL/gates.md` matches the program. No named page is stale and none refers to
   a plan.
 - [ ] Safety commit.
 - [ ] Revision-bound verification receipt exists; the rendered-image gate has passing evidence on
