@@ -57,6 +57,7 @@ mod tests {
             .hit(&ray, 0.001, f64::INFINITY)
             .expect("the ray hits");
         assert!((hit.t - 1.5).abs() < 1e-9);
+        assert!(hit.front_face);
         assert_eq!(hit.normal, Vec3::new(0.0, 0.0, 1.0));
     }
 

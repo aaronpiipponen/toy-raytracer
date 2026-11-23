@@ -3,7 +3,6 @@
 mod camera;
 mod hittable;
 mod ray;
-// Seeded randomness for the scattering and sampling the plans add.
 #[allow(dead_code)]
 mod rng;
 mod sphere;
