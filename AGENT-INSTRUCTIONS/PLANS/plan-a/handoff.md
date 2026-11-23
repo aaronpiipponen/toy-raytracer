@@ -2,16 +2,14 @@
 
 ## Next action
 
-Implement A2 from `phases/A2-glass.md`; on its receipt run `REVIEW AND ADVANCE` for A2, then
-continue with A3.
+Run `REVIEW AND ADVANCE` for A2 at `d079bb0`; on advancement take its next-phase handoff and run the
+acceptance check before A3 (samples per pixel).
 
 ## Current state
 
-A1r done and compressed (`b7af7f8`, reviewed and advanced). A1 `not applicable`. A2 active and
-detailed (passed the orchestrator acceptance check). A3 (samples per pixel) and Z1 planned.
-Worktree clean on branch `plan-a`. The release merge reconciles `main`/`write_ppm`/`render`/
-`ray_colour` with the output plan and the face-side normal with the geometry plan; that is not
-phase work.
+A1r done (`b7af7f8`). A2 implemented and committed (`b7af7f8..d079bb0`): glass material, glass
+sphere, three tests, 11 tests green, rendered image observed, one review pass with no problems, user
+test not required. A1 `not applicable`. A3 and Z1 planned.
 
 Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
 Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
@@ -26,3 +24,5 @@ Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
   than staying as an empty planned phase.
 - A coordinator hold armed after an implementer has already started is not valid; resume that same
   implementer session rather than restarting the phase.
+- Render artifacts left in `/tmp/opencode` are reused by a phase's user test, never written into the
+  repository.
