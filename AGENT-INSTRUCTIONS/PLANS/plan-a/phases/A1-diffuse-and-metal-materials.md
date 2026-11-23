@@ -72,16 +72,18 @@ path.
      `Some((self.albedo, scattered))` otherwise.
    - private `fn reflect(direction: Vec3, normal: Vec3) -> Vec3` returning
      `direction - normal * (2.0 * direction.dot(normal))`.
-   - private `fn random_unit_vector(rng: &mut Rng) -> Vec3` drawing
-     `2.0 * rng.next_f64() - 1.0` for each component into a `Vec3`, repeating while
-     `candidate.length() >= 1.0` and `candidate.length() > 0.0` cannot both matter, so the loop
-     condition is exactly `candidate.length() >= 1.0` (a rejected sample redraws three values), and
-     returning `candidate.unit()`. The loop uses `Vec3::length`, which exists.
+   - private `fn random_unit_vector(rng: &mut Rng) -> Vec3` looping until it draws a point inside
+     the unit ball and returns that point's `unit()`: each attempt builds
+     `Vec3::new(2.0 * rng.next_f64() - 1.0, 2.0 * rng.next_f64() - 1.0, 2.0 * rng.next_f64() - 1.0)`
+     and accepts it when `candidate.length() < 1.0`. A rejected attempt draws three values. The
+     `length` and `unit` methods already exist on `Vec3`.
    - `#[cfg(test)] mod tests` with the two material tests listed under **Tests**.
 2. `src/hittable.rs` - `use std::rc::Rc;` plus `use crate::material::Material;`.
-   `pub struct HitRecord` changes to `#[derive(Clone, Debug)]`, keeps `t`, `point` and `normal`, and
-   gains `pub material: Rc<dyn Material>`. Delete the `#[allow(dead_code)]` above `point`. In
-   `impl Hittable for HittableList`, `hit` changes line 37 to
+   `pub struct HitRecord` changes from `#[derive(Clone, Copy, Debug)]` to `#[derive(Clone)]`, keeps
+   `t`, `point` and `normal`, and gains `pub material: Rc<dyn Material>`. `Debug` is dropped because
+   `dyn Material` does not implement it, and `Copy` is dropped because a shared material cannot be
+   copied. Delete the two-line `#[allow(dead_code)]` and its comment above `point`, which the
+   material code reads. In `impl Hittable for HittableList`, `hit` changes line 37 to
    `let limit = nearest.as_ref().map_or(t_max, |hit| hit.t);`, because `HitRecord` is no longer
    `Copy`.
 3. `src/sphere.rs` - add `use std::rc::Rc;`, `use crate::material::Material;`.
@@ -91,8 +93,10 @@ path.
    `HitRecord` gains `material: Rc::clone(&self.material)`. Both existing tests pass a material of
    their own (see **Tests**).
 4. `src/main.rs` - `mod material;` in the module list, then `mod rng;` without its
-   `#[allow(dead_code)]`. Imports gain `use std::rc::Rc;`,
-   `use material::{Lambertian, Metal};` and `use rng::Rng;` (keep the existing imports).
+   `#[allow(dead_code)]`. Delete the comment line above `mod rng;` (`// Seeded randomness for the
+   scattering and sampling the plans add.`), because code carries no plan reference. Imports gain
+   `use std::rc::Rc;`, `use material::{Lambertian, Metal};` and `use rng::Rng;` (keep the existing
+   imports).
 5. `src/main.rs` - add `const MAX_BOUNCES: usize = 50;` and `const RNG_SEED: u64 = 2024;`.
    `ray_colour` changes from `fn ray_colour(ray: &Ray, world: &dyn Hittable) -> Colour` to
    `fn ray_colour(ray: Ray, world: &dyn Hittable, rng: &mut Rng) -> Colour`. Its body becomes:
