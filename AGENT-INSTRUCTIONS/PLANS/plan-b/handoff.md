@@ -21,9 +21,11 @@ A1r), call `channel_close` naming plan-a's resolution phase file, and continue w
 - Shared design written: `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md`. Agreed with the
   plan-a orchestrator: `Clone` only (no `Copy`, no `Debug`), material last in `HitRecord::new`, one
   constructor, `as_ref` in the list, plan-a owns the material field/parameter/call sites.
-- The plan-a orchestrator agreed to take B1 across now, not B2, and to add a small later unit for
-  materials on planes and triangles. **Coordinator approval for the B1 cross-branch hand-off is
-  still required** (tip `6eb43e09`); I cannot authorise it myself. The user has been told.
+- The plan-a orchestrator owns A1r on plan-a's branch. **No cross-branch transfer exists**: commits
+  never move between plan branches and no plan branch is merged, rebased or cherry-picked onto
+  another; the releases merge both into `main` and resolve textual conflicts by the shared design.
+  plan-a's A1r writes its own `HitRecord::new(t, point, normal, material)` with no `front_face`/`u`/`v`,
+  plus the same `as_ref()` line in `HittableList::hit`.
 - Autonomous mode on; standing authorization for phase commits exists. No open user decision.
 
 ## Learned rules
@@ -37,4 +39,6 @@ A1r), call `channel_close` naming plan-a's resolution phase file, and continue w
   phase that already touches the file; keep it to the comment lines only.
 - A `Rc<dyn Trait>` field kills `Copy` and `Debug` on a derived struct; do not add `Debug` as a trait
   supertrait just to keep a derive when no reader prints the value.
-- Never offer an uncommitted tip as a cross-branch hand-off; state exactly which commit is available.
+- Commits never move between plan branches; parallel plans each implement their own side on their own
+  branch and the release merges both into `main`, reconciling textual conflicts by the shared design.
+  Never offer a cross-branch tip as a hand-off.
