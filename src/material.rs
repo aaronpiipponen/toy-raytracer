@@ -56,8 +56,54 @@ impl Material for Metal {
     }
 }
 
+/// A transparent material that refracts by its refractive index.
+pub struct Dielectric {
+    pub refractive_index: f64,
+}
+
+impl Dielectric {
+    /// A transparent material with refractive index `refractive_index`.
+    pub fn new(refractive_index: f64) -> Self {
+        Dielectric { refractive_index }
+    }
+}
+
+impl Material for Dielectric {
+    fn scatter(&self, ray: &Ray, hit: &HitRecord, rng: &mut Rng) -> Option<(Colour, Ray)> {
+        let front_face = ray.direction.dot(hit.normal) < 0.0;
+        let normal = if front_face { hit.normal } else { -hit.normal };
+        let ratio = if front_face {
+            1.0 / self.refractive_index
+        } else {
+            self.refractive_index
+        };
+        let unit_direction = ray.direction.unit();
+        let cos_theta = (-unit_direction.dot(normal)).min(1.0);
+        let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
+        let direction = if ratio * sin_theta > 1.0 || schlick(cos_theta, ratio) > rng.next_f64() {
+            reflect(unit_direction, normal)
+        } else {
+            refract(unit_direction, normal, ratio)
+        };
+        Some((Colour::new(1.0, 1.0, 1.0), Ray::new(hit.point, direction)))
+    }
+}
+
 fn reflect(direction: Vec3, normal: Vec3) -> Vec3 {
     direction - normal * (2.0 * direction.dot(normal))
+}
+
+fn refract(direction: Vec3, normal: Vec3, ratio: f64) -> Vec3 {
+    let cos_theta = (-direction).dot(normal).min(1.0);
+    let perpendicular = (direction + normal * cos_theta) * ratio;
+    let parallel = normal * -(1.0 - perpendicular.dot(perpendicular)).max(0.0).sqrt();
+    perpendicular + parallel
+}
+
+fn schlick(cosine: f64, ratio: f64) -> f64 {
+    let r0 = (1.0 - ratio) / (1.0 + ratio);
+    let r0 = r0 * r0;
+    r0 + (1.0 - r0) * (1.0 - cosine).powi(5)
 }
 
 fn random_unit_vector(rng: &mut Rng) -> Vec3 {
@@ -111,5 +157,87 @@ mod tests {
         assert!(Metal::new(Vec3::new(0.8, 0.8, 0.8), 0.0)
             .scatter(&ray, &hit, &mut rng)
             .is_none());
+    }
+
+    #[test]
+    fn a_ray_entering_glass_bends_toward_the_normal() {
+        let hit = HitRecord::new(
+            0.0,
+            Vec3::new(0.0, 0.0, 0.0),
+            Vec3::new(0.0, 0.0, 1.0),
+            Rc::new(Dielectric::new(1.5)),
+        );
+        let ray = Ray::new(
+            Vec3::new(0.0, 0.0, 0.0),
+            Vec3::new(0.5, 0.0, -3.0f64.sqrt() / 2.0),
+        );
+        let mut rng = Rng::new(1);
+        let (attenuation, scattered) = Dielectric::new(1.5)
+            .scatter(&ray, &hit, &mut rng)
+            .expect("glass scatters");
+        assert_eq!(attenuation, Vec3::new(1.0, 1.0, 1.0));
+        let expected = Vec3::new(1.0 / 3.0, 0.0, -8.0f64.sqrt() / 3.0);
+        assert!(
+            (scattered.direction - expected).length() < 1e-9,
+            "the ray refracts toward the normal: {:?}",
+            scattered.direction
+        );
+    }
+
+    #[test]
+    fn a_ray_leaving_glass_past_the_critical_angle_reflects() {
+        let hit = HitRecord::new(
+            0.0,
+            Vec3::new(0.0, 0.0, 0.0),
+            Vec3::new(0.0, 0.0, 1.0),
+            Rc::new(Dielectric::new(1.5)),
+        );
+        let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(1.0, 0.0, 1.0));
+        let mut rng = Rng::new(1);
+        let (_, scattered) = Dielectric::new(1.5)
+            .scatter(&ray, &hit, &mut rng)
+            .expect("glass scatters");
+        let expected = Vec3::new(0.5f64.sqrt(), 0.0, -0.5f64.sqrt());
+        assert!(
+            (scattered.direction - expected).length() < 1e-9,
+            "total internal reflection sends the ray back: {:?}",
+            scattered.direction
+        );
+    }
+
+    #[test]
+    fn grazing_incidence_reflects_where_normal_incidence_refracts() {
+        let hit = HitRecord::new(
+            0.0,
+            Vec3::new(0.0, 0.0, 0.0),
+            Vec3::new(0.0, 0.0, 1.0),
+            Rc::new(Dielectric::new(1.5)),
+        );
+        let head_on = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
+        let mut rng = Rng::new(1);
+        let (_, scattered) = Dielectric::new(1.5)
+            .scatter(&head_on, &hit, &mut rng)
+            .expect("glass scatters");
+        let expected = Vec3::new(0.0, 0.0, -1.0);
+        assert!(
+            (scattered.direction - expected).length() < 1e-9,
+            "a head-on ray refracts straight through: {:?}",
+            scattered.direction
+        );
+
+        let grazing = Ray::new(
+            Vec3::new(0.0, 0.0, 0.0),
+            Vec3::new(85.0f64.to_radians().sin(), 0.0, -85.0f64.to_radians().cos()),
+        );
+        let mut rng = Rng::new(1);
+        let (_, scattered) = Dielectric::new(1.5)
+            .scatter(&grazing, &hit, &mut rng)
+            .expect("glass scatters");
+        let expected = Vec3::new(85.0f64.to_radians().sin(), 0.0, 85.0f64.to_radians().cos());
+        assert!(
+            (scattered.direction - expected).length() < 1e-9,
+            "a grazing ray reflects: {:?}",
+            scattered.direction
+        );
     }
 }
