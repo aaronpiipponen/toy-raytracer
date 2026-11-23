@@ -48,12 +48,12 @@
    - every finding carries `file:line` evidence and the class it belongs to;
    - an out-of-scope observation is reported with the evidence already in hand and is not investigated further;
    - the scout reads whatever context outside the area it needs to judge it, and no prompt limits it to the diff.
-3. After all four returns arrive, dispatch ONE further read-only `ops-scout` that receives every first-round finding and cross-checks each claim against the source, the documents and the done contracts. It marks each finding `CONFIRMED`, `WRONG` or `UNCLEAR` with evidence, and reports any finding the first round missed from the same evidence. Areas get no per-area checker.
+3. After all four returns arrive, dispatch ONE further read-only `ops-scout` that receives every first-round finding and cross-checks each claim against the source, the documents and the done contracts. It marks each finding `CONFIRMED`, `WRONG` or `UNCLEAR` with evidence. Areas get no per-area checker.
 4. The orchestrator writes `AGENT-INSTRUCTIONS/PLANS/plan-c/benchmarks/survey-2026-11-23.md` itself from the saved returns. No scout, implementer or other child writes it. The note contains, in this order:
    - the date `2026-11-23`, the plan scope, the four areas and the statement that no earlier survey note exists;
    - one row per real finding with an id, the finding class, `file:line` evidence, the impact and a recommendation;
    - the out-of-scope observations, kept separate from plan-c findings;
-   - the cross-check table with one verdict and its evidence per finding, and the missed findings it added;
+   - the cross-check table with one verdict and its evidence per finding;
    - the checks performed, recording the requirement comparison, the hard invariants, the rendered image, the test budget, the documentation accuracy and the `docs-pass.md` state;
    - a user-review list of every finding that needs the user's decision, and every finding the cross-check marked `UNCLEAR`.
    Drop every finding the cross-check marks `WRONG`. Do not record a finding without `file:line` evidence.
