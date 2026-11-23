@@ -205,8 +205,8 @@ and the phase deletes the stale plan-naming comments listed under carry-overs.
    comment `// Seeded randomness for the scattering and sampling the plans add.` at
    `src/main.rs:6`. Keep both `#[allow(dead_code)]` attributes. Delete the comment lines only.
 
-6. Tests - one new test module in each new file (step 7 gives the exact functions). Do not add a
-   test to `src/main.rs`, to `src/sphere.rs` or to any other module.
+6. Tests - one new test module in each new file, with the exact functions listed in the `Tests`
+   section below. Do not add a test to `src/main.rs`, to `src/sphere.rs` or to any other module.
 
 7. `AGENT-INSTRUCTIONS/LOCAL/project.md:5` - the repository map names every module of `src/`, so
    add the two new ones. Before:
@@ -305,9 +305,9 @@ and the phase deletes the stale plan-naming comments listed under carry-overs.
        report a difference, because the image gains the triangle.
     4. The PPM is `P3` text with three header lines followed by one pixel per line. Line 7441 is
        column 37 of row 37 counted from the top, which lies inside the triangle. `sed -n '7441p'
-       /tmp/opencode/render-after-triangle.ppm` must print `127 127 127`, the triangle's normal
-       colour `(0.5, 0.5, 0.5)` scaled to bytes. That pixel is sky before the change, so the two
-       files differ there.
+       /tmp/opencode/render-after-triangle.ppm` must print `127 127 255`, the triangle's normal
+       colour `(0.5, 0.5, 1.0)` from the `(normal + 1) * 0.5` shading scaled to bytes. That pixel
+       is sky (`182 211 255`) before the change, so the two files differ there.
   - Agent generation: not run; no file under `AGENT-INSTRUCTIONS/SUBAGENTS/` changes.
 - Slow gate (>2 minutes): none.
 
