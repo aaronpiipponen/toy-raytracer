@@ -2,7 +2,7 @@
 
 **Status:** active.
 **Depends on:** none.
-**Scope:** plan-b's half of `shared-plan-a+plan-b.md`. It adds `front_face`, `u` and `v` to `HitRecord`, adds the one `HitRecord::new` constructor that sets the normal against the ray, and fills `(u, v)` in `Sphere::hit` from latitude and longitude. It adds no material, no `Rc` and no change to `src/main.rs`; plan-a's A1r owns those, and the merged constructor gains `material` as its last parameter at merge. This phase supersedes plan row `B1`, which carries the same geometry scope and must not be detailed or implemented again; plan row `B1r` is the authoritative one.
+**Scope:** plan-b's half of `shared-plan-a+plan-b.md`. It adds `front_face`, `u` and `v` to `HitRecord`, adds the one `HitRecord::new` constructor that sets the normal against the ray, and fills `(u, v)` in `Sphere::hit` from latitude and longitude. It adds no material, no `Rc` and no change to `src/main.rs`; plan-a's A1r owns those, and the merged constructor gains `material` as its last parameter at merge. This phase executes plan row `B1`'s geometry scope as the pair resolution. Row `B1` stays planned and is re-detailed against the landed contract after this phase; it is not implemented from its current scoped text, and row `Z1`'s dependency on `B1` stays as written.
 **Gate level:** standard - the phase changes the shared record contract and the sphere hit, with no durable state, security or migration surface.
 **Simplicity statement:** there is one construction path, `HitRecord::new`, and every shape uses it. The helper does not validate `(u, v)`, does not clamp the normal and does not handle a degenerate ray. `front_face`, `u` and `v` carry `#[allow(dead_code)]` because the normal-colouring renderer does not read them, and the phase adds no reader to justify their use. No material, no second record and no texture mapping is built here.
 
@@ -99,6 +99,6 @@
 - [ ] `docs/requirements.md` and `README.md` were re-read and need no change; no docs page refers to a plan.
 - [ ] Safety commit.
 - [ ] Revision-bound verification receipt exists.
-- [ ] On passing evidence: compress this file into `done/B1r-face-side-and-texture-coordinates.md` (frozen contract only) and flip the `full-plan.md` status row to `done`.
+- [ ] On passing evidence: compress this file into `done/B1r-face-side-and-texture-coordinates.md` (frozen contract only) and flip the `full-plan.md` row `B1r` to `done`; row `B1` stays planned for re-detailing, not implementation.
 
 **Exit:** every sphere hit records its face side, a normal that points against the ray and `(u, v)` from latitude and longitude, built through the one `HitRecord::new` constructor, with the image unchanged.

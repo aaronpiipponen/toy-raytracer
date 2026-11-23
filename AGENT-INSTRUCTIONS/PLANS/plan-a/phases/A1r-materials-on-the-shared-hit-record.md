@@ -2,7 +2,7 @@
 
 **Status:** active.
 **Depends on:** none.
-**Scope:** plan-a's half of `shared-plan-a+plan-b.md`. It adds the `material` field to `HitRecord`, gives `Sphere` a material and puts it on the record, adds `src/material.rs` with the `Material` trait, a diffuse and a metal material, and replaces the normal-colouring loop in `src/main.rs` with the scatter loop and gamma 2 output. It does not add `front_face`, `u`, `v`, a `HitRecord` constructor, or any change to how the normal is computed; plan-b's B1r owns those. This phase supersedes plan row `A1`, which carries the same material scope and must not be detailed or implemented again; plan row `A1r` is the authoritative one.
+**Scope:** plan-a's half of `shared-plan-a+plan-b.md`. It adds the `material` field to `HitRecord`, gives `Sphere` a material and puts it on the record, adds `src/material.rs` with the `Material` trait, a diffuse and a metal material, and replaces the normal-colouring loop in `src/main.rs` with the scatter loop and gamma 2 output. It does not add `front_face`, `u`, `v`, a `HitRecord` constructor, or any change to how the normal is computed; plan-b's B1r owns those. This phase executes plan row `A1`'s material scope as the pair resolution. Row `A1` stays planned and is re-detailed against the landed contract after this phase; it is not implemented from its current scoped text.
 **Gate level:** standard - the phase changes runtime rendering behaviour across the record, the shape and the render loop, with no durable state, security or migration surface.
 **Simplicity statement:** the trait object is shared as `Rc<dyn Material>` with no generic parameter and no lifetime. The bounce limit is a fixed constant, the seed is a fixed constant, and a ray that reaches either is returned as produced, not retried. There is no path tracer accumulator, no sampling average, no clamping of material parameters and no second colouring path; the normal-colouring code is deleted, not kept beside the new loop. No legacy format and no defensive re-check is added.
 
@@ -30,7 +30,7 @@
 
 **Build plan:**
 1. `src/material.rs` - create the module with header `//! Materials: how a surface scatters the ray that hit it.` and these exact public items. Every public item carries a doc comment in the style guide's form; the wording below is the minimum:
-   - `pub trait Material` with `fn scatter(&self, ray: &Ray, hit: &HitRecord, rng: &mut Rng) -> Option<(Colour, Ray)>`; doc comment: "Scatter `ray` at a hit, returning the attenuation and the scattered ray, or nothing when the material absorbs the ray."
+   - `pub trait Material` with doc comment "A surface that scatters the ray that hits it." and method `fn scatter(&self, ray: &Ray, hit: &HitRecord, rng: &mut Rng) -> Option<(Colour, Ray)>` with its own doc comment "Scatter `ray` at a hit, returning the attenuation and the scattered ray, or nothing when the material absorbs the ray."
    - `pub struct Lambertian { pub albedo: Colour }` with doc comment "A diffuse surface that scatters in a random direction around the normal." and `pub fn new(albedo: Colour) -> Self` with doc comment "Build a diffuse material with the given albedo."; `impl Material for Lambertian` computes `let direction = hit.normal + random_in_unit_sphere(rng);` and returns `Some((self.albedo, Ray::new(hit.point, direction.unit())))`. The `ray` parameter is named `_ray`.
    - `pub struct Metal { pub albedo: Colour, pub fuzz: f64 }` with doc comment "A reflective surface, the reflection blurred by `fuzz` in 0..=1." and `pub fn new(albedo: Colour, fuzz: f64) -> Self` with doc comment "Build a metal material with the given albedo and fuzz factor."; `impl Material for Metal` computes `let unit = ray.direction.unit();`, `let reflected = unit - hit.normal * (2.0 * unit.dot(hit.normal));`, `let direction = reflected + random_in_unit_sphere(rng) * self.fuzz;`, and returns `Some((self.albedo, Ray::new(hit.point, direction)))` when `direction.dot(hit.normal) > 0.0`, otherwise `None`.
    - `fn random_in_unit_sphere(rng: &mut Rng) -> Vec3` draws three coordinates with `2.0 * rng.next_f64() - 1.0` in a loop and returns the first whose `dot` with itself is `< 1.0`.
@@ -119,6 +119,6 @@
 - [ ] `docs/requirements.md` and `README.md` were re-read and need no change; no docs page refers to a plan.
 - [ ] Safety commit.
 - [ ] Revision-bound verification receipt exists; the agent acceptance render passed steps 1 to 6 and the second render matched byte for byte.
-- [ ] On passing evidence: compress this file into `done/A1r-materials-on-the-shared-hit-record.md` (frozen contract only) and flip the `full-plan.md` status row to `done`; leave `A1` planned and superseded, not re-implemented.
+- [ ] On passing evidence: compress this file into `done/A1r-materials-on-the-shared-hit-record.md` (frozen contract only) and flip the `full-plan.md` row `A1r` to `done`; row `A1` stays planned for re-detailing, not implementation.
 
 **Exit:** every sphere and the ground carry a material, the record carries it without `Copy`, and the rendered image is the scatter loop with gamma 2, showing a red diffuse sphere, a yellow diffuse ground and a metal sphere.
