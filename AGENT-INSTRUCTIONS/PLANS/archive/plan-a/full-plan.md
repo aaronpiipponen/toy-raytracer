@@ -1,6 +1,6 @@
 # Materials Plan
 
-> **Status:** scoped forward plan on branch `plan-a`.
+> **Status:** archived 2026-11-24, completed on branch `plan-a`.
 > **Scope:** materials and how rays scatter: diffuse, metal and glass, the bounce limit, samples per
 > pixel and gamma correction (`docs/requirements.md` items 1 to 6).
 > **Out of scope:** new shapes, face sides and texture coordinates, bounding boxes (the geometry
