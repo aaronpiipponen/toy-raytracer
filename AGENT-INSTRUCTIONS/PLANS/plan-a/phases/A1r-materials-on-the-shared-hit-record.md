@@ -45,7 +45,7 @@
 8. `src/main.rs` imports - add `use std::rc::Rc;`, `use material::{Lambertian, Material, Metal};` and `use rng::Rng;`. `Material` is imported so the trait is in scope for the `Rc<dyn Material>` values.
 9. `src/main.rs` constants - add `const MAX_BOUNCES: u32 = 50;` and `const SEED: u64 = 42;` beside `WIDTH` and `HEIGHT`.
 10. `src/main.rs`, `ray_colour` - before -> after: `fn ray_colour(ray: &Ray, world: &dyn Hittable) -> Colour` becomes `fn ray_colour(ray: &Ray, world: &dyn Hittable, depth: u32, rng: &mut Rng) -> Colour`. Body: return `Colour::new(0.0, 0.0, 0.0)` when `depth == 0`; on a hit call `hit.material.scatter(ray, &hit, rng)` and return `attenuation * ray_colour(&scattered, world, depth - 1, rng)` when it is `Some((attenuation, scattered))`, otherwise `Colour::new(0.0, 0.0, 0.0)`; keep the sky gradient as the final branch. The doc comment becomes "The colour seen along a ray: the material's scattered colour up to the bounce limit, the sky gradient otherwise."
-11. `src/main.rs`, `scene` - build three shared materials and add three spheres in this order: `Lambertian::new(Vec3::new(0.8, 0.3, 0.3))` on `Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, ...)`; `Lambertian::new(Vec3::new(0.8, 0.8, 0.0))` on `Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0, ...)`; `Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.3)` on `Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.3, ...)`. Bind each as a local `Rc::new(...)` and pass it with `Rc::clone`.
+11. `src/main.rs`, `scene` - bind each material as a local typed trait object and add three spheres in this order: `let red: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(0.8, 0.3, 0.3)));` on `Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, Rc::clone(&red))`; `let ground: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0)));` on `Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0, Rc::clone(&ground))`; `let metal: Rc<dyn Material> = Rc::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.3));` on `Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.3, Rc::clone(&metal))`. The explicit `Rc<dyn Material>` annotation is required: `Rc::clone` on an `Rc<Lambertian>` cannot infer the unsizing coercion at the call site.
 12. `src/main.rs`, `render` - create `let mut rng = Rng::new(SEED);` before the loops and call `ray_colour(&camera.ray(u, v), &world, MAX_BOUNCES, &mut rng)`. The signature of `render` does not change.
 13. `src/main.rs`, `to_byte` - return `(255.999 * channel.clamp(0.0, 1.0).sqrt()) as u8`.
 14. `src/main.rs` tests - rename `the_center_pixel_shows_the_sphere_facing_the_camera` to `the_center_pixel_shows_the_red_diffuse_sphere` and assert `center.x > center.y && center.x > center.z`, with the message `"the centre sphere is diffuse red: {center:?}"`. Leave `the_top_row_is_sky` unchanged.
@@ -76,7 +76,7 @@
 - Do not add `front_face`, `u`, `v`, or a `HitRecord` constructor; plan-b's B1r owns them and the merged helper gains `material` only at merge.
 - Do not change how `Sphere::hit` computes the normal; it stays the outward normal on this branch.
 - Do not keep the normal-colouring path, a material-second-path flag, or any fallback colour; replace the hit branch in `ray_colour`.
-- Do not add a dependency to `Cargo.toml`; `Rc`, `f64::consts` and the standard library only.
+- Do not add a dependency to `Cargo.toml`; `Rc` and the standard library only.
 - Do not use `RefCell`, `Cell`, `unsafe`, threads, or a seed from the clock; all randomness goes through `&mut Rng`.
 - Do not add `Debug` to `Material` or `Debug` to `HitRecord`.
 - Do not clamp or validate `fuzz` and do not add recovery for a zero-length scatter direction.
@@ -85,8 +85,8 @@
 
 **Tests:**
 - New/changed/deleted:
-  - `src/material.rs` - `a_diffuse_hit_scatters_into_the_normal_hemisphere`: a `Lambertian` hit with normal `(0, 0, 1)`, `Rng::new(1)` and an incoming ray along `(0, 0, -1)` returns a scattered direction whose dot with the normal is positive.
-  - `src/material.rs` - `a_metal_reflection_below_the_surface_is_absorbed`: a `Metal` with fuzz `0.0`, the same hit and an incoming ray along `(0, 0, 1)` returns `None`.
+  - `src/material.rs` - `a_diffuse_hit_scatters_into_the_normal_hemisphere`: bind `let material: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(0.8, 0.3, 0.3)));`, build the hit with `hit_with_normal(Vec3::new(0.0, 0.0, 1.0), Rc::clone(&material))`, and scatter `Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0))` with `&mut Rng::new(1)`; the returned scattered ray's direction has a positive dot with the normal.
+  - `src/material.rs` - `a_metal_reflection_below_the_surface_is_absorbed`: bind `let material: Rc<dyn Material> = Rc::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.0));`, build the same hit with `hit_with_normal(Vec3::new(0.0, 0.0, 1.0), Rc::clone(&material))`, and scatter `Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, 1.0))`; the result is `None`.
   - `src/main.rs` - `the_center_pixel_shows_the_sphere_facing_the_camera` is renamed to `the_center_pixel_shows_the_red_diffuse_sphere` and asserts the red channel is the largest. This adapts an existing test; it does not add to the budget.
   - `src/sphere.rs` - both existing tests keep their assertions and only gain the material argument (adaptation, no new function).
   - Deleted: none.

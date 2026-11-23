@@ -24,7 +24,7 @@
 - `src/vec3.rs` - `Vec3::dot` and `Neg` used by the helper, and `Vec3::new`.
 
 **Build plan:**
-1. `src/hittable.rs`, `HitRecord` - keep `#[derive(Clone, Copy, Debug)]` and the existing `t`, `point`, `normal` fields. Add after `normal`, in this order:
+1. `src/hittable.rs`, `HitRecord` - keep `#[derive(Clone, Copy, Debug)]` and the existing `t`, `point`, `normal` fields. Keep `point`'s `#[allow(dead_code)]` and delete the comment above it (`// The origin of the bounce rays the materials plan adds.`), which names a plan. Add after `normal`, in this order:
    - `// Which side of the surface the ray hit.` then `#[allow(dead_code)]` then `pub front_face: bool`;
    - `// The hit point's texture coordinates in 0..=1.` then `#[allow(dead_code)]` then `pub u: f64`;
    - `#[allow(dead_code)]` then `pub v: f64`.
@@ -56,7 +56,7 @@
 
 **Touched files:**
 <!-- touched-files:start -->
-- `src/hittable.rs` - changed: `front_face`, `u` and `v` fields with dead-code allowances, and the `HitRecord::new` constructor.
+- `src/hittable.rs` - changed: `front_face`, `u` and `v` fields with dead-code allowances, the stale `point` comment removed, and the `HitRecord::new` constructor.
 - `src/sphere.rs` - changed: `hit` computes the outward normal, latitude and longitude and builds the record through `HitRecord::new`; two tests added.
 - Adds: nothing.
 <!-- touched-files:end -->
