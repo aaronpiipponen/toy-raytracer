@@ -2,15 +2,17 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for phase C2 with the implementer's
-receipt.
+Make the `phase_subagent` call for C3 even though the coordinator hold is armed. When it refuses
+with `COORDINATOR HOLD`, tell the user in one line and end the turn. Wait for the coordinator or the
+partner orchestrator to resume this session.
 
 ## Current state
 
-C2 implementation is at tested head `928af8e` (base `30f857f`), tree clean, one review with no
-finding, fast and rendered-image gates passed. Completion, compression to `done/` and promotion of
-C3 belong to the advancer. The implementer surfaced a wording mismatch in
-`AGENT-INSTRUCTIONS/LOCAL/gates.md` line 39 that the advancer should judge.
+C1 and C2 are done (`done/C1-png-writer.md`, `done/C2-command-line.md`). C3 is detailed in
+`phases/C3-progress-line.md` and passed the orchestrator acceptance check (standard gate, no new
+tests, progress line on standard error, README sentence, no image change). A coordinator hold pairs
+plan-c C3 with plan-a A1r; I lead the settlement once the channel opens. The release item list is
+`AGENT-INSTRUCTIONS/PLANS/plan-c/docs-pass.md`.
 
 ## Learned rules
 
@@ -21,3 +23,5 @@ C3 belong to the advancer. The implementer surfaced a wording mismatch in
   jitter to the same function, so the release/coordinator reconciles it at merge.
 - When the advancer promotes and details the next phase in REVIEW AND ADVANCE, still run the full
   acceptance check on the new phase document before any implementer starts.
+- A coordinator hold: make the held phase's `phase_subagent` call so the refusal is recorded, start
+  nothing else, tell the user one line, end the turn.
