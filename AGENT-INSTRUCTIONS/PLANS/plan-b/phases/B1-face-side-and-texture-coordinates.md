@@ -222,17 +222,16 @@ field by field and calls the one constructor.
   - `cargo fmt --check`
   - `git diff --check`
 - Conditional gates:
-  - Rendered image: required. The phase changes the normal every shape records, which sets every
-    hit pixel's colour, so the plan's "normal-colouring keeps working" is proven by one render.
-    Run once by the implementer:
-    `cargo run --release > /tmp/opencode/render.ppm`, then confirm the header lines are `P3`,
-    `200 100` and `255`, and read the centre pixel with
-    `sed -n '10104p' /tmp/opencode/render.ppm`, which is output row 51 and column 101 (the header
-    takes the first three lines). It reads `129 126 255` on the current tree and must read the same
-    after the change: that ray leaves the camera slightly off centre, hits the front of the sphere,
-    so the corrected normal equals the outward one and the colour is unchanged. A normal flipped
-    into the surface would print `0 0 0` there. Record the line the command prints; a mismatch is a
-    failed gate.
+  - Rendered image: required, because the phase states that the rendered image is the same picture as
+    before it and the normal now decides every hit pixel's colour. Prove it by comparison, not by a
+    remembered value:
+    1. Before editing anything, render the untouched tree to a baseline:
+       `cargo run --release > /tmp/opencode/render-before.ppm`.
+    2. After the change, render again to `/tmp/opencode/render-after.ppm`.
+    3. `cmp /tmp/opencode/render-before.ppm /tmp/opencode/render-after.ppm` must print nothing and
+       exit 0. Any difference is a failed gate; report the first differing byte offset.
+    Both renders use the same fixed scene and the same options, so a flipped normal or a changed
+    colour shows up as a byte difference.
   - Agent generation: not run; no file under `AGENT-INSTRUCTIONS/SUBAGENTS/` changes.
 - Slow gate (>2 minutes): none.
 
