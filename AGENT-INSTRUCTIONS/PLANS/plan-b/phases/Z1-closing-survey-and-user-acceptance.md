@@ -31,6 +31,8 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
 - `src/plane.rs:22-57` - `Plane::hit`, `plane_axes` and `Plane::bounding_box`.
 - `src/triangle.rs:23-67` - `Triangle::hit` and `Triangle::bounding_box`.
 - `src/aabb.rs:1-46` - `Aabb { min, max }`, `Aabb::new` and the slab test.
+- `src/vec3.rs:21-27` - `Vec3::cross`, which carries no `#[allow(dead_code)]` attribute and no
+  comment, and has one caller in `src/triangle.rs`.
 - `src/main.rs:3-13` - the module list with `mod aabb;` first. `src/main.rs:36-46` - `scene()` with
   two spheres and one triangle.
 - Eleven test functions: `src/aabb.rs` 1, `src/hittable.rs` 1, `src/main.rs` 2, `src/plane.rs` 1,
@@ -55,7 +57,7 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
 
 **Build plan:**
 
-1. Survey the nine areas below, one read-only `ops-scout` per area, dispatched in parallel. Each
+1. Survey the ten areas below, one read-only `ops-scout` per area, dispatched in parallel. Each
    prompt names its area, the contract it is judged against, the finding classes and the evidence
    format, and does not restrict the scout to the diff.
    - **Hit record and constructor:** `src/hittable.rs:7-43`, plus every `HitRecord::new` call in
@@ -70,9 +72,13 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
    - **Triangle:** `src/triangle.rs` in full. Judged against requirements 8, 9 and 10.
    - **Bounding box and its four implementations:** `src/aabb.rs` in full and the four
      `bounding_box` methods. Judged against requirement 10 and REPO-RULES §0.
+   - **Shared vector helper:** `src/vec3.rs:21-27`, `Vec3::cross`, and its use in
+     `src/triangle.rs`. Judged against REPO-RULES §0 and the B2 frozen contract, which records that
+     `cross` carries neither an `#[allow(dead_code)]` attribute nor a comment naming a plan.
    - **Scene's triangle object:** `src/main.rs:3-13` and `:36-46`. Judged against requirement 9.
-   - **Tests across the plan:** the test modules of the six files above, all eleven functions, their
-     names and their assertions. Judged against REPO-RULES §3a and requirement 14.
+   - **Tests across the plan:** the test modules of `src/aabb.rs`, `src/hittable.rs`,
+     `src/sphere.rs`, `src/plane.rs`, `src/triangle.rs`, `src/main.rs` and `src/rng.rs`, all eleven
+     functions, their names and their assertions. Judged against REPO-RULES §3a and requirement 14.
    - **Repository map and requirement pages:** `AGENT-INSTRUCTIONS/LOCAL/project.md:5`,
      `docs/requirements.md:21-30` and `README.md`. Judged against the current tree and REPO-RULES
      §0b.
@@ -80,15 +86,16 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
    redundant checks or records, test bloat, stale documentation, and drift from the user's decisions.
    Each finding carries `file:line` evidence and its class. An out-of-scope observation is reported
    with the evidence already in hand and is not investigated further.
-3. After all nine returns arrive, dispatch one further read-only `ops-scout` that cross-checks every
+3. After all ten returns arrive, dispatch one further read-only `ops-scout` that cross-checks every
    finding together against the source, the documents and the four done contracts, and marks each
    `CONFIRMED`, `WRONG` or `UNCLEAR` with evidence.
 4. The orchestrator writes `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/survey-2026-11-23.md` itself
-   from the saved returns. The note holds, in this order: the date, the plan scope, the nine areas,
+   from the saved returns. The note holds, in this order: the date, the plan scope, the ten areas,
    the statement that no earlier survey note exists; one row per real finding with an id, class,
    `file:line` evidence, impact and recommendation; the out-of-scope observations kept separate; the
-   cross-check table; the checks performed; and the user-review list. Drop every `WRONG` finding and
-   put every `UNCLEAR` finding on the user-review list. No finding without `file:line` evidence.
+   cross-check table; the checks performed, including the rendered-image results and the path of the
+   PPM kept for the user; and the user-review list. Drop every `WRONG` finding and put every
+   `UNCLEAR` finding on the user-review list. No finding without `file:line` evidence.
 5. Record in the note the checks the survey performs:
    - requirements 7, 8 and 9: cite the frozen contract evidence in `done/B1-...md` and
      `done/B2-...md` and confirm the current source matches; do not rerun their tests;
@@ -104,22 +111,28 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
      changed or deleted function;
    - documentation accuracy: the repository map names every module and no permanent document or code
      comment names a plan.
-6. Render the scene once for the comparison and the reproducibility check, from `~/.cargo/bin/cargo`
-   when `cargo` is not on `PATH`:
+6. Render the scene twice for the comparison and the reproducibility check, from `~/.cargo/bin/cargo`
+   when `cargo` is not on `PATH`, then check the file in the same shell:
    ```bash
    ~/.cargo/bin/cargo run --release > /tmp/opencode/survey-a.ppm
    ~/.cargo/bin/cargo run --release > /tmp/opencode/survey-b.ppm
    cmp /tmp/opencode/survey-a.ppm /tmp/opencode/survey-b.ppm
+   wc -l /tmp/opencode/survey-a.ppm
+   sed -n '1,4p;7441p;10104p' /tmp/opencode/survey-a.ppm
    ```
-   The header is `P3`, `200 100`, `255`, line 7441 is `127 127 255`, and `cmp` exits 0. Open
-   `/tmp/opencode/survey-a.ppm` with the image reader and confirm the two spheres and the triangle
-   over the sky. Record all of it in the note and remove both files afterwards.
+   `cmp` exits 0 and `wc -l` prints `20003`. The selected lines print `P3`, `200 100`, `255`,
+   `165 201 255` (the sky at the top-left), `127 127 255` at line 7441 (the triangle's face) and
+   `129 126 255` at line 10104 (the near sphere at the centre pixel). The PPM is ASCII text, so the
+   checks read its lines with `sed`. Record all of it in the note and keep `/tmp/opencode/survey-a.ppm`
+   for the user's acceptance; remove `/tmp/opencode/survey-b.ppm` after the comparison and
+   `/tmp/opencode/survey-a.ppm` after the user replies.
 7. Report to the user: the note path, the finding summary by class, the cross-check result and the
    user-review list. State plainly that no finding was fixed inside Z1.
 8. On the user's acceptance, the advancer compresses this file into `done/Z1-closing-survey.md` and
-   flips the status row. If the user names changes, return their direction to the orchestrator for a
-   later survey or remediation round under section 3b. Acceptance alone does not archive the plan:
-   closure needs the user's explicit authorization (`AGENT-INSTRUCTIONS/PLANS/README.md`).
+   flips the `full-plan.md` row to `done`, repointing its `Phase file` cell to the done file. If the
+   user names changes, return their direction to the orchestrator for a later survey or remediation
+   round under section 3b. Acceptance alone does not archive the plan: closure needs the user's
+   explicit authorization (`AGENT-INSTRUCTIONS/PLANS/README.md`).
 
 **Callers / wiring to update:**
 - None. No product file calls anything new and no signature changes.
@@ -135,7 +148,7 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
 **Touched files:**
 <!-- touched-files:start -->
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/survey-2026-11-23.md` - created: the closing survey note with cross-checked findings, the checks performed and the user-review list.
-- `AGENT-INSTRUCTIONS/PLANS/plan-b/full-plan.md` - changed after acceptance: the advancer flips the Z1 row to done.
+- `AGENT-INSTRUCTIONS/PLANS/plan-b/full-plan.md` - changed after acceptance: the advancer flips the Z1 row to done and repoints its `Phase file` cell to `done/Z1-closing-survey.md`.
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/done/Z1-closing-survey.md` - created after acceptance: the advancer compresses this phase into the frozen contract.
 - Adds: nothing in the project repository (no dependency, configuration key or generated file).
 <!-- touched-files:end -->
@@ -150,7 +163,7 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
 - Do not claim a finding without `file:line` evidence confirmed by the cross-checking scout. Drop
   `WRONG` findings and put `UNCLEAR` ones on the user-review list.
 - Do not rerun the fast gate on the unchanged `2b4e2b7` revision. Do not rerun the B3 before/after
-  byte comparison; the survey's one render is the one Z1 owns.
+  byte comparison; the survey's own two renders are the ones Z1 owns.
 - Do not recount a contract in the note as a second source of truth; cite the done contract and the
   current source.
 - Do not write history, review narration or plan identifiers into a permanent file, and do not name a
@@ -164,9 +177,9 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
 - Test budget: 0 new test functions, 0 changed, 0 deleted.
 - Fast gate: not run on the unchanged `2b4e2b7` revision, whose receipt already reports every fast
   command. The note itself is re-read for accuracy and its paths are checked.
-- Conditional gates: rendered image, run once by the plan orchestrator at 200 by 100 (step 6),
-  because the survey compares the scene with the requirements and checks reproducibility.
-  Agent generation: not run; no file under `AGENT-INSTRUCTIONS/SUBAGENTS/` changes.
+- Conditional gates: rendered image, run once as a comparison pair by the plan orchestrator at
+  200 by 100 (step 6), because the survey compares the scene with the requirements and checks
+  reproducibility. Agent generation: not run; no file under `AGENT-INSTRUCTIONS/SUBAGENTS/` changes.
 - Slow gate (>2 minutes): none.
 
 **User test (acceptance):**
@@ -174,30 +187,32 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
 - The plan's move-on gate is the user's acceptance of the closing survey.
 - 1. Open `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/survey-2026-11-23.md` and read the findings,
   the cross-check verdicts and the user-review list.
-- 2. Confirm from the note that the plan's rendered scene is the one the user expects: two spheres
-  and the triangle over the sky, 200 by 100.
+- 2. Open `/tmp/opencode/survey-a.ppm` in an image viewer that reads PPM and confirm the two spheres
+  and the triangle over the sky at 200 by 100. The note records the pixel checks and keeps the file
+  until this reply.
 - 3. Reply that the survey results are accepted, or name each change to make. Any change is
   scheduled outside Z1.
 - Acceptance alone does not close or archive the plan.
 
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a for `minimal` are satisfied.
-- [ ] `benchmarks/survey-2026-11-23.md` exists, is dated `2026-11-23`, and covers the nine areas the
+- [ ] `benchmarks/survey-2026-11-23.md` exists, is dated `2026-11-23`, and covers the ten areas the
       plan added or changed.
 - [ ] Every finding carries `file:line` evidence and a cross-check verdict. No `WRONG` finding
       remains, and every `UNCLEAR` finding is on the user-review list.
 - [ ] The note records the requirement checks for items 7 to 10, the three hard invariants, the test
       budget, the documentation accuracy and the statement that no earlier survey note exists.
-- [ ] The 200 by 100 render has the header `P3`, `200 100`, `255`, line 7441 `127 127 255`, two runs
-      are byte-identical, and the image shows the two spheres and the triangle over the sky.
+- [ ] The 200 by 100 render has 20003 lines, the header `P3`, `200 100`, `255`, line 4
+      `165 201 255`, line 7441 `127 127 255`, line 10104 `129 126 255`, and two runs are
+      byte-identical.
 - [ ] No product source, test, configuration or permanent document changed, and `git status
       --porcelain` in the worktree lists no product file.
 - [ ] No test, dependency, configuration key, checker, command or receipt was added.
 - [ ] Findings sit only in the note's user-review list and none was fixed inside Z1.
 - [ ] The user accepted the survey results, or named the changes to make.
-- [ ] On acceptance: the advancer compresses this file into `done/Z1-closing-survey.md` and flips
-      the `full-plan.md` row to done. The plan is not archived without the user's explicit
-      authorization.
+- [ ] On acceptance: the advancer compresses this file into `done/Z1-closing-survey.md`, flips the
+      `full-plan.md` row to done and repoints its `Phase file` cell. The plan is not archived without
+      the user's explicit authorization.
 
-**Exit:** the closing survey note records the plan's nine areas with cross-checked findings and a
+**Exit:** the closing survey note records the plan's ten areas with cross-checked findings and a
 user-review list, and the user has accepted the results or named the changes to make.
