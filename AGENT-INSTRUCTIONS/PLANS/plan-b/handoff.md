@@ -16,9 +16,14 @@ and triangles), B3 (bounding boxes), Z1 (closing survey and user acceptance). `s
 Autonomous mode is on; standing authorization for phase commits exists. The plan is linked to the
 coordinator.
 
-**Coordinator hold:** `HOLD ARMED (pair plan-a-A1+plan-b-B2)` - phase B2 overlaps plan-a's A1 and its
-implementer start will be refused. B2 detailing may proceed; the implementer start must not be
-retried or routed around. Wait for a coordinator `CHANNEL OPEN` / resolution message.
+**Coordinator hold:** `HOLD ARMED (pair plan-a-A1+plan-b-B2)` - armed reason corrected by the user:
+both plans rewrite `HitRecord` in `src/hittable.rs` and `Sphere::hit` in `src/sphere.rs`. plan-b B1
+(committed at `6eb43e09`) adds `front_face`/`u`/`v`, keeps `#[derive(Clone, Copy, Debug)]`, and makes
+`HitRecord::new` the only construction. plan-a A1 adds `material: Rc<dyn Material>`, drops `Copy`, and
+builds the record with a struct literal in `Sphere::hit`; `src/main.rs:ray_colour` and the sphere
+tests change under both. plan-b leads because B1 is already committed. B2 detailing may proceed; the
+B2 implementer start must not be retried or routed around. Wait for `CHANNEL OPEN`, then settle
+through `channel_send` and write `PLANS/shared/plan-a-A1+plan-b-B2.md`.
 
 ## Learned rules
 

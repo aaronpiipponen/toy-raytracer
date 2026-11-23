@@ -10,11 +10,11 @@ the PNG writer, the command line and progress output stay out of this phase.
 with no durable state, no external boundary and no security surface; targeted tests plus the fast
 gate and the rendered-image conditional gate fit the risk.
 **Simplicity statement:** a scatter direction is used as produced, with no guard for a
-near-zero-length direction and no retry that would consume extra random numbers; `Metal` uses its
-fuzz value as given and does not clamp or validate it; the material interface carries only what
-requirement 2 and requirement 3 need. The normal-colour shading path and the stale
-`allow(dead_code)` markers that the phase makes unnecessary are deleted, not kept beside the new
-path.
+near-zero-length direction; `Metal` uses its fuzz value as given and does not clamp or validate
+it, and a fuzz value outside `0.0..=1.0` simply produces the direction it produces; the material
+interface carries only what requirement 2 and requirement 3 need. The normal-colour shading path
+and the stale `allow(dead_code)` markers that the phase makes unnecessary are deleted, not kept
+beside the new path.
 
 **Current state (verified):**
 - `src/main.rs:24` - `fn ray_colour(ray: &Ray, world: &dyn Hittable) -> Colour` returns
@@ -57,7 +57,8 @@ path.
 
 1. `src/material.rs` (create) - module header
    `//! Materials: how a ray scatters off a surface.` Then:
-   - `use std::rc::Rc;` only where a test needs it, otherwise no import.
+   - no `Rc` import at module level; the imports are `crate::hittable::HitRecord`,
+     `crate::ray::Ray`, `crate::rng::Rng` and `crate::vec3::{Colour, Vec3}`.
    - `pub trait Material { fn scatter(&self, ray: &Ray, hit: &HitRecord, rng: &mut Rng) -> Option<(Colour, Ray)>; }`
      with a doc comment stating that it returns the attenuation and the scattered ray, and `None`
      when the ray is absorbed.
@@ -77,7 +78,9 @@ path.
      `Vec3::new(2.0 * rng.next_f64() - 1.0, 2.0 * rng.next_f64() - 1.0, 2.0 * rng.next_f64() - 1.0)`
      and accepts it when `candidate.length() < 1.0`. A rejected attempt draws three values. The
      `length` and `unit` methods already exist on `Vec3`.
-   - `#[cfg(test)] mod tests` with the two material tests listed under **Tests**.
+   - `#[cfg(test)] mod tests` with the two material tests listed under **Tests**. The test module
+     imports `std::rc::Rc` and builds each `HitRecord` with a `Lambertian` in its `material` field,
+     because `Metal` reads only the hit's point and normal.
 2. `src/hittable.rs` - `use std::rc::Rc;` plus `use crate::material::Material;`.
    `pub struct HitRecord` changes from `#[derive(Clone, Copy, Debug)]` to `#[derive(Clone)]`, keeps
    `t`, `point` and `normal`, and gains `pub material: Rc<dyn Material>`. `Debug` is dropped because
@@ -239,12 +242,15 @@ path.
   ```
   Run it as `python3 /tmp/opencode/ppm2png.py /tmp/opencode/a1-render.ppm /tmp/opencode/a1-render.png`.
 - 3. Observe in the opened image: a blue-white gradient sky above the horizon, a yellow-green ground
-  plane filling the lower part, a matte red-brown sphere in the centre with smooth shading between
-  its lit and dark sides, and a grey metal sphere to the right of the matte sphere whose surface
-  shows a blurred reflection of the ground and sky. The image has no banded normal colours, no
-  black patches across a sphere, and no visible white specks on the metal sphere.
-- 4. No cast shadows appear under either sphere. That is expected: the phase adds no shadow ray, so
-  absence of shadows is not a defect and is not to be fixed here.
+  plane filling the lower part, a matte red-brown sphere in the centre, and a grey metal sphere to
+  its right that reflects the sky. Shading varies smoothly across both spheres and no sphere shows
+  banded normal colours.
+- 4. The image is visibly speckled with isolated black and coloured pixels, and neither sphere casts
+  a shadow. Both are expected: each pixel traces one ray, and the phase adds no shadow ray. A3
+  averages jittered samples and removes the speckle, so it is not to be fixed here.
+- 5. The render at these settings places the two spheres about 55 pixels apart horizontally, with
+  the metal sphere's bottom touching the ground plane and a strip of ground visible at the right
+  edge.
 
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied.
