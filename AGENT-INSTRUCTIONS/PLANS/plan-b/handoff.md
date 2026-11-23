@@ -2,22 +2,27 @@
 
 ## Next action
 
-Spawn `phase-implementer` with `phase_subagent` for the active phase B2.
+Spawn a fresh `phase-advancer` in REVIEW AND ADVANCE mode for B2 with the receipt below. It should
+complete B2 and produce DETAIL READY for B3 (bounding boxes).
 
 ## Current state
 
 - B1: `done` at `6eb43e09`.
-- B2r: `done` at `5204447`; contract `done/B2r-shared-hit-record-resolution.md`.
-- B2: `active`, detailed and orchestrator-accepted at `phases/B2-planes-and-triangles.md`; not
-  implemented. Three new test functions; rendered-image gate compares before/after and probes one
-  triangle pixel.
-- B3, Z1: `planned`.
-- Out-of-scope observation: `AGENT-INSTRUCTIONS/LOCAL/project.md:5` already names `png.rs` and a
-  command line, which do not exist in this worktree; that is another plan's forward edit in the
-  shared workspace root, not ours to fix. B2's step 7 preserves every existing entry.
-- The coordinator pair `plan-a-A1+plan-b-B2` is RESOLVED and the channel is closed. Shared design:
-  `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md`, including the seven merge hunks. plan-a's
-  A1r passed the same check; plan-a resumes its own loop.
+- B2r: `done` at `5204447`.
+- B2: implemented at `a5c6665`, pending review/advance. Receipt: base `5204447`, head `a5c6665`;
+  `cargo test plane` 1 passed, `cargo test triangle` 2 passed, `cargo test` 9 passed, build, clippy
+  `-D warnings`, fmt and diff check all pass; rendered image differs from the pre-change PPM and
+  line 7441 reads `127 127 255` (triangle) where it was `182 211 255` (sky); test budget 3 added /
+  0 deleted; review loop 2 rounds (2 real findings fixed, then none). User test: not required.
+- B3: `planned`, next to detail. Bounding boxes: an `Aabb` type, `Hittable::bounding_box` returning
+  `Option<Aabb>`, `HittableList` testing a box before its object.
+- Z1: `planned`.
+- The `AGENT-INSTRUCTIONS/LOCAL/project.md` repository-map edit is in the shared workspace root, not
+  in the project commit. No workflow reload is needed: agents read it at session start and the
+  plugin commits the root after each round.
+- Approved implementer deviations, no action needed: `src/triangle.rs` uses
+  `!(0.0..=1.0).contains(&u)` because clippy rejects the literal range comparison; doc comments were
+  added to the new public items and a semicolon removed from a doc comment.
 - Autonomous mode on; standing authorization for phase commits exists. No open user decision.
 
 ## Learned rules
@@ -37,3 +42,5 @@ Spawn `phase-implementer` with `phase_subagent` for the active phase B2.
   phase; do not accept it or close a channel on it.
 - The partner orchestrator cannot message the leader on its own; when it says it is waiting, re-read
   its phase file rather than waiting for a message.
+- Clippy `-D warnings` rejects a literal `x < a || x > b`; a phase that spells it out will be
+  implemented as `!(a..=b).contains(&x)`. Do not treat that equivalence as drift.
