@@ -1,8 +1,9 @@
 ## Phase B2 - Planes and triangles
 
-**Status:** active.
+**Status:** planned.
 **Depends on:** `done/B1-face-side-and-texture-coordinates.md`, which froze `HitRecord` and
-`HitRecord::new`.
+`HitRecord::new`, and `done/B2r-shared-hit-record-resolution.md`, which makes `HittableList::hit`
+read the nearest distance through `nearest.as_ref()`.
 **Scope:** add `src/plane.rs` (an infinite plane from a point and a normal, with texture
 coordinates from the hit point along two in-plane axes, modulo 1) and `src/triangle.rs` (a
 triangle from three vertices, hit with Möller-Trumbore, with barycentric texture coordinates), wire
@@ -20,12 +21,15 @@ non-unit normal. No second construction of a `HitRecord` is added, no plane is p
 and the phase deletes the stale plan-naming comments listed under carry-overs.
 
 **Current state (verified):**
-- `src/hittable.rs:8-43` - `pub struct HitRecord { t, point, normal, front_face, u, v }` and
+- `src/hittable.rs:8-43` - `pub struct HitRecord { t, point, normal, front_face, u, v }` deriving
+  `Clone, Copy, Debug`, and
   `impl HitRecord { pub fn new(t: f64, point: Vec3, u: f64, v: f64, ray: &Ray, outward_normal: Vec3) -> Self }`,
-  which records the face side and points `normal` against the ray.
+  which records the face side and points `normal` against the ray. The constructor on this branch
+  takes six parameters and no material argument.
 - `src/hittable.rs:45-48` - `pub trait Hittable { fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>; }`.
-- `src/hittable.rs:50-73` - `HittableList` holds `pub objects: Vec<Box<dyn Hittable>>`, `add` pushes,
-  and `hit` keeps the nearest record by comparing `hit.t`. It needs no change.
+- `src/hittable.rs:62-72` - `HittableList` holds `pub objects: Vec<Box<dyn Hittable>>`, `add` pushes,
+  and `hit` keeps the nearest record by comparing `hit.t`, read through
+  `nearest.as_ref().map_or(t_max, |hit| hit.t)`. This phase does not touch it.
 - `src/sphere.rs:19-43` - the one existing `impl Hittable`, which shows the shape of a hit
   implementation and calls `HitRecord::new`.
 - `src/main.rs:3-10` - the module list, `mod rng;` carrying `#[allow(dead_code)]`.
@@ -52,6 +56,8 @@ and the phase deletes the stale plan-naming comments listed under carry-overs.
 - `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the fast gate and the rendered-image conditional gate.
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/done/B1-face-side-and-texture-coordinates.md` - the frozen
   record contract.
+- `AGENT-INSTRUCTIONS/PLANS/plan-b/done/B2r-shared-hit-record-resolution.md` - the frozen
+  nearest-distance loop this phase builds beside.
 
 **Build plan:**
 
@@ -227,7 +233,8 @@ and the phase deletes the stale plan-naming comments listed under carry-overs.
 - `src/vec3.rs:21-23` - `cross` keeps its signature and loses its dead-code attribute and comment.
 - `src/hittable.rs:11` and `src/main.rs:6` - the two plan-naming comments are deleted.
 - `AGENT-INSTRUCTIONS/LOCAL/project.md:5` - the repository map names the two new modules.
-- `HittableList::hit` needs no change: it already keeps the nearest record from any `Hittable`.
+- `HittableList::hit` needs no change: it reads the nearest distance through `nearest.as_ref()` and
+  keeps the nearest record from any `Hittable`.
 - No other file constructs a `HitRecord` or names a shape: a repository-wide search finds
   `HitRecord` only in `src/hittable.rs`, `src/sphere.rs` and `src/main.rs` as `hit.normal`.
 
@@ -255,7 +262,10 @@ and the phase deletes the stale plan-naming comments listed under carry-overs.
   to other plans.
 - Do not add a plane to the scene, and do not change the two spheres, the camera or the render
   loop's pixel mapping.
-- Do not add a second way to build a `HitRecord`; both shapes call `HitRecord::new`.
+- Do not add a second way to build a `HitRecord`; both shapes call the six-parameter
+  `HitRecord::new` on this branch.
+- Do not add a material argument, a `material` field or an `Rc<dyn Material>` to any call or type.
+  The materials plan owns the seventh constructor parameter and the material field.
 - Do not add back-face culling, normal flipping inside a shape, or a `front_face` field of your
   own. `HitRecord::new` owns that decision.
 - Do not normalize the plane's normal in the hit path, divide by `normal.dot(normal)`, or guard a
