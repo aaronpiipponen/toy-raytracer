@@ -233,14 +233,14 @@
 
 **Tests:**
 - New: `src/main.rs` - `the_defaults_are_400_by_200_with_16_samples`: `Config::parse(std::iter::empty::<String>())` returns `Ok` with `width == 400`, `height == 200`, `samples == 16`, `output == "render.png"` and `format == Format::Png`. This pins the five requirement defaults and the extension-derived default format.
-- New: `src/main.rs` - `a_full_command_line_sets_every_option`: `Config::parse(vec!["--width".to_string(), "80".to_string(), "--height".to_string(), "40".to_string(), "--samples".to_string(), "4".to_string(), "--output".to_string(), "scene.ppm".to_string()].into_iter())` returns `Ok` with `width == 80`, `height == 40`, `samples == 4`, `output == "scene.ppm"` and `format == Format::Ppm`. This proves every option parses and the `.ppm` extension selects PPM.
+- New: `src/main.rs` - `a_full_command_line_sets_every_option`: `Config::parse(vec!["--width".to_string(), "80".to_string(), "--height".to_string(), "40".to_string(), "--samples".to_string(), "4".to_string(), "--output".to_string(), "scene.ppm".to_string(), "--format".to_string(), "png".to_string()].into_iter())` returns `Ok` with `width == 80`, `height == 40`, `samples == 4`, `output == "scene.ppm"` and `format == Format::Png`. This proves every option parses and that an explicit `--format` wins over the `.ppm` output extension.
 - New: `src/main.rs` - `an_unknown_option_is_rejected`: `Config::parse(vec!["--bogus".to_string()].into_iter())` returns `Err`. The usage text and exit status are proved by the conditional gate below, not by capturing standard error in a unit test.
 - Changed existing tests, no new functions: `src/main.rs` - `the_center_pixel_shows_the_sphere_facing_the_camera` and `the_top_row_is_sky` pass `1` as the sample count to `render`; their assertions do not change.
 - Test budget: 3 new test functions, within the 3 allowed, with none deleted.
 - Fast gate, run in this order: `cargo test`, `cargo build`, `cargo clippy -- -D warnings`, `cargo fmt --check`, `git diff --check`.
 - Conditional gates: rendered image, required because the default size, the sample count and the output writer change. The implementer runs, once on the tested revision:
   1. `cargo run --release -- --width 80 --height 40 --samples 4 --output /tmp/opencode/render.png` exits 0, prints nothing on standard output and writes `/tmp/opencode/render.png`. Check it with `python3 -c "d=open('/tmp/opencode/render.png','rb').read();print(d[:8]==bytes([137,80,78,71,13,10,26,10]), d[16:24].hex())"`, which must print `True 0000005000000028`, and open the file with the image reader: the sphere sits over the sky gradient at 80 by 40.
-  2. `cargo run --release -- --format ppm --width 40 --height 20 --output /tmp/opencode/render.ppm` exits 0, prints nothing on standard output, and writes a P3 file whose second line is `40 20`. `head -2 /tmp/opencode/render.ppm` must print `P3` and `40 20`.
+  2. `cargo run --release -- --width 40 --height 20 --output /tmp/opencode/render.ppm` exits 0, prints nothing on standard output, and writes a P3 file whose second line is `40 20`. This proves the `.ppm` extension selects PPM without `--format`. `head -2 /tmp/opencode/render.ppm` must print `P3` and `40 20`.
   3. `cargo run --release -- --bogus` exits with status 2 and prints a line ending in `unknown option: --bogus` and the `usage:` line on standard error, with nothing written. `cargo run --release -- --width 0` likewise exits 2 and prints `--width must be at least 2`.
   4. Remove `/tmp/opencode/render.png` and `/tmp/opencode/render.ppm` after the checks.
 - Slow gate (>2 minutes): none.
@@ -258,6 +258,7 @@
 - [ ] `write_ppm` is called by `main`, keeps its body and no longer carries `#[allow(dead_code)]`.
 - [ ] `Cargo.toml` still has no dependency.
 - [ ] Named tests pass.
+- [ ] The module header in `src/main.rs` names both PNG and PPM.
 - [ ] Test budget respected (REPO-RULES §3a); the receipt reports 3 functions added, 0 deleted and 2 existing tests adapted.
 - [ ] Fast phase gate and the rendered-image conditional gate pass, including both formats and the usage exit.
 - [ ] `README.md`, `docs/requirements.md`, `AGENT-INSTRUCTIONS/LOCAL/project.md` and `AGENT-INSTRUCTIONS/LOCAL/gates.md` were read and stay accurate; no page refers to a plan.
