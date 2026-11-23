@@ -32,8 +32,8 @@ and writes the image to a file. Every render is reproducible: the same options g
 ## Output and command line
 
 11. The image is written as PNG, with no external crate: one IDAT chunk holding zlib data made of
-    stored (uncompressed) deflate blocks, with correct CRC-32 and Adler-32 checksums. PPM stays
-    available.
+    stored (uncompressed) deflate blocks, with correct CRC-32 and Adler-32 checksums. PPM output is
+    also available.
 12. The command line takes `--width`, `--height`, `--samples`, `--output <path>` and
     `--format png|ppm`. The defaults are 400 by 200, 16 samples, `render.png` and the format from the
     output file's extension. An unknown option or a bad value prints a usage line and exits with a
