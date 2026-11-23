@@ -2,17 +2,15 @@
 
 ## Next action
 
-Spawn a fresh `phase-implementer` for phase C3 via `phase_subagent`. A hold may return when the
-coordinator re-investigates against plan-a's landed A1r; if the start is refused again, follow the
-refusal.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for phase C3 with the implementer's
+receipt.
 
 ## Current state
 
-C1 and C2 are done (`done/C1-png-writer.md`, `done/C2-command-line.md`). C3 is detailed in
-`phases/C3-progress-line.md` and passed the orchestrator acceptance check (standard gate, no new
-tests, progress line on standard error, README sentence, no image change). The earlier hold against
-plan-a A1r was released because A1r's implementer had already started; plan-a now leads that
-investigation. The release item list is `AGENT-INSTRUCTIONS/PLANS/plan-c/docs-pass.md`.
+C3 implementation is at tested head `525196b` (base `928af8e`), review returned no problem, fast and
+rendered-image gates passed, the image is byte-identical to the base. Completion, compression to
+`done/` and promotion of Z1 (closing survey and user acceptance) belong to the advancer. The release
+item list is `AGENT-INSTRUCTIONS/PLANS/plan-c/docs-pass.md`.
 
 ## Learned rules
 
