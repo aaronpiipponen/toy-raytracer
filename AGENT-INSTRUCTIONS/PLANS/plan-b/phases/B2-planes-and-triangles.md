@@ -78,7 +78,8 @@ and no second record construction path.
      `(u_axis, v_axis) = self.axes()`.
 2. `src/triangle.rs` - create the module with the header `//! Triangles.` and:
    - `pub struct Triangle { pub vertex0: Vec3, pub vertex1: Vec3, pub vertex2: Vec3 }`;
-   - `pub fn new(vertex0: Vec3, vertex1: Vec3, vertex2: Vec3) -> Self`;
+   - `pub fn new(vertex0: Vec3, vertex1: Vec3, vertex2: Vec3) -> Self`, doc comment
+     "A triangle whose corners are `vertex0`, `vertex1` and `vertex2`.";
    - `impl Hittable for Triangle` with the Möller–Trumbore hit from `vertex0`:
      `edge1 = self.vertex1 - self.vertex0`, `edge2 = self.vertex2 - self.vertex0`,
      `pvec = ray.direction.cross(edge2)`, `determinant = edge1.dot(pvec)`. Return `None` when

@@ -68,5 +68,6 @@ Render the scene, compare it with the requirements, and ask the user to accept.
   product history, it becomes wrong once the plans merge, and all three plans' worktrees share the
   file, so it is one post-merge edit. The orchestrator decides its owner (Z1's closing survey or the
   release docs pass); no plan-b phase edits it.
-- `AGENT-INSTRUCTIONS/LOCAL/project.md` repository map: B2 adds `plane.rs` and `triangle.rs`; B3 adds
-  `aabb.rs`. Each phase re-reads the shared line before editing it.
+- `AGENT-INSTRUCTIONS/LOCAL/project.md` repository map: B2 adds `plane.rs` and `triangle.rs`, and B3
+  updates the line for whatever modules it adds. Each phase re-reads the shared line before editing
+  it.

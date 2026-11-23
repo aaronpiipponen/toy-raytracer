@@ -21,9 +21,10 @@ these frozen contracts:
 - `src/vec3.rs` - `Vec3::cross` exists, carries `#[allow(dead_code)]` because nothing calls it on
   this branch, and has no comment above it. `src/main.rs` - `mod rng;` carries
   `#[allow(dead_code)]` with no comment above it.
-- Carry-over into B2: a second and third shape each build their record through `HitRecord::new`;
-  the `#[allow(dead_code)]` on `front_face`, `u`, `v` and `Vec3::cross` stays until a non-test
-  production reader exists, which the render loop does not provide while it colours by `normal`.
+- Carry-over into B2: a second and third shape each build their record through `HitRecord::new`.
+  The `#[allow(dead_code)]` on `front_face` and `u`/`v` stays, because the render loop colours by
+  `normal` and reads neither. `Vec3::cross` gets its first production callers in B2, which removes
+  that one allowance there.
 - Merge obligation from `shared-plan-a+plan-b.md` stays with plan-a's A1r and the coordinator's
   merge: `HitRecord` ends as `Clone` only with `material: Rc<dyn Material>` as its last field and
   last constructor parameter, and `Sphere::new` gains a material parameter. No plan-b phase performs
