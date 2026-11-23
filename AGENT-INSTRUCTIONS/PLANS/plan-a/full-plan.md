@@ -15,10 +15,10 @@
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
 | A1r | Hit record constructor and materials | active | standard | - | `phases/A1r-hit-record-constructor-and-materials.md` | one constructor builds every hit record and the scene scatters by materials | gates green, rendered image shows matte and metal spheres |
-| A1 | Diffuse and metal materials | planned | standard | A1r | - | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
-| A2 | Glass | planned | standard | A1 | - | a glass sphere refracts | gates green, rendered image shows a glass sphere |
-| A3 | Samples per pixel | planned | standard | A1 | - | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
-| Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the user accepts the result | the user accepts |
+| A1 | Diffuse and metal materials | not applicable | standard | A1r | - | covered by A1r | A1r carries this phase |
+| A2 | Glass | planned | standard | A1r | - | a glass sphere refracts | gates green, rendered image shows a glass sphere |
+| A3 | Samples per pixel | planned | standard | A1r | - | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
+| Z1 | Closing survey and user acceptance | planned | minimal | A1r + A2 + A3 | - | the user accepts the result | the user accepts |
 
 ## How to implement this plan
 
