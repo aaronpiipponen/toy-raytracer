@@ -145,9 +145,10 @@ field by field and calls the one constructor.
    ```
 
    `u` is longitude: `0.5 + atan2(z, x) / (2 * PI)`, in 0..=1. `v` is latitude with 0 at the north
-   pole (`+y`): `0.5 - asin(y) / PI`, in 0..=1. Add `use std::f64::consts::PI;` as a new line at
-   the top of `src/sphere.rs` after the file header and before the `use crate::` lines. Leave the
-   quadratic solve, the `t_min`/`t_max` comparisons and the miss path untouched.
+   pole (`+y`): `0.5 - asin(y) / PI`, in 0..=1. Add `use std::f64::consts::PI;` to the `use` block
+   after the existing `use crate::vec3::Vec3;` line, with no blank line between them, so
+   `cargo fmt --check` keeps the order `crate::` then `std::`. Leave the quadratic solve, the
+   `t_min`/`t_max` comparisons and the miss path untouched.
 
 4. `src/main.rs` - no edit. `ray_colour` keeps reading `hit.normal`, which is now the face-corrected
    normal. Every ray in the current scene hits a sphere from outside, so each `normal` keeps the
@@ -226,11 +227,12 @@ field by field and calls the one constructor.
     Run once by the implementer:
     `cargo run --release > /tmp/opencode/render.ppm`, then confirm the header lines are `P3`,
     `200 100` and `255`, and read the centre pixel with
-    `sed -n '10104p' /tmp/opencode/render.ppm`, which is row 50 and column 100 (the header takes
-    the first three lines). It reads `129 126 255` before and after this phase: the sphere's
-    outward normal at that hit is `(0, 0, 1)`, its face side is the front, so the corrected normal
-    equals the outward one. A flipped normal would print a dark blue-dominant value such as
-    `0 0 0`; a wrong record build would fail the render.
+    `sed -n '10104p' /tmp/opencode/render.ppm`, which is output row 51 and column 101 (the header
+    takes the first three lines). It reads `129 126 255` on the current tree and must read the same
+    after the change: that ray leaves the camera slightly off centre, hits the front of the sphere,
+    so the corrected normal equals the outward one and the colour is unchanged. A normal flipped
+    into the surface would print `0 0 0` there. Record the line the command prints; a mismatch is a
+    failed gate.
   - Agent generation: not run; no file under `AGENT-INSTRUCTIONS/SUBAGENTS/` changes.
 - Slow gate (>2 minutes): none.
 
