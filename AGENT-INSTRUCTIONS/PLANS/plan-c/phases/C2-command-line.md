@@ -213,7 +213,7 @@
 
 **Touched files:**
 <!-- touched-files:start -->
-- `src/main.rs` - changed: default size and sample constants, `Format`/`Config` and the hand parser, `render` takes and averages the sample count, `main` parses and dispatches PNG or PPM to the parsed path, `write_ppm` loses `#[allow(dead_code)]`, two tests adapted, three tests added.
+- `src/main.rs` - changed: module header names both formats, default size and sample constants, `Format`/`Config` and the hand parser, `render` takes and averages the sample count, `main` parses and dispatches PNG or PPM to the parsed path, `write_ppm` loses `#[allow(dead_code)]`, two tests adapted, three tests added.
 - `src/hittable.rs` - changed: one plan-naming comment deleted above `point`.
 - `src/vec3.rs` - changed: one plan-naming comment deleted above `cross`.
 - Adds: nothing (no dependency, no config key, no migration, no generated file).
