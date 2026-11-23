@@ -2,18 +2,16 @@
 
 ## Next action
 
-Wait for the user's acceptance of the closing survey or their named changes. On acceptance, send
-`REVIEW AND ADVANCE` for Z1 so the advancer compresses the phase into `done/Z1-closing-survey.md` and
-flips the row. On named changes, schedule them outside Z1 (a later survey or remediation round). The
-plan is not archived without explicit closure authorization.
+Run `REVIEW AND ADVANCE` for Z1 with the user's acceptance so the advancer compresses
+`phases/Z1-closing-survey-and-user-acceptance.md` into `done/Z1-closing-survey.md` and flips its row.
+Then report the completed plan; the release follows and closes/archives it.
 
 ## Current state
 
-Z1 is the only open phase. The closing survey note is written at
-`benchmarks/survey-2026-11-23.md`: 21 cross-checked findings, none fixed, plus out-of-scope
-observations and a user-review list. Two renders were byte-identical, the 200x100 image was
-inspected; `/tmp/opencode/survey-a.png` and `.ppm` are kept for the user and must be removed after
-their reply. Code head `dca633c`, worktree clean, A1r/A2/A3 done, A1 `not applicable`.
+The user accepted the closing survey (`benchmarks/survey-2026-11-23.md`) as it stands and scheduled
+no changes; findings stay recorded. All implementation phases are done (A1r, A2, A3); A1 is
+`not applicable`. Code head `dca633c`, worktree clean. Remove `/tmp/opencode/survey-a.png` and
+`survey-a.ppm` after their reply.
 
 Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
 Work kind: product work (Z1 `minimal`).
@@ -34,3 +32,4 @@ Work kind: product work (Z1 `minimal`).
   dated note; the plan closes only on the user's acceptance.
 - Workspace rule: rendering tests check a few pixels of a small image, never a whole image
   (`LOCAL/repo-rules-domain.md:37`).
+- Plan closure and archiving belong to the release; I never archive the plan myself.
