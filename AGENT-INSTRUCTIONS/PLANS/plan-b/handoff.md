@@ -2,20 +2,19 @@
 
 ## Next action
 
-Spawn `phase-implementer` with `phase_subagent` for the active phase B1. Its phase document is
-`AGENT-INSTRUCTIONS/PLANS/plan-b/phases/B1-face-side-and-texture-coordinates.md`, accepted by the
-orchestrator with one correction already applied (the rendered-image gate compares a before/after
-render with `cmp` instead of a remembered pixel value).
+Spawn a fresh `phase-advancer` in REVIEW AND ADVANCE mode for phase B1, with the receipt below. On
+its handoff, run the acceptance check on B2's detail before any implementer.
 
 ## Current state
 
-B1 is detailed and accepted; no implementation exists. The phase adds `front_face`, `u`, `v` and
-one `HitRecord::new` constructor in `src/hittable.rs`, and computes latitude/longitude `(u, v)` in
-`src/sphere.rs`. Product work, gate level standard: fast gate plus the rendered-image conditional
-gate as a before/after byte comparison. Expected receipt: one adapted test, one new test
-(`a_ray_from_inside_the_sphere_flips_the_normal`). Next after B1: B2 (planes and triangles), then
-B3 (bounding boxes), then Z1 (closing survey and user acceptance). `scope.md` is final. Autonomous
-mode is on; standing authorization for phase commits exists.
+B1 is implemented and pending review/advance; tested head `6eb43e09`. Receipt: base `e180476`,
+head `6eb43e09`; `cargo build`, `cargo test` (6 passed), `cargo clippy -- -D warnings`,
+`cargo fmt --check`, `git diff --check` all pass; rendered-image gate passed as a byte-identical
+before/after `cmp`; test budget 1 added / 0 deleted. Implementer review loop: 1 round, no real
+finding. User test: not required. No `USER DECISION REQUIRED`, no blocker. Next phases: B2 (planes
+and triangles), B3 (bounding boxes), Z1 (closing survey and user acceptance). `scope.md` is final.
+Autonomous mode is on; standing authorization for phase commits exists. The plan is linked to the
+coordinator; no hold has been received.
 
 ## Learned rules
 
