@@ -2,8 +2,7 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in REVIEW AND ADVANCE mode for B2 with the receipt below. It should
-complete B2 and produce DETAIL READY for B3 (bounding boxes).
+Spawn `phase-implementer` with `phase_subagent` for the active phase B3.
 
 ## Current state
 

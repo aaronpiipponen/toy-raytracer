@@ -2,15 +2,16 @@
 
 ## Next action
 
-Run `REVIEW AND ADVANCE` for A1r at `b7af7f8a0ad52671c92b1ca62d0825feb4fbb13f`; on advancement,
-take its next-phase handoff and run the acceptance check before detailing/implementing A2.
+Implement A2 from `phases/A2-glass.md`; on its receipt run `REVIEW AND ADVANCE` for A2, then
+continue with A3.
 
 ## Current state
 
-A1r implemented and committed (`e180476..b7af7f8`), fast gate and rendered-image gate green, one
-review pass with no findings, user test not required. A1 `not applicable` (carried by A1r). A2
-(glass), A3 (samples) and Z1 planned. The coordinator may re-examine the plan-c overlap on the
-implemented A1r; that is outside this phase and must not change it.
+A1r done and compressed (`b7af7f8`, reviewed and advanced). A1 `not applicable`. A2 active and
+detailed (passed the orchestrator acceptance check). A3 (samples per pixel) and Z1 planned.
+Worktree clean on branch `plan-a`. The release merge reconciles `main`/`write_ppm`/`render`/
+`ray_colour` with the output plan and the face-side normal with the geometry plan; that is not
+phase work.
 
 Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
 Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
