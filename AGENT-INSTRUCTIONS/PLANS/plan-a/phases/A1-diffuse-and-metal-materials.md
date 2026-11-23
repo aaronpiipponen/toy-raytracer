@@ -97,10 +97,11 @@ beside the new path.
    `HitRecord` gains `material: Rc::clone(&self.material)`. Both existing tests pass a material of
    their own (see **Tests**).
 4. `src/main.rs` - `mod material;` in the module list, then `mod rng;` without its
-   `#[allow(dead_code)]` on line 7. Delete the comment line above `mod rng;` on line 6 (`// Seeded
-   randomness for the scattering and sampling the plans add.`), because the phase edits that
-   comment's line. Imports gain `use std::rc::Rc;`, `use material::{Lambertian, Metal};` and
-   `use rng::Rng;` (keep the existing imports).
+   `#[allow(dead_code)]` on line 7. Delete the comment line above `mod rng;` on line 6 as well
+   (`// Seeded randomness for the scattering and sampling the plans add.`): the phase rewrites this
+   declaration block, and the prose rules forbid a plan reference in it. Imports gain
+   `use std::rc::Rc;`, `use material::{Lambertian, Metal};` and `use rng::Rng;` (keep the existing
+   imports).
 5. `src/main.rs` - add `const MAX_BOUNCES: usize = 50;` and `const RNG_SEED: u64 = 2024;`.
    `ray_colour` changes from `fn ray_colour(ray: &Ray, world: &dyn Hittable) -> Colour` to
    `fn ray_colour(ray: Ray, world: &dyn Hittable, rng: &mut Rng) -> Colour`. Its body becomes:
@@ -211,10 +212,10 @@ beside the new path.
     `Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5)))` to `Sphere::new`.
 - Fast gate: `~/.cargo/bin/cargo build`, `~/.cargo/bin/cargo test`,
   `~/.cargo/bin/cargo clippy -- -D warnings`, `~/.cargo/bin/cargo fmt --check`,
-  `git diff --check`. The whole suite is the targeted run for this crate (eight unit-test functions
-  in one binary, finishing in well under a second); when one test fails, rerun it by node id, for
-  example `~/.cargo/bin/cargo test tests::the_center_pixel_shows_the_diffuse_sphere`. Use `cargo`
-  directly when it is on `PATH`; this shell keeps the toolchain in `~/.cargo/bin`.
+  `git diff --check`. The whole suite is the targeted run for this crate (one binary, finishing in
+  well under a second); when one test fails, rerun it by node id, for example
+  `~/.cargo/bin/cargo test tests::the_center_pixel_shows_the_diffuse_sphere`. Use `cargo` directly
+  when it is on `PATH`; this shell keeps the toolchain in `~/.cargo/bin`.
 - Conditional gates: Rendered image, required because the render loop, both materials, the camera
   usage through `render` and the output values change. The single run is
   `~/.cargo/bin/cargo run --release > /tmp/opencode/a1-render.ppm` (the command line is the output
