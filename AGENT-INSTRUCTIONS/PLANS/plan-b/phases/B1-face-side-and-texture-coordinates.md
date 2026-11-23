@@ -2,9 +2,9 @@
 
 **Status:** active.
 **Depends on:** B1r (`done/B1r-face-side-and-texture-coordinates.md`).
-**Scope:** close out row `B1` against the contract `B1r` landed. It removes the two source comments that still name plans (`src/main.rs:6`, `src/vec3.rs:21`), asserts the front-face side in the existing sphere hit test so requirement 7 is proven for both sides, and records that requirements 7 and 8 are satisfied by the landed code. It adds no field, no constructor, no shape and no reader of `front_face`, `u` or `v`. Planes, triangles and bounding boxes stay in B2 and B3.
+**Scope:** close out row `B1` against the contract `B1r` landed. It removes the two source comments that still name plans (`src/main.rs:6`, `src/vec3.rs:21`), asserts the front-face side in the existing sphere hit test so requirement 7 is proven for both sides, and records that requirements 7 and 8 are satisfied by the landed code. It adds no field, no constructor, no shape and no production reader of `front_face`, `u` or `v`; the one new read is an assertion inside a `#[cfg(test)]` module. Planes, triangles and bounding boxes stay in B2 and B3.
 **Gate level:** standard - the phase changes a test and two source comments, so it runs the fast gate, but it changes no runtime behavior and no contract.
-**Simplicity statement:** the phase deletes text and adds one assertion. It adds no test function, no validation, no clamp and no reader of the new record fields. The three `#[allow(dead_code)]` attributes on `front_face`, `u` and `v` stay, because a read inside `#[cfg(test)]` does not count as a non-test reader and `cargo build` would otherwise fail on `-D warnings`.
+**Simplicity statement:** the phase deletes text and adds one assertion. It adds no test function, no validation, no clamp and no production reader of the new record fields. The three `#[allow(dead_code)]` attributes on `front_face`, `u` and `v` stay, because a read inside `#[cfg(test)]` does not count as a non-test reader and `cargo build` would otherwise fail on `-D warnings`.
 
 **Current state (verified):**
 - `src/hittable.rs` - `HitRecord` holds `t`, `point`, `normal`, `front_face`, `u`, `v` in that order, derives `Clone, Copy, Debug`, and is built only by `HitRecord::new(t, point, outward_normal, ray, u, v)`; `front_face`, `u` and `v` carry `#[allow(dead_code)]`.
@@ -50,7 +50,7 @@
 **Rules / MUST NOT:**
 - Do not add `front_face`, `u`, `v`, a constructor or any field; `B1r` landed them and this phase changes nothing in `src/hittable.rs`.
 - Do not remove the `#[allow(dead_code)]` on `front_face`, `u`, `v`, `point`, `mod rng` or `Vec3::cross`; no non-test reader exists on this branch.
-- Do not add a reader of `u` or `v`, a texture lookup, or a clamp of either.
+- Do not add a production reader of `u` or `v`, a texture lookup, or a clamp of either; the only new read of a record field in this phase is the `front_face` assertion inside the test module.
 - Do not change `src/main.rs`'s colouring, the scene, the camera, the render loop or the output.
 - Do not name plan-a's symbols (`Material`, `Lambertian`, `Metal`, `Rc<dyn Material>`), and do not add the `material` field or the `Rc` import; those arrive only through the coordinator's merge.
 - Do not add a test function; the one assertion is an adaptation of an existing test (REPO-RULES §3a).
