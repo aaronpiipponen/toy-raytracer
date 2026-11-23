@@ -1,6 +1,6 @@
 # Output Plan
 
-> **Status:** scoped forward plan on branch `plan-c`.
+> **Status:** archived 2026-11-23, completed on branch `plan-c`.
 > **Scope:** how the program is run and what it writes: the PNG writer, the command line and the
 > progress line (`docs/requirements.md` items 11 to 13).
 > **Out of scope:** materials, sampling and scattering (the materials plan); shapes and hit data
