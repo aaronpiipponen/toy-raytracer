@@ -2,15 +2,18 @@
 
 ## Next action
 
-Run `REVIEW AND ADVANCE` for A3 at `dca633c`; on advancement take its Z1 handoff. Z1 is the closing
-survey phase: I dispatch one read-only `ops-scout` per area in parallel, then one cross-check scout,
-then write the dated note into `benchmarks/` myself, and the user accepts before the plan closes.
+Wait for the user's acceptance of the closing survey or their named changes. On acceptance, send
+`REVIEW AND ADVANCE` for Z1 so the advancer compresses the phase into `done/Z1-closing-survey.md` and
+flips the row. On named changes, schedule them outside Z1 (a later survey or remediation round). The
+plan is not archived without explicit closure authorization.
 
 ## Current state
 
-A1r, A2 done. A3 implemented and committed (`d079bb0..dca633c`): `SAMPLES = 16`,
-`render(width, height, samples)` averaging jittered rays, one new test, 12 tests green, rendered
-image observed smooth, review clean, user test not required. Z1 planned.
+Z1 is the only open phase. The closing survey note is written at
+`benchmarks/survey-2026-11-23.md`: 21 cross-checked findings, none fixed, plus out-of-scope
+observations and a user-review list. Two renders were byte-identical, the 200x100 image was
+inspected; `/tmp/opencode/survey-a.png` and `.ppm` are kept for the user and must be removed after
+their reply. Code head `dca633c`, worktree clean, A1r/A2/A3 done, A1 `not applicable`.
 
 Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
 Work kind: product work (Z1 `minimal`).
@@ -29,3 +32,5 @@ Work kind: product work (Z1 `minimal`).
   repository.
 - The closing survey is mine to run: parallel area scouts, one cross-check scout, then I write the
   dated note; the plan closes only on the user's acceptance.
+- Workspace rule: rendering tests check a few pixels of a small image, never a whole image
+  (`LOCAL/repo-rules-domain.md:37`).
