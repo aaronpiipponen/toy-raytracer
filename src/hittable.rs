@@ -7,7 +7,6 @@ use crate::vec3::Vec3;
 #[derive(Clone, Copy, Debug)]
 pub struct HitRecord {
     pub t: f64,
-    // The origin of the bounce rays the materials plan adds.
     #[allow(dead_code)]
     pub point: Vec3,
     pub normal: Vec3,
