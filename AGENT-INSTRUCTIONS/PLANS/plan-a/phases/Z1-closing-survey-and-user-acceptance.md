@@ -113,8 +113,9 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
      rerun them on the unchanged revision;
    - the test budget: seven functions added across A1r, A2 and A3, at most three per phase, and no
      deleted function or weakened assertion;
-   - documentation accuracy: the repository map names every module in `src/`, and no permanent
-     document or code comment names a plan.
+   - documentation accuracy: record whether the repository map names every module in `src/`, and
+     whether any permanent document or code comment names a plan. Each failure is a finding with
+     `file:line` evidence and goes on the user-review list like every other finding.
 6. Render the scene twice for the comparison and the reproducibility check, from `~/.cargo/bin/cargo`
    when `cargo` is not on `PATH`, then check the files in the same shell:
    ```bash
@@ -221,7 +222,10 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
 - [ ] Every finding carries `file:line` evidence and a cross-check verdict. No `WRONG` finding
       remains, and every `UNCLEAR` finding is on the user-review list.
 - [ ] The note records the requirement checks for items 1 to 6, the three hard invariants, the test
-      budget, the documentation accuracy and the statement that no earlier survey note exists.
+      budget and the statement that no earlier survey note exists.
+- [ ] The note records the documentation-accuracy check result, and each documentation failure it
+      finds appears as a finding with `file:line` evidence on the user-review list. The check is
+      recorded as an observation, not asserted as a fact the note must satisfy.
 - [ ] The 200 by 100 render has 20003 lines starting `P3`, `200 100` and `255`, two runs are
       byte-identical, and the opened PNG shows the four spheres with their materials and smooth
       edges.
