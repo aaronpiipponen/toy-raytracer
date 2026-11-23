@@ -17,4 +17,6 @@ The options are:
 
 `cargo run` with no options writes `render.png` at 400 by 200 with 16 samples.
 
+While rendering, a progress line on standard error shows the share of rows done.
+
 `docs/requirements.md` states what the finished program does.

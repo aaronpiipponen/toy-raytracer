@@ -41,12 +41,13 @@ fn scene() -> HittableList {
     world
 }
 
-/// Every pixel's colour, row by row from the top.
+/// Every pixel's colour, row by row from the top. A progress line on standard error reports the
+/// share of rows done.
 fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
     let world = scene();
     let camera = Camera::new(width as f64 / height as f64);
     let mut pixels = Vec::with_capacity(width * height);
-    for row in (0..height).rev() {
+    for (done, row) in (0..height).rev().enumerate() {
         for column in 0..width {
             let u = column as f64 / (width - 1) as f64;
             let v = row as f64 / (height - 1) as f64;
@@ -57,7 +58,9 @@ fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
             }
             pixels.push(colour / samples as f64);
         }
+        eprint!("\r{:3}%", (done + 1) * 100 / height);
     }
+    eprintln!();
     pixels
 }
 
