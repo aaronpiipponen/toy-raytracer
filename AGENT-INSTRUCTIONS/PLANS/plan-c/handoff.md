@@ -2,21 +2,22 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `DETAIL ACTIVE` mode to re-detail C2 with the README usage
-correction.
+Spawn a fresh `phase-implementer` for phase C2 via `phase_subagent`.
 
 ## Current state
 
-C1 is done (`done/C1-png-writer.md`). C2 is active and detailed in `phases/C2-command-line.md`, but
-the document wrongly declares no documentation page changes and forbids touching `README.md`.
-`AGENT-INSTRUCTIONS/LOCAL/documentation-pages.md` requires a command-line change to update the
-usage in `README.md`, so C2 must include that edit. The rest of C2 passed the acceptance check.
+C1 is done (`done/C1-png-writer.md`). C2 is detailed in `phases/C2-command-line.md`, the README
+usage correction is in, and the whole document passed the orchestrator acceptance check. C2 adds the
+hand parser, the defaults, PNG/PPM dispatch, `render(width, height, samples)` averaging without
+jitter, three tests, two adapted tests, the README usage block and the two carry-over comment
+deletions.
 
 ## Learned rules
 
 - `cargo` may not be on `PATH`; use `~/.cargo/bin/cargo` (gates.md).
-- Rendered-image gate is the option form once C2 lands.
 - Workspace detail must respect `AGENT-INSTRUCTIONS/LOCAL/documentation-pages.md`: a command-line
   change updates the usage in `README.md`.
 - Known cross-plan seam: C2 owns `render(width, height, samples)` averaging; the materials plan adds
   jitter to the same function, so the release/coordinator reconciles it at merge.
+- When the advancer promotes and details the next phase in REVIEW AND ADVANCE, still run the full
+  acceptance check on the new phase document before any implementer starts.
