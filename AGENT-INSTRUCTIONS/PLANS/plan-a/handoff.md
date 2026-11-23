@@ -2,17 +2,18 @@
 
 ## Next action
 
-Implement A3 from `phases/A3-samples-per-pixel.md`; on its receipt run `REVIEW AND ADVANCE` for A3,
-then Z1 (closing survey).
+Run `REVIEW AND ADVANCE` for A3 at `dca633c`; on advancement take its Z1 handoff. Z1 is the closing
+survey phase: I dispatch one read-only `ops-scout` per area in parallel, then one cross-check scout,
+then write the dated note into `benchmarks/` myself, and the user accepts before the plan closes.
 
 ## Current state
 
-A1r and A2 done (`b7af7f8`, `d079bb0`). A3 active and detailed (passed the orchestrator acceptance
-check): `SAMPLES = 16`, `render(width, height, samples)` averaging jittered rays from the one seeded
-generator, one new exact-average test, two test calls adapted. Z1 remains planned.
+A1r, A2 done. A3 implemented and committed (`d079bb0..dca633c`): `SAMPLES = 16`,
+`render(width, height, samples)` averaging jittered rays, one new test, 12 tests green, rendered
+image observed smooth, review clean, user test not required. Z1 planned.
 
 Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
-Work kind: product work (A3 `standard`, Z1 `minimal`).
+Work kind: product work (Z1 `minimal`).
 
 ## Learned rules
 
@@ -26,3 +27,5 @@ Work kind: product work (A3 `standard`, Z1 `minimal`).
   implementer session rather than restarting the phase.
 - Render artifacts left in `/tmp/opencode` are reused by a phase's user test, never written into the
   repository.
+- The closing survey is mine to run: parallel area scouts, one cross-check scout, then I write the
+  dated note; the plan closes only on the user's acceptance.
