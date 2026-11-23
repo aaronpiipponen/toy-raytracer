@@ -32,7 +32,7 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
 - `src/triangle.rs:23-67` - `Triangle::hit` and `Triangle::bounding_box`.
 - `src/aabb.rs:1-46` - `Aabb { min, max }`, `Aabb::new` and the slab test.
 - `src/vec3.rs:21-27` - `Vec3::cross`, which carries no `#[allow(dead_code)]` attribute and no
-  comment, and has one caller in `src/triangle.rs`.
+  comment, and is called by `src/plane.rs` and `src/triangle.rs`.
 - `src/main.rs:3-13` - the module list with `mod aabb;` first. `src/main.rs:36-46` - `scene()` with
   two spheres and one triangle.
 - Eleven test functions: `src/aabb.rs` 1, `src/hittable.rs` 1, `src/main.rs` 2, `src/plane.rs` 1,
@@ -72,9 +72,10 @@ hand this phase to `phase_subagent` and do not ask a writer to produce the note.
    - **Triangle:** `src/triangle.rs` in full. Judged against requirements 8, 9 and 10.
    - **Bounding box and its four implementations:** `src/aabb.rs` in full and the four
      `bounding_box` methods. Judged against requirement 10 and REPO-RULES §0.
-   - **Shared vector helper:** `src/vec3.rs:21-27`, `Vec3::cross`, and its use in
-     `src/triangle.rs`. Judged against REPO-RULES §0 and the B2 frozen contract, which records that
-     `cross` carries neither an `#[allow(dead_code)]` attribute nor a comment naming a plan.
+   - **Shared vector helper:** `src/vec3.rs:21-27`, `Vec3::cross`, and its calls in
+     `src/plane.rs:55-56` and `src/triangle.rs:27,39,49`. Judged against REPO-RULES §0 and the B2
+     frozen contract, which records that `cross` carries neither an `#[allow(dead_code)]` attribute
+     nor a comment naming a plan.
    - **Scene's triangle object:** `src/main.rs:3-13` and `:36-46`. Judged against requirement 9.
    - **Tests across the plan:** the test modules of `src/aabb.rs`, `src/hittable.rs`,
      `src/sphere.rs`, `src/plane.rs`, `src/triangle.rs`, `src/main.rs` and `src/rng.rs`, all eleven
