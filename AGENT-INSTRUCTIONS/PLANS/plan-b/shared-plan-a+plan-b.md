@@ -40,7 +40,7 @@ A1 chooses the `HitRecord` derive list as `Clone` alone.
 ## Face-normal helper
 
 B1 adds one helper, `HitRecord::new(t, point, outward_normal, ray, u, v)`, which sets
-`front_face = outward_normal.dot(&ray.direction) < 0.0` and
+`front_face = outward_normal.dot(ray.direction) < 0.0` and
 `normal = if front_face { outward_normal } else { -outward_normal }`. In the merged tree the same
 function gains `material: Rc<dyn Material>` as its last parameter and assigns it. The signature
 changes exactly once, at merge; no branch ever names the other branch's new symbols.
@@ -68,6 +68,13 @@ changes exactly once, at merge; no branch ever names the other branch's new symb
    fixed scene hits front faces only.
 5. Nobody reruns the other plan's move-on gate; each verifies its own on its own branch, and the
    merge follows this checklist.
+6. Test helpers that build a record follow the merged shape: the materials test helper in
+   `src/material.rs` (`hit_with_normal`) either builds its record through `HitRecord::new` or keeps a
+   literal carrying `front_face`, `u` and `v`. Through the helper the ray must point into the
+   surface, so `front_face` and the against-the-ray normal stay consistent with the normal the test
+   asserts; as a literal the fields must be that same self-consistent triple (`front_face: true`,
+   the test's normal, and any `(u, v)` in 0..=1). No test-only construction path keeps the
+   four-field shape.
 
 ## What each plan may rely on
 

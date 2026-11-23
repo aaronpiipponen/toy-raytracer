@@ -40,7 +40,7 @@ A1 chooses the `HitRecord` derive list as `Clone` alone.
 ## Face-normal helper
 
 B1 adds one helper, `HitRecord::new(t, point, outward_normal, ray, u, v)`, which sets
-`front_face = outward_normal.dot(&ray.direction) < 0.0` and
+`front_face = outward_normal.dot(ray.direction) < 0.0` and
 `normal = if front_face { outward_normal } else { -outward_normal }`. In the merged tree the same
 function gains `material: Rc<dyn Material>` as its last parameter and assigns it. The signature
 changes exactly once, at merge; no branch ever names the other branch's new symbols.
