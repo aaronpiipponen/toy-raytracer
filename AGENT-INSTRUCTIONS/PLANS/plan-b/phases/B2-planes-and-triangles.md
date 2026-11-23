@@ -1,6 +1,6 @@
 ## Phase B2 - Planes and triangles
 
-**Status:** planned.
+**Status:** active.
 **Depends on:** `done/B1-face-side-and-texture-coordinates.md`, which froze `HitRecord` and
 `HitRecord::new`, and `done/B2r-shared-hit-record-resolution.md`, which makes `HittableList::hit`
 read the nearest distance through `nearest.as_ref()`.
@@ -43,7 +43,7 @@ and the phase deletes the stale plan-naming comments listed under carry-overs.
 - `src/main.rs:86-97` - two tests pin the centre pixel to the sphere and the top row to the sky.
 - `docs/requirements.md:23-28` - items 7 and 8 (face side, texture coordinates for spheres, planes
   and triangles) and item 9 (the scene can hold planes and triangles).
-- `src/main.rs:4-8` and `src/hittable.rs:11` - the plan-naming comments listed under carry-overs.
+- `src/main.rs:6` and `src/hittable.rs:11` - the plan-naming comments listed under carry-overs.
 
 **Read first (do not invent):**
 - `src/hittable.rs`, whole file - the record, `HitRecord::new` and the trait this phase implements.

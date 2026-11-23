@@ -2,15 +2,16 @@
 
 ## Next action
 
-Implement A1r from `phases/A1r-hit-record-constructor-and-materials.md`; on its receipt, run
-`REVIEW AND ADVANCE` for A1r, then continue with A2.
+Resume the A1r implementer (session `ses_df5c575d1ffe7pohdqPykjTX2c`) after the released hold:
+finish the review loop, commit and return the receipt. Then run `REVIEW AND ADVANCE` for A1r.
 
 ## Current state
 
-Pair plan-a-A1+plan-b-B2 resolved and the channel is closed. plan-a writes only its own side on
-branch `plan-a`; no cross-branch transfer, no branch merges another, and the releases merge both
-into main later by `PLANS/shared/plan-a-A1+plan-b-B2.md`. A1r is active and detailed (passed the
-orchestrator acceptance check). A1 is `not applicable` (carried by A1r). A2, A3 and Z1 are planned.
+A1r is active and implemented but uncommitted: branch head `e180476`, dirty tree with
+`src/material.rs` (new), `src/hittable.rs`, `src/sphere.rs`, `src/main.rs`; fast gate green, rendered
+image inspected. The A1r/C3 coordinator hold was released (it was armed after the implementer had
+started); the coordinator will re-examine the plan-c overlap on the implemented A1r. A1 is
+`not applicable` (carried by A1r); A2, A3 and Z1 are planned.
 
 Autonomous mode on; standing authorization for phase commits on branch `plan-a`.
 Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
@@ -23,3 +24,5 @@ Work kind: product work for every phase (gate level `standard`, Z1 `minimal`).
   side writes on its own branch, and the release merges both into main.
 - A resolution phase carries the held phase's work; the held row becomes `not applicable` rather
   than staying as an empty planned phase.
+- A coordinator hold armed after an implementer has already started is not valid; resume that same
+  implementer session rather than restarting the phase.
