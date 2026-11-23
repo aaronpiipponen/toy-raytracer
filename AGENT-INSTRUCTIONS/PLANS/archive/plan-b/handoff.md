@@ -2,16 +2,22 @@
 
 ## Next action
 
-Plan-b's phase work is complete; the release follows and closes the plan. Nothing is running. Hand off
-to the release with: branch `plan-b`, code head `2b4e2b7`, every status row `done`, survey note
-`benchmarks/survey-2026-11-23.md` accepted by the user, and the two coverage findings (F9, F10)
-recorded but deliberately not fixed.
+None. The release merged the plan into `main` at `5b149b7` and archived the plan on 2026-11-23.
 
 ## Current state
 
 - B1 `6eb43e09`, B2r `5204447`, B2 `a5c6665`, B3 `2b4e2b7`; Z1 done (survey note + user acceptance).
-- Every `full-plan.md` row reads `done`; `phases/` is gone; `done/` holds the five frozen contracts.
-- The plan is not archived: closure belongs to the release.
+- Every `full-plan.md` row reads `done`; `done/` holds the five frozen contracts.
+- The release documentation pass corrected four comments in `src/aabb.rs`, `src/hittable.rs` and
+  `src/plane.rs` at `3f6ef46`: the closed box interval, the two function doc comments that opened
+  with a noun phrase, and the ambiguous `HitRecord::new` wording. It changed no code.
+- The merge conflicted only in `src/main.rs` (both branches' module lists) and `src/vec3.rs` (the
+  `#[allow(dead_code)]` line), both covered by `PLANS/shared/plan-a-A1+plan-b-B2.md`. `src/hittable.rs`
+  merged cleanly. No conflict needed a choice the shared design does not make.
+- The merged `main` passes `cargo build`, `cargo test` (16 passed), `cargo clippy -- -D warnings`,
+  `cargo fmt --check` and `git diff --check`. The rendered-image gate passes: the 80 by 40 PNG opens
+  and shows the sky, ground, sphere and triangle, and the 200 by 100 PPM keeps the survey's pixel
+  probes (line 4 `165 201 255`, line 7441 `127 127 255`, line 10104 `129 126 255`).
 - Settled user decisions: accept the survey as it stands; do not add the F9/F10 coverage tests.
 - No `docs-pass.md` exists because this plan deferred no page work to the release.
 - Autonomous mode on; standing authorization for phase commits exists.

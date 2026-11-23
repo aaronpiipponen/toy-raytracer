@@ -1,6 +1,6 @@
 # Geometry Plan
 
-> **Status:** scoped forward plan on branch `plan-b`.
+> **Status:** archived 2026-11-23, completed on branch `plan-b`.
 > **Scope:** what a hit records and which shapes exist: the front-face flag, texture coordinates,
 > planes, triangles and bounding boxes (`docs/requirements.md` items 7 to 10).
 > **Out of scope:** materials and scattering (the materials plan); the PNG writer, the command line

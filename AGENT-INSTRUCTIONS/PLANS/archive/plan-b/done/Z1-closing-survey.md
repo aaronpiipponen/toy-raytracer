@@ -4,7 +4,7 @@
 **Gate level:** minimal.
 
 **Frozen contract:**
-- `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/survey-2026-11-23.md` is the plan's closing survey
+- `AGENT-INSTRUCTIONS/PLANS/archive/plan-b/benchmarks/survey-2026-11-23.md` is the plan's closing survey
   note, dated 2026-11-23. It surveys the ten areas this plan added or changed, with one read-only
   pass per area and one cross-check pass, and it holds the findings with `file:line` evidence and a
   cross-check verdict, the out-of-scope observations, the checks performed and the user-review list.
@@ -16,7 +16,7 @@
   action.
 - The note added no product source, test, configuration or permanent document change. The code head
   is `2b4e2b7` and `git status --porcelain` in the worktree is empty.
-- The plan folder is at `AGENT-INSTRUCTIONS/PLANS/plan-b/`. The release closes it, not this
+- The plan folder is at `AGENT-INSTRUCTIONS/PLANS/archive/plan-b/`. The release closes it, not this
   phase.
 
 **Evidence:** the 200 by 100 render pair at `2b4e2b7` is byte-identical, with `wc -l` 20003, header
