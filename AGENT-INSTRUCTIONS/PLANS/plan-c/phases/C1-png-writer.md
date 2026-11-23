@@ -85,12 +85,22 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
    above it, because `main` stops calling it until the format option selects it. Write no
    comment about why it is unused.
 5. `src/png.rs`, tests - add `#[cfg(test)] mod tests` with the two tests in the `Tests` section.
-6. `README.md` - keep the file's present shape and change only the run example: the code fence
-   becomes `cargo run` followed by `cargo test`, and the sentence before `docs/requirements.md`
-   states that `cargo run` writes `render.png`. `AGENT-INSTRUCTIONS/LOCAL/documentation-pages.md`
-   names `README.md` as the only page that carries the usage, and the guide named there gives the
-   README no other page set to update. Load the `readme-guide` skill before editing and keep the
-   documentation style wording.
+6. `README.md` - replace lines 5 to 10 with exactly this text, keeping the heading and the
+   sentence above the fence:
+   ````text
+   ```sh
+   cargo run
+   cargo test
+   ```
+
+   `cargo run` writes `render.png`.
+
+   `docs/requirements.md` states what the finished program does.
+   ````
+   `AGENT-INSTRUCTIONS/LOCAL/documentation-pages.md` states that the documentation is `README.md`
+   and `docs/requirements.md` and that no other page set exists. Load the `readme-guide` skill
+   (its source is `AGENT-INSTRUCTIONS/BUILDING/README-GUIDE.md`) for the wording, and keep the
+   file's present shape.
 7. `AGENT-INSTRUCTIONS/LOCAL/project.md` - extend the repository map line in
    `## Project sources of truth` with `png.rs` (the PNG encoding). Load the `agent-instructions`
    skill before editing this file, because the edit is outside `PLANS/`.
@@ -133,8 +143,8 @@ it, and it carries `#[allow(dead_code)]` because `main` no longer calls it.
   fallback for a write error. A write error returns from `main` with `?`.
 - Do not validate, clamp or reject dimensions and lengths. `render` supplies the bytes and the
   size.
-- Do not restructure `README.md`, add new sections to it, or change `docs/requirements.md`; the
-  run example is the only README text this phase changes.
+- Do not restructure `README.md`, add sections to it, or change `docs/requirements.md`; the run
+  example and the one usage sentence in step 6 are the only README text this phase changes.
 - Do not mention plans, phases or future work in source comments, module headers, the README or
   test names. Comments state what the code does now.
 - Single-threaded, no `unsafe`.
