@@ -2,9 +2,10 @@
 
 ## Next action
 
-Do not start any implementer. Phase B2 is held by the coordinator (`pair plan-a-A1+plan-b-B2`) and
-its start must not be attempted or routed around. Wait for the coordinator's `CHANNEL OPEN`; then
-settle through `channel_send` and write `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md`,
+Plan-b is HELD: the B2 implementer start was refused with `COORDINATOR HOLD` (overlap with plan-a
+A1 on `HitRecord`/`Sphere::hit`). Start nothing, retry nothing. Wait for the coordinator's
+`CHANNEL OPEN`; then settle through `channel_send` and write
+`AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md`,
 spawn `DETAIL RESOLUTION: Pair plan-a-A1+plan-b-B2. Plans plan-b (held phase B2) and plan-a (held
 phase A1). Shared design: PLANS/shared/plan-a-A1+plan-b-B2.md.`, run the orchestrator acceptance
 check on both resolution phase files, `channel_close`, then continue the loop with plan-b's
