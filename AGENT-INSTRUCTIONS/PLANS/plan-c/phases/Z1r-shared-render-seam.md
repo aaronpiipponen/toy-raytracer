@@ -1,6 +1,6 @@
 ## Phase Z1r - Shared render seam resolution
 
-**Status:** active.
+**Status:** done.
 **Depends on:** C1 and C3, whose frozen contracts are in `done/C1-png-writer-and-command-line.md`
 and `done/C3-progress-line.md`, and the shared design
 `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md`, which both plans read as the one copy.
