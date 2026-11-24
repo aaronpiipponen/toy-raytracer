@@ -1,4 +1,6 @@
 {
   "integration": "main",
-  "resources": []
+  "resources": [
+    "render slot"
+  ]
 }
