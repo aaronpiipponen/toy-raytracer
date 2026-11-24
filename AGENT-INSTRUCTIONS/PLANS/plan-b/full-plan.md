@@ -17,7 +17,7 @@
 | B1 | Face side and texture coordinates | done | standard | - | `done/B1-face-side-and-texture-coordinates.md` | every hit records its face side and (u, v) | gates green |
 | B2 | Planes and triangles | done | standard | B1 | `done/B2-planes-and-triangles.md` | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
 | B3 | Bounding boxes | done | standard | B2 | `done/B3-bounding-boxes.md` | the scene list skips objects whose box the ray misses | gates green, same image as before |
-| Z1 | Closing survey and user acceptance | active | minimal | B1 + B2 + B3 | `phases/Z1-closing-survey-and-user-acceptance.md` | the user accepts the result | the user accepts |
+| Z1 | Closing survey and user acceptance | done | minimal | B1 + B2 + B3 | `done/Z1-closing-survey-and-user-acceptance.md` | the user accepts the result | the user accepts |
 
 ## How to implement this plan
 
@@ -58,7 +58,8 @@ and `HittableList` testing a box before its object.
 
 ### Z1 - Closing survey and user acceptance
 
-**Status:** active. The detailed phase is `phases/Z1-closing-survey-and-user-acceptance.md`.
+**Status:** done. The frozen contract and the carry-overs are in
+`done/Z1-closing-survey-and-user-acceptance.md`.
 
 The binding closing survey of everything the plan added or changed: one read-only `ops-scout` per
 area in parallel, then one independent `ops-scout` cross-checking every finding against the code, and
@@ -67,4 +68,4 @@ this phase. Also render the scene, compare it with the requirements, and ask the
 
 ## Carry-overs
 
-None.
+The release-merge carry-overs are listed in `done/Z1-closing-survey-and-user-acceptance.md`.
