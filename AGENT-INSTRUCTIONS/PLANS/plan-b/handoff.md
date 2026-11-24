@@ -2,22 +2,21 @@
 
 ## Next action
 
-`phase-advancer` is advancing B2r in the background. Pair `plan-a-A1+plan-b-B2` is settled:
-`PLANS/shared/plan-a-A1+plan-b-B2.md`, plan-a's `A1r3` and plan-b's
-`phases/B2r-shared-scene-settlement.md` both passed my check, and I sent plan-a `RESOLVED`. When the
-advancer returns, run the orchestrator acceptance check on B2's (re-)detail before starting B2's
-implementer.
+`phase-implementer` is implementing B2 (planes and triangles) in the background. When it returns a
+complete receipt (fresh reviewer, fixes, fresh passes finished), spawn a fresh `phase-advancer` in
+`REVIEW AND ADVANCE` for B2.
 
 ## Current state
 
-- B1r done at `f0f11e2`; B2 detailed and accepted but its implementation was held by the B2 overlap.
-- B2's detail (`phases/B2-planes-and-triangles.md`) is unchanged: plane at `y = -0.5`, triangle at
-  `z = -2`, six-argument `HitRecord::new`, no material, three new tests, no `docs/` change.
-- The B2 settlement (`phases/B2r-shared-scene-settlement.md`, written by plan-a as leader, corrected
-  by me) is documentation-only: plan-b's branch shape unchanged; the merge adds
-  `Rc<dyn Material>` to `Plane`/`Triangle`, composes the four-material scene, uses the borrowed
-  nearest record plus B3's box test, and keeps the plane's normalisation and `(u, v)` mapping.
-- B2r has no status row yet; adding it, compressing it and promoting B2 are the advancer's work.
+- B1r done at `f0f11e2`; B2r (shared scene settlement) done, `done/B2r-shared-scene-settlement.md`.
+- B2 active and accepted by my check: `phases/B2-planes-and-triangles.md` - plane at `y = -0.5`,
+  triangle at `z = -2`, six-argument `HitRecord::new`, no material, no box, three new tests, one
+  rendered-image acceptance by the agent, no `docs/` change. I corrected the plan's scoped B2 entry
+  to say the ground sphere becomes the plane.
+- Settlements that bind later phases: `PLANS/shared/plan-a-A1+plan-b-B1.md` and
+  `PLANS/shared/plan-a-A1+plan-b-B2.md`; both branches stay material-free; the release merge composes
+  the scene and adds materials, boxes, and the borrowed nearest record.
+- B3 (bounding boxes) and Z1 follow; Z1 is the mandatory closing survey plus the user's acceptance.
 - Autonomous mode: small, easily undoable, behaviour-neutral choices only; `autonomous-decisions.md`
   when the first is recorded. Product decisions still go to the user.
 

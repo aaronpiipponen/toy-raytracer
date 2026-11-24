@@ -23,6 +23,9 @@
   averaging one repeated ray before materials consume the generator, and two doc-comment wordings
   inherited from the phase and the requirement. The sample count reaches the render loop, and each
   sample traces a different path once materials use the generator.
+- The two wordings stay: `render`'s doc comment describes the averaging the code performs and the
+  progress sentence repeats requirement 13's own phrase. Neither is a defect and neither is a release
+  item.
 - The documents area leaves two records in `PLANS/plan-c/docs-pass.md`: the `project.md` repository
   map omits `src/png.rs`, and the rendered-image gate entry says to write a PPM command rather than
   keep one the file does not have.

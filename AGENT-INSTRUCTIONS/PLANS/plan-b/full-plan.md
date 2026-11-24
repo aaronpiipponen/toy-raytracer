@@ -59,9 +59,10 @@ branch. The frozen contract is `done/B2r-shared-scene-settlement.md`.
 ### B2 - Planes and triangles
 
 `src/plane.rs` (a point and a normal; (u, v) from the hit position along two in-plane axes, modulo
-1) and `src/triangle.rs` (three vertices, Möller-Trumbore; (u, v) barycentric). The scene adds a
-triangle. Both new shapes are matte after the materials merge: the ground plane takes the mid-grey
-the current ground sphere uses and the triangle a distinct dull green.
+1) and `src/triangle.rs` (three vertices, Möller-Trumbore; (u, v) barycentric). The large ground
+sphere becomes an infinite ground plane at the same visible height and the scene gains a triangle.
+Both new shapes are matte after the materials merge: the ground plane takes the mid-grey the current
+ground sphere uses and the triangle a distinct dull green.
 
 ### B3 - Bounding boxes
 
