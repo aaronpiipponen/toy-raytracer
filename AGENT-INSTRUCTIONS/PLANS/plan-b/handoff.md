@@ -2,25 +2,25 @@
 
 ## Next action
 
-B3's `REVIEW AND ADVANCE` advancer is running. It should detail Z1, the closing survey and user
-acceptance phase. When it returns, read Z1's handoff and run my acceptance check on the Z1 detail.
+Z1's closing survey is starting: four read-only `ops-scout` area scouts run in parallel. Save each
+return unchanged under `benchmarks/returns/`, then dispatch one cross-check scout, write the dated
+note, render and inspect the acceptance image, and ask the user to accept.
 
 ## Current state
 
-B1, B2 and B3 are implemented on branch `plan-b`; B3 landed at tested head `f85a183` (base
-`f3a3d2a`). Receipt: build, 12 tests, clippy `-D warnings`, fmt, `git diff --check` green;
-before/after renders byte-identical (md5 `13b3bc0a3cf5c41df684e179c1d3e93d`); 3 tests added;
-review pass clean. B3's `done/` compression and status flip belong to the advancer.
-
-After B3 the only remaining phase is Z1: the binding closing survey (one read-only `ops-scout` per
-area in parallel, then one independent cross-checking scout, then the orchestrator writes the dated
-note in `benchmarks/`), plus rendering the scene and asking the user to accept. Plan closure and the
-release are not this session's work.
+B1, B2 and B3 are done and green; B3 landed at tested head `f85a183` (base `f3a3d2a`). Z1
+(`phases/Z1-closing-survey-and-user-acceptance.md`) is detailed, audited, and passed my acceptance
+check on 2026-11-24: it matches the binding survey method (four areas in parallel, one cross-check,
+orchestrator writes the note from saved returns), is read-only, fixes nothing, changes no product
+code, adds no test, and carries a user acceptance gate for the note and the render. Saved returns are
+mandated by my own orchestration rules, not an extra record.
 
 Open items to carry:
 - Release must ask the user which material the scene triangle gets
   (`PLANS/shared/plan-a-A2+plan-b-B2.md`).
-- `/workflow-reload` for the shared `project.md` edit is still a question for the user.
+- `/workflow-reload` for the shared `project.md` edits is still a question for the user.
+- The shared repository map lists `material.rs`, which this branch does not have (plan-a owns it);
+  area 4 should report it as an out-of-scope observation.
 
 ## Learned rules
 
