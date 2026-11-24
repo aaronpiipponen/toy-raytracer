@@ -20,16 +20,22 @@ to the user-review list. The plan is neither closed nor archived here: the relea
 the user accepts.
 
 **Current state (verified):**
-- The plan's changes sit in the branch range `e1293ef..0ad0f2b`: `src/png.rs` holds the PNG
+- The plan's changes sit in the branch range `e1293ef..a0c585b`: `src/png.rs` holds the PNG
   writer (`write_png`, `write_chunk`, `crc32`, `adler32`, `SIGNATURE`, `MAX_STORED_BLOCK`),
   `src/main.rs` holds `Format`, `Settings`, `parse_args`, `parse_dimension`, `resolve_format`,
   `run` and the progress output in `render`, `tests/cli.rs` holds the three binary tests, and
-  `README.md` shows the real run command.
+  `README.md` shows the real run command. The survey note describes `0ad0f2b`. The C1 remediation at
+  `a0c585b` changes only test assertions and the internal shape of `parse_args`, and its
+  before/after renders are byte-identical, so the note's descriptions and image evidence describe the
+  landed revision.
 - `docs/requirements.md` items 11 to 13 state the output and command-line behaviour. That file and
   `AGENT-INSTRUCTIONS/LOCAL/gates.md` are unchanged by this plan.
-- `docs-pass.md` records one deferred item: deleting the rendered-image fallback sentence in
-  `AGENT-INSTRUCTIONS/LOCAL/gates.md` during the release.
-- No `benchmarks/` directory exists under `AGENT-INSTRUCTIONS/PLANS/plan-c/` yet.
+- `docs-pass.md` records three deferred items for the release: deleting the rendered-image fallback
+  sentence in `AGENT-INSTRUCTIONS/LOCAL/gates.md`, adding `src/png.rs` to the repository map in
+  `AGENT-INSTRUCTIONS/LOCAL/project.md`, and naming the output module in
+  `AGENT-INSTRUCTIONS/LOCAL/repo-rules-domain.md`.
+- The survey note `AGENT-INSTRUCTIONS/PLANS/plan-c/benchmarks/closing-survey-2026-11-24.md` and the
+  saved scout returns in `AGENT-INSTRUCTIONS/PLANS/plan-c/benchmarks/returns/` exist.
 - This workspace holds no earlier plan survey note to consult. The survey method is the binding one
   in `AGENT-INSTRUCTIONS/PLANNING/PLAN-AUTHORING-SCOPING.md` §3b: one read-only `ops-scout` per
   area in parallel, then one read-only `ops-scout` cross-checking every finding, then the
@@ -85,7 +91,7 @@ the user accepts.
 3. The orchestrator dispatches ONE independent read-only `ops-scout` that cross-checks every
    finding from every area, claim by claim, against the code and documents with evidence. It returns
    each claim as confirmed or rejected with `file:line` evidence. There is no per-area checker.
-4. Rendered-image gate on the surveyed revision, run by the orchestrator. Build and run the real
+4. Rendered-image gate on the current head, run by the orchestrator. Build and run the real
    command line, capture the streams separately and inspect the image:
    ```bash
    ~/.cargo/bin/cargo build --release
@@ -95,7 +101,9 @@ the user accepts.
    with `\r` separators ending in `100%` plus one newline, and open
    `/tmp/opencode/acceptance.png` with the image reader to confirm the sphere and the sky. Compare
    what runs with requirements 11 to 13. Keep `/tmp/opencode/acceptance.png` and the two captures
-   until the user answers in the acceptance step below.
+   until the user answers in the acceptance step below. The C1 remediation's own rendered-image gate
+   produced byte-identical PNGs before and after its edits at `a0c585b`, so this render and the
+   survey note's image evidence show the same image.
 5. The orchestrator writes the dated note from the saved returns. The note states the surveyed
    areas and the revision surveyed, then lists:
    - confirmed findings with `file:line` evidence and their class: unnecessary complexity,
@@ -159,8 +167,8 @@ the user accepts.
 - New/changed/deleted: none. The phase adds no test function, so the budget is 0 added / 0 deleted /
   0 changed. The survey checks the existing tests against REPO-RULES §3a and may report test bloat
   in the note, but it changes nothing.
-- Fast gate: not applicable. No code or test changes, so the existing evidence at `0ad0f2b` stands
-  and is not rerun.
+- Fast gate: not applicable. No code or test changes, so the C1 remediation's passing evidence at
+  `a0c585b` stands and is not rerun.
 - Documentation-only gate for the note: reread the note and run `git diff --check`.
 - Conditional gates: rendered image, required by step 4 as survey evidence and for the user's
   acceptance. Agent generation: not affected.
