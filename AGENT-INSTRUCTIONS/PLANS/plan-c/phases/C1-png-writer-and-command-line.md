@@ -4,8 +4,7 @@
 **Depends on:** none (the first phase of this plan).
 **Scope:** replace the PPM-on-stdout output with one resolved set of command-line settings and an
 image file written as PNG or PPM. Add the dependency-free PNG writer. Give `render` the sample
-count. Update the README run example and the rendered-image fallback line in
-`AGENT-INSTRUCTIONS/LOCAL/gates.md`. No progress line, no jitter and no scattering.
+count. Update the README run example. No progress line, no jitter and no scattering.
 **Gate level:** standard - bounded runtime behaviour in one binary plus a new output format, with
 the rendered-image conditional gate covering the format change. No durable state, no trust
 boundary, no migration.
