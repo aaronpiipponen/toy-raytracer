@@ -175,4 +175,9 @@ head -2 /tmp/opencode/z1-accept.ppm
 
 ## User decision
 
-Pending.
+**Accepted 2026-11-24.** The user read the note and opened the rendered image, and accepted the
+survey and the scene. No remediation round follows: findings 1 to 6 are accepted as documented (the
+forward-looking `dead_code` allowances are expected to become live at the release merge, and the
+pole and floating-point boundaries are unobserved and outside this plan's scope); findings 7 and 8
+are release bookkeeping that the merging release reconciles. Accepted gaps are exactly those
+findings.
