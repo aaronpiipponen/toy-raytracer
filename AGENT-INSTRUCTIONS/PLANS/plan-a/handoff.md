@@ -2,20 +2,19 @@
 
 ## Next action
 
-Spawn `phase-advancer` DETAIL ACTIVE for a remediation phase `R1` (detail it from current code). R1
-fixes only the survey's accepted non-behavioural items: the two stale frozen records, the `Rng::new`
-seed-0 silent substitution, the duplicate scene-list surface, the repeated sphere test setup, and the
-`colour`/`pixel` naming split in `PLANS/shared/plan-a-A3+plan-c-Z1.md`. Test gaps are accepted as-is
-and add no test. Keep exactly one active row (R1), with Z1 `next` pending its final acceptance
-compression.
+Start R1's implementer with `phase_subagent` (`R1`). When it returns, take its receipt into REVIEW AND
+ADVANCE for R1; then compress Z1 with the user's recorded acceptance and report the plan's outcome.
 
 ## Current state
 
 A1 done (`de1cf31`), A2 done (`a1d640a`), A3 done (`566b11c`); A3r done. Z1's closing survey is written
-(`benchmarks/closing-survey-2026-11-24.md` with five returns) and the user ACCEPTED the survey and the
-rendered image, and chose: fix the small cleanups and stale records in a short remediation round, accept
-the test-coverage gaps (no extra tests). R1 is that round. `docs-pass.md` holds four documentation items
-plus the answered triangle-material carry-over.
+(`benchmarks/closing-survey-2026-11-24.md` + five returns) and the user ACCEPTED the survey and image at
+`566b11c`, choosing: fix the small cleanups and stale records now, accept the test-coverage gaps (no
+extra tests). R1 is detailed at `phases/R1-survey-cleanups.md`, passed the orchestrator acceptance check,
+and awaits implementation; its render-byte-identical hash is
+`5457ef7a788539f5f5b0145e7c20fd178a77f0d184663b83fcd38d299a54665b`. Plan-level fact for the release:
+plan-b's `HittableList.objects` is public there, so the merge keeps plan-a's private field with plan-b's
+box skip. `docs-pass.md` holds four documentation items plus the answered triangle-material carry-over.
 
 ## Learned rules
 
