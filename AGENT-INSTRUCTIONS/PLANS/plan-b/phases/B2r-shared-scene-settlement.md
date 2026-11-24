@@ -41,7 +41,7 @@ branch work. It names only the composition points the merge changes: the materia
 **Read first (do not invent):**
 - `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md` - the only authority for the merged
   scene, the material values and the merge obligations.
-- `AGENT-INSTRUCTIONS/PLANS/plan-b/full-plan.md` - the B2r and B2 rows, the B2 and B3 scoped entries
+- `AGENT-INSTRUCTIONS/PLANS/plan-b/full-plan.md` - the B2 and B3 rows, the B2 and B3 scoped entries
   and the binding design rules.
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/phases/B2-planes-and-triangles.md` - every branch symbol, value
   and test named below.
@@ -95,13 +95,14 @@ branch work. It names only the composition points the merge changes: the materia
 
 ## Branch shape
 
-B2's branch work is unchanged as detailed. On this branch `Plane` and `Triangle` carry no material,
-every hit goes through the six-argument `HitRecord::new(ray, t, point, outward_normal, u, v)`, and
-`scene()` holds the centre sphere, the ground plane at `y = -0.5` with normal `(0.0, 1.0, 0.0)` and
-the triangle with vertices `(-2.0, -0.5, -2.0)`, `(2.0, -0.5, -2.0)` and `(0.0, 1.5, -2.0)`. B2
-removes the `Vec3::cross` dead-code allowance and purpose comment. `HittableList::hit` copies whole
-records through the by-value `nearest.map_or(...)` and needs no edit on this branch. Nothing in this
-settlement adds or changes code on the branch.
+B2's branch work is unchanged as detailed. B2 as detailed adds `Plane` and `Triangle` that carry no
+material, sends every hit through the six-argument
+`HitRecord::new(ray, t, point, outward_normal, u, v)`, and gives `scene()` the centre sphere, the
+ground plane at `y = -0.5` with normal `(0.0, 1.0, 0.0)` and the triangle with vertices
+`(-2.0, -0.5, -2.0)`, `(2.0, -0.5, -2.0)` and `(0.0, 1.5, -2.0)`. B2 removes the `Vec3::cross`
+dead-code allowance and purpose comment. `HittableList::hit` copies whole records through the
+by-value `nearest.map_or(...)` and needs no edit on this branch. Nothing in this settlement adds or
+changes code on the branch.
 
 ## Release merge obligations
 
@@ -152,7 +153,8 @@ The release merge combines this branch with the materials plan's branch. On plan
 
 **Tests:**
 - New/changed/deleted: none. No test function is added or changed; the settlement is documentation.
-- Fast gate: not applicable: no code, test, configuration or `docs/` page changes.
+- Fast gate: `git diff --check` at the workspace root plus the changed-file reread. No cargo, test or
+  documentation-page gate applies because no code, test or `docs/` page changes.
 - Conditional gates: none. The rendered-image gate runs with B2, not here, because this phase renders
   nothing.
 - Slow gate (>2 minutes): none.
@@ -173,8 +175,9 @@ The release merge combines this branch with the materials plan's branch. On plan
 - [ ] The plan document is re-read for accuracy and `git diff --check` is clean.
 - [ ] No verification receipt or code safety commit is invented; the plan document is the change.
 - [ ] On passing evidence: compress this file into `done/B2r-shared-scene-settlement.md` (frozen
-      contract only) and flip the B2r status row to `done`, then promote B2. Plan-b's orchestrator
-      performs the status-row edits.
+      contract only). Plan-b's orchestrator adds the B2r status row and scoped entry, sets B2 to
+      `planned` behind B2r, later flips the B2r row to `done`, and then promotes B2. This phase
+      writes no status row itself.
 
 **Exit:** the shared scene design is recorded for this branch and the merge, B2's detail is
 unchanged, and B2 resumes with its existing detail.

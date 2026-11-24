@@ -20,7 +20,7 @@ handling and box test.
   `scene()` order, the materials on `Plane` and `Triangle`, the record and scene-list shape, B3's box
   test and the test and documentation state at the merge.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - the A1 row and the scoped A1 entry; A1 is the
-  material phase and is the only product work on this branch.
+  product phase this settlement unblocks, and A2 and A3 remain later product phases on this branch.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/phases/A1-diffuse-and-metal-materials.md` - A1's detail: on this
   branch `render(width, height)`, one `Rng::new(SEED)`, `ray_colour` with `sky_colour`, gamma 2 in
   `to_byte`, and the three spheres (centre diffuse, ground diffuse, metal). It is byte-identical
@@ -62,12 +62,12 @@ handling and box test.
    plan-a's settlement: the branch half in `## Branch shape`, the merge obligations in
    `## Release merge obligations`, and the test and documentation state in
    `## Tests at the merge` and `## Documentation state`.
-2. `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - add the A1r3 status row as `active` with gate
-   level `minimal`, this phase file, exit "the shared scene design is recorded for this branch and
-   the merge" and move-on gate "plan documents re-read, `git diff --check` clean, no product code
-   moved"; set the A1 row to `planned`, depending on `A1r3`, keeping its existing
-   `phases/A1-diffuse-and-metal-materials.md`; keep A3 depending on `A1 + A1r2`; add the short scoped
-   `### A1r3` entry. Change nothing else.
+2. `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - confirm the recorded A1r3 status row (`active`,
+   gate level `minimal`, this phase file, exit "the shared scene design is recorded for this branch
+   and the merge", move-on gate "plan documents re-read, `git diff --check` clean, no product code
+   moved"), the scoped `### A1r3` entry, the A1 row (`planned`, depending on `A1r3`, existing
+   `phases/A1-diffuse-and-metal-materials.md`) and A3's dependency on `A1 + A1r2`. Change nothing
+   else.
 3. No other file. Do not edit `phases/A1-diffuse-and-metal-materials.md`; A1's detail is
    byte-identical after this phase.
 
@@ -102,11 +102,11 @@ handling and box test.
 
 ## Branch shape
 
-A1's branch work is unchanged as detailed. On this branch `render(width, height)` keeps its two
-arguments, `render` creates one `Rng::new(SEED)`, `ray_colour` scatters through `Material` and falls
-back to `sky_colour`, `to_byte` applies gamma 2, and `scene()` holds three spheres: the red-brown
-diffuse centre sphere, the mid-grey diffuse ground sphere and the grey metal sphere with fuzz 0.3.
-Nothing in this settlement adds or changes code on the branch.
+A1's branch work is unchanged as detailed. A1 as detailed keeps `render(width, height)` with its two
+arguments, creates one `Rng::new(SEED)` inside `render`, scatters `ray_colour` through `Material`
+with the `sky_colour` fallback, applies gamma 2 in `to_byte`, and gives `scene()` three spheres: the
+red-brown diffuse centre sphere, the mid-grey diffuse ground sphere and the grey metal sphere with
+fuzz 0.3. Nothing in this settlement adds or changes code on the branch.
 
 ## Release merge obligations
 
@@ -144,8 +144,8 @@ The release merge combines this branch with the geometry plan's branch. On plan-
 ## Documentation state
 
 - No `docs/` page change: `docs/requirements.md` item 1 already says every object has a material,
-  item 9 that the scene holds planes and triangles, and item 10 the box test. B2 deletes the stale
-  `Vec3::cross` comment, so plan-a's deferred note about it is dropped.
+  item 9 that the scene holds planes and triangles, and item 10 the box test. B2 deletes the
+  `// For the triangle normals.` comment on `Vec3::cross`, so no note about it remains.
 - Neither branch's permanent files name this settlement. The release merge is bound by
   `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md`.
 - This phase changes plan documents only: no product code, test, `docs/` page, `Cargo.toml` or
@@ -154,7 +154,8 @@ The release merge combines this branch with the geometry plan's branch. On plan-
 
 **Tests:**
 - New/changed/deleted: none. No test function is added or changed; the settlement is documentation.
-- Fast gate: not applicable: no code, test, configuration or `docs/` page changes.
+- Fast gate: `git diff --check` at the workspace root plus the changed-file reread. No cargo, test or
+  documentation-page gate applies because no code, test or `docs/` page changes.
 - Conditional gates: none. The rendered-image gate runs with A1, not here, because this phase renders
   nothing.
 - Slow gate (>2 minutes): none.
@@ -166,7 +167,8 @@ The release merge combines this branch with the geometry plan's branch. On plan-
 
 **Completion checklist (gate):**
 - [ ] Gate level `minimal` requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied.
-- [ ] The shared scene design in `PLAN-A1+plan-b-B2` is recorded for plan-a's branch half and for the
+- [ ] The shared scene design in
+      `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md` is recorded for plan-a's branch half and for the
       release merge's obligations on plan-a's side.
 - [ ] A1's detail file is byte-identical and the A1 row is `planned` behind A1r3 with its existing
       phase file.
