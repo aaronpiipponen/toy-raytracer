@@ -293,9 +293,9 @@ or test is deleted.
 - Fast gate, from the worktree root: `~/.cargo/bin/cargo test`, `~/.cargo/bin/cargo build`,
   `~/.cargo/bin/cargo clippy -- -D warnings`, `~/.cargo/bin/cargo fmt --check`, `git diff --check`.
 - Conditional gates: rendered image, required because the hit path changes and the output must stay
-  byte-identical. Render `~/.cargo/bin/cargo run --release > /tmp/opencode/b3-after.ppm`, then
-  compare it byte for byte with the same render taken before the change
-  (`documents asked for the numbered acceptance steps below`). Agent generation: not affected.
+  byte-identical. Render `~/.cargo/bin/cargo run --release > /tmp/opencode/b3-after.ppm` and compare
+  it with the pre-change render, with the numbered acceptance steps below. Agent generation: not
+  affected.
 - Slow gate (>2 minutes): none; the 200 by 100 single-ray render finishes in well under a second in
   release mode.
 
