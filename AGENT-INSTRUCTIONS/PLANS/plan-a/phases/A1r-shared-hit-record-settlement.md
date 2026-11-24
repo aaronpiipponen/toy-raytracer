@@ -17,7 +17,7 @@ geometry plan's fields or constructor, does not re-detail A1, and does not pre-w
 only product code this plan will own is A1's and A2's, as already detailed.
 
 **Current state (verified):**
-- `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B1.md:63-72` - "plan-a / A1: unchanged as
+- `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B1.md:70-72` - "plan-a / A1: unchanged as
   detailed. The record keeps its material field and literal construction on this branch." The merge,
   not either branch, combines the two shapes.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/scope.md:1-8` - authorized unit is this plan; branch `plan-a`;
@@ -25,7 +25,7 @@ only product code this plan will own is A1's and A2's, as already detailed.
   or the release merge.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md:6` - face sides and texture coordinates are out of
   scope for this plan (the geometry plan owns them).
-- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md:35-39` - the settled A2 rule: glass derives the face
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md:36-40` - the settled A2 rule: glass derives the face
   side locally on this branch from the outward normal and the ray, and the merge replaces that with
   `hit.front_face`; glass adds no face flag.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md:129-137` - carry-overs already state the merge's job
