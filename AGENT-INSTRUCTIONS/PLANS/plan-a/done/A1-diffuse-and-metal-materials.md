@@ -28,5 +28,5 @@ frozen contracts:
 - Known carry-over: with one sample per pixel the image carries visible grain, and a pixel whose only
   metal-fuzz sample is absorbed renders black. A3's per-pixel averaging smooths both. A1 does not
   handle sampling.
-- `HitRecord.normal` is the outward normal and the record carries no face-side flag. The face-side
-  shape shared with the geometry plan is settled through the coordinator before A2 is detailed.
+- `HitRecord.normal` faces against the incoming ray and the record carries `front_face`. The shared
+  shape with the geometry plan is `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A2+plan-b-B2.md`.

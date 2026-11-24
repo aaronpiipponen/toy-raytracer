@@ -5,7 +5,7 @@ frozen contracts:
 
 - The shared sampling design is `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md`. Both
   plans read it as the one copy, and this plan cites it rather than copying it.
-- `phases/A3-samples-per-pixel.md` is amended in place to that design and sits at `planned`. The
+- A3's contract is `done/A3-samples-per-pixel.md`, amended to that design. The
   amendments are: a branch-local `const SAMPLES: usize = 16` below `const HEIGHT`, used only by the
   `main` call `render(WIDTH, HEIGHT, SAMPLES)`; `render` takes `samples` and averages that many
   jittered rays per pixel with the one `Rng::new(SEED)` created before both loops; each sample draws
@@ -39,5 +39,4 @@ frozen contracts:
   `git diff --check` at the workspace root. No fast gate, build, test or render ran. The A1 and A2
   fast-gate evidence at A2's landed head `a1d640a` stands unchanged. Test budget: 0 functions
   added, 0 deleted, 0 changed.
-- Exit state: A3 remains `planned` with `phases/A3-samples-per-pixel.md` and is implemented after
-  the pair returns `RESOLVED`.
+- Exit state: A3 is `done`, with its contract at `done/A3-samples-per-pixel.md`.

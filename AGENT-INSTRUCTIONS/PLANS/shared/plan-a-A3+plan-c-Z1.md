@@ -19,13 +19,13 @@ fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
     let mut pixels = Vec::with_capacity(width * height);
     for row in (0..height).rev() {
         for column in 0..width {
-            let mut colour = Colour::new(0.0, 0.0, 0.0);
+            let mut pixel = Colour::new(0.0, 0.0, 0.0);
             for _ in 0..samples {
                 let u = (column as f64 + rng.next_f64()) / width as f64;
                 let v = (row as f64 + rng.next_f64()) / height as f64;
-                colour = colour + ray_colour(&camera.ray(u, v), &world, &mut rng);
+                pixel = pixel + ray_colour(&camera.ray(u, v), &world, &mut rng);
             }
-            pixels.push(colour / samples as f64);
+            pixels.push(pixel / samples as f64);
         }
         let done = height - row;
         eprint!("\r{}%", done * 100 / height);
