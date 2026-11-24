@@ -2,18 +2,20 @@
 
 ## Next action
 
-`phase-advancer` is reviewing and advancing B2 in the background. When it returns, read its
-next-phase handoff, then run the orchestrator acceptance check on B3's detail before starting B3's
-implementer.
+`phase-implementer` is implementing B3 (bounding boxes) in the background. When it returns a
+complete receipt, spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` for B3.
 
 ## Current state
 
-- B1r done at `f0f11e2`; B2r (scene settlement) done; B2 implemented and reviewed clean at `9afa2db`
-  (build, 10 tests, clippy, fmt, `git diff --check`, rendered image shows the flat ground and a
-  visible triangle; 3 tests added).
-- B2 stays material-free, matching the frozen settlements; the release merge adds materials, the
-  borrowed nearest record and the box test.
-- B3 (bounding boxes) and Z1 (closing survey plus the user's acceptance) follow.
+- B1r, B2r and B2 are done; B2 landed at `9afa2db`. My own commit `281dda8` removed the stale
+  "the plans add" comment on `mod rng` in `src/main.rs`.
+- B3 active and accepted by my check: `phases/B3-bounding-boxes.md` - `Aabb` type, required
+  `bounding_box` on `Hittable`, list box test over `t_min..t_max` before each object's `hit`, plane
+  and list report none, 3 new tests, byte-identical rendered image.
+- Open small item for the user: `AGENT-INSTRUCTIONS/LOCAL/project.md`'s repository map still omits
+  `plane.rs` and `triangle.rs` (and will omit `aabb.rs`); proposed exact text was sent to the user,
+  and an edit there needs the user's reload decision.
+- Z1 (closing survey plus the user's acceptance) follows after B3.
 - Autonomous mode: small, easily undoable, behaviour-neutral choices only; `autonomous-decisions.md`
   when the first is recorded. Product decisions still go to the user.
 
