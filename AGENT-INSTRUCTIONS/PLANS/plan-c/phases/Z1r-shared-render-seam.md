@@ -109,11 +109,12 @@ being patched here.
    0 bytes. Standard error is 783 bytes of percentages separated by `\r`, ending `100%` plus one
    newline. If the file or captures are absent, run the command once.
 7. Documentation-only gate: reread this phase file and the `full-plan.md` edits, and run
-   `git diff --check` at the workspace root `/home/opc/projects/toy-raytracer-runs/run004`, where
-   the plan files are tracked and the worktree's own `AGENT-INSTRUCTIONS/` link is not a separate
-   tree. A created file is untracked until the workflow plugin commits the round, so the reread is
-   its check, and the command must print nothing for the tracked edits. Do not run the fast gate.
-   No code changes, so the passing evidence at `a0c585b` stands and is not reproduced.
+   `git diff --check` at the workspace root `/home/opc/projects/toy-raytracer-runs/run004`. That
+   directory is the target of the worktree's `AGENT-INSTRUCTIONS/` link and is the tree that tracks
+   the plan files, so the command sees the tracked edits. A created file is untracked until the
+   workflow plugin commits the round, so the reread is its check, and the command must print nothing
+   for the tracked edits. Do not run the fast gate. No code changes, so the passing evidence at
+   `a0c585b` stands and is not reproduced.
 8. On passing evidence, compress this file into `done/Z1r-shared-render-seam.md` as the frozen
    resolution contract: the design path, the facts plan-c's branch holds, the release merge split,
    the merged test module, the no-constant rule and the acceptance-render evidence. Then set the
