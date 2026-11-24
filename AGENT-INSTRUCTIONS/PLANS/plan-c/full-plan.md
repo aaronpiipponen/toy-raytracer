@@ -18,7 +18,8 @@
 | C1 | PNG writer and command line | done | standard | - | `done/C1-survey-remediation.md` | the program writes a real PNG at the chosen size, path and format from the command line | fast gate green, the written PNG opens, PPM still writes |
 | C2 | (merged into C1) | not applicable | - | - | - | - | - |
 | C3 | Progress line | done | standard | C1 | `done/C3-progress-line.md` | rendering shows the share of rows done on standard error | fast gate green, progress observed, image unchanged |
-| Z1 | Closing survey and user acceptance | active | minimal | C1 + C3 | `phases/Z1-closing-survey.md` | the closing survey note is written and the user accepts the result | the user accepts |
+| Z1r | Shared render seam resolution | active | minimal | C1 + C3 | `phases/Z1r-shared-render-seam.md` | the shared design is recorded and plan-c's render seam and acceptance render are confirmed against it | documentation gate green, acceptance render observed |
+| Z1 | Closing survey and user acceptance | planned | minimal | C1 + C3 | - | the closing survey note is written and the user accepts the result | the user accepts |
 
 C2 was folded into C1 so that PPM never becomes unreachable code and the format choice exists in
 the same change that makes `render.png` the default.
@@ -187,9 +188,47 @@ apply.
 **Exit:** a render shows its row share on standard error while it runs.
 **Move-on gate:** fast gate green, progress observed, image unchanged, work committed.
 
-### Z1 - Closing survey and user acceptance
+### Z1r - Shared render seam resolution
 
 **Status:** active.
+**Depends on:** C1 + C3 and the shared design `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md`.
+**Scope:** record the shared render design in the plan, confirm plan-c's landed `render` seam and
+frozen C1/C3 contracts against it, and re-run plan-c's acceptance render. No product code, test,
+README or `docs/` change.
+**Expected gate level:** minimal.
+
+**Starting state / reason:**
+- plan-a's A3 lands the jittered sample loop on top of plan-c's landed `render(width, height,
+  samples)` and progress write. The two branches settled the merged shape in the shared design, so
+  plan-c's branch needs a recorded resolution rather than a code change.
+
+**TODOs:**
+1. Record in `phases/Z1r-shared-render-seam.md` what plan-c keeps as its landed contract and what
+   the release merge takes from each plan per the shared design's release section.
+2. Confirm plan-c's landed `render`, its single doc-comment sentence and the progress placement match
+   the design, and that no `SAMPLES`, `WIDTH` or `HEIGHT` constant exists on this branch.
+3. Run the acceptance render once through the built binary and record the observed evidence.
+4. Compress the phase to `done/Z1r-shared-render-seam.md` and return Z1 to `active`.
+
+**Must not:**
+- Change product code, tests, `Cargo.toml`, `README.md` or `docs/`.
+- Edit the shared design, the closing survey note, `docs-pass.md` or any file outside the plan
+  folder.
+- Add a sample constant, a second render path or a second progress write.
+
+**Verification shape:**
+- Documentation gate: reread the phase file plus `git diff --check`. The fast gate is not rerun,
+  because no code moves and the passing evidence at `a0c585b` stands.
+- Rendered-image gate: one 400 by 200, 16-sample render through the built binary, the PNG opened and
+  looked at, standard output empty and the progress line ending `100%` plus one newline.
+
+**Exit:** the resolution contract is frozen in `done/Z1r-shared-render-seam.md` and the acceptance
+render evidence is recorded.
+**Move-on gate:** documentation gate clean, acceptance render observed, Z1 returned to `active`.
+
+### Z1 - Closing survey and user acceptance
+
+**Status:** planned.
 **Depends on:** C1 + C3.
 **Scope:** the binding closing survey of everything this plan added or changed, then the user's
 acceptance of the result.
