@@ -30,8 +30,8 @@ case and creates no second code path.
   centre. `Sphere::hit` (`src/sphere.rs:29,37-40`) solves in that parameter with
   `a = ray.direction.dot(ray.direction)`.
 - `src/main.rs:33` - `if let Some(hit) = world.hit(&ray, 0.001, f64::INFINITY) {` inside
-  `ray_colour`. The `0.001` is a lower bound on the same ray parameter and currently carries no
-  comment, so nothing claims it is a distance.
+  `ray_colour`. The `0.001` is a lower bound on the same ray parameter and carries no comment, so
+  nothing claims it is a distance.
 - `src/main.rs:134-138` - `#[test] fn the_top_row_is_sky()` calls `render(WIDTH, HEIGHT, 16)` with
   `WIDTH = 200` and `HEIGHT = 100` (`src/main.rs:22-23`) and asserts only
   `pixels[0].z > pixels[0].x`. It renders 320,000 samples and proves one pixel.
@@ -74,9 +74,9 @@ case and creates no second code path.
    /// material of the object. `t` is the ray parameter, which is the distance along the ray when
    /// the direction has unit length.
    ```
-   Keep it to three comment lines or fewer, cover the fields the struct lists, and make no other
-   change to the struct. Fix any wording in the finished comment that the style guide's self-check
-   rejects.
+   Keep it short, wrapped at the formatter's width, cover the fields the struct lists, and make no
+   other change to the struct. Fix any wording in the finished comment that the style guide's
+   self-check rejects.
 2. `src/main.rs`, `ray_colour` line 33 - add a comment directly above the `world.hit` call that
    states the `0.001` lower bound in ray-parameter units and the effect it has, wrapped to the
    formatter's line width. Two `//` lines are expected, for example:
@@ -200,6 +200,8 @@ case and creates no second code path.
   files are removed.
 - [ ] No `docs/` page, `README.md`, `AGENT-INSTRUCTIONS/LOCAL/project.md` or `Cargo.toml` change,
   and none of them is stale.
+- [ ] `benchmarks/closing-survey-2026-11-24.md` is unedited. The fix is recorded in the frozen
+  `done/R1-closing-survey-fixes.md` contract only.
 - [ ] Safety commit.
 - [ ] Revision-bound verification receipt exists.
 - [ ] On passing evidence: compress this file into `done/R1-closing-survey-fixes.md` (frozen
@@ -209,5 +211,7 @@ case and creates no second code path.
 **Exit:** the two accepted survey defects are fixed, the shared render note carries the corrected
 sky-test call, the fast gate and the byte comparison pass, and `done/R1-closing-survey-fixes.md`
 records the fix.
-**Move-on gate:** the fast gate and the named test pass, and the completed unit's frozen contract
-records the fix.
+**Move-on gate:** the fast gate and the named test pass, and the fix is recorded. The record is
+the frozen `done/R1-closing-survey-fixes.md` contract, written when this unit completes, and that
+is what the `R1` row's "survey note records the fix" clause refers to. The accepted
+`benchmarks/closing-survey-2026-11-24.md` is survey evidence and is not edited.
