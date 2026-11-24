@@ -3,7 +3,7 @@
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
-/// Where a ray hit a surface: the distance along the ray, the point, the normal facing the ray, the
+/// Where a ray hit a surface: the distance along the ray, the point, the normal against the ray, the
 /// face side and the texture coordinates.
 #[derive(Clone, Copy, Debug)]
 pub struct HitRecord {
