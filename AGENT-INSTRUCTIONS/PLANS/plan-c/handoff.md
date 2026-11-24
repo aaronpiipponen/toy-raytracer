@@ -2,22 +2,24 @@
 
 ## Next action
 
-The C3 review-and-advance advancer is running. When it returns, run the orchestrator acceptance check
-on the Z1 closing-survey phase document it drafts (if it drafts it) before any Z1 implementer, and
-check that C3's compressed contract does not weaken the settled render shape.
+Phase Z1's document is being re-detailed to the binding survey method (orchestrator-dispatched
+`ops-scout` per area, one independent cross-check `ops-scout`, orchestrator writes the note, no
+implementer). When it returns, acceptance-check it, then execute Z1 myself: four scouts in parallel,
+one cross-check scout, write `benchmarks/`, run the acceptance render, present to the user.
 
 ## Current state
 
-- C1 done (`done/C1-png-writer-and-command-line.md`, commit `910a9c5`). C3 implemented at commit
-  `e194181`: progress line on standard error, image bytes unchanged, 0 new tests, 1 adapted binary
-  test, one review pass with no finding. C3 is awaiting the advancer's completion and compression.
-- Shared render settlement closed with plan-a (`PLANS/shared/plan-a-A1+plan-c-C3.md`,
-  `done/C3r-shared-render-settlement.md`). plan-a is finishing `A1r2` and then running its A1
-  implementer.
-- Z1 (closing survey and user acceptance) is the last phase, planned behind C3. Nothing in the plan
-  is currently blocked; no coordinator hold is active.
+- C1 and C3 are done (`done/C1-png-writer-and-command-line.md` at `910a9c5`,
+  `done/C3-progress-line.md` at `e194181`). C3's progress line is verified: stderr rows, image bytes
+  unchanged, 0 new tests, 1 adapted test.
+- Z1 (closing survey and user acceptance) is active and temporarily mis-detailed: it gave the survey
+  to a phase-implementer with a reviewer cross-check, which contradicts the binding survey method.
+  A fresh advancer is correcting it.
+- The plan's product work is complete apart from the closing survey and the user's acceptance; the
+  plan is then ready for the release, which closes it.
 - `docs-pass.md` holds the release item for the `gates.md` fallback sentence.
-- Autonomous mode is on for the routine loop only; every product decision still goes to the user.
+- Shared settlement with plan-a is closed (`PLANS/shared/plan-a-A1+plan-c-C3.md`).
+- Autonomous mode is on for the routine loop only; the closing acceptance is the user's.
 
 ## Learned rules
 
@@ -29,8 +31,9 @@ check that C3's compressed contract does not weaken the settled render shape.
 - A held phase still gets its `phase_subagent` call: the refusal is the recorded stop, and nothing
   else starts afterwards.
 - As leader, verify a partner's factual claim before writing it into a shared design.
-- A settled shared design fixes implementation shape only; anything that changes how the product
-  behaves is the user's decision.
+- The closing survey is orchestrator work: one independent `ops-scout` per area in parallel, one
+  independent `ops-scout` cross-checking all findings, and the orchestrator writes the note. Never a
+  phase-implementer, never a per-area checker.
 - Autonomous mode never covers behaviour a user can see, deployment, security boundaries, spending
   or plan closure.
 - Check a receipt for its explicit `REVIEW:` line before treating the review loop as finished.
