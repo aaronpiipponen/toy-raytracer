@@ -123,8 +123,10 @@ format or extension is one clear error on standard error plus a non-zero exit. T
 
 4. `src/main.rs` - `fn parse_args(args: &[String]) -> Result<Settings, String>`, the whole command
    line resolved once before any rendering:
-   - Start from the defaults: width 400, height 200, samples 16, output `PathBuf::from("render.png")`
-     and no explicit format (`None`).
+   - Start from the defaults through the four constants from step 3: `DEFAULT_WIDTH`,
+     `DEFAULT_HEIGHT`, `DEFAULT_SAMPLES` and `PathBuf::from(DEFAULT_OUTPUT)`, with no explicit
+     format (`None`). Those constants are the only place the default values appear; do not repeat
+     the literals in `parse_args`.
    - Walk the arguments in order with an index. The recognized arguments are exactly `--width`,
      `--height`, `--samples`, `--output` and `--format`, each consuming the next argument as its
      value. A missing value, an argument that is not one of these five, and a positional argument
@@ -264,7 +266,9 @@ format or extension is one clear error on standard error plus a non-zero exit. T
   from the returned pixels. No new assertions.
 - New: `tests/cli.rs` - `writes_a_png_whose_pixels_match_the_ppm_render`: run the binary with
   `--width 8 --height 4 --samples 1 --output <dir>/match.png`, assert success, decode the file, and
-  compare its RGB triples with the pixels of a second run using `--format ppm` and the same options.
+  compare a few of its RGB triples with the same pixels of a second run using `--format ppm` and the
+  same options: the first pixel, the centre pixel and the last pixel of the 8 by 4 image, which
+  cover sky and sphere. Do not compare every pixel.
   The decoder asserts the PNG signature, walks the chunks and verifies each chunk CRC-32, requires
   one `IDAT`, checks `IHDR` is 8 by 4, bit depth 8, colour type 2, filter 0, interlace 0, checks the
   zlib header `0x78 0x01`, reads the stored blocks and verifies each `LEN`/`NLEN` pair and the
