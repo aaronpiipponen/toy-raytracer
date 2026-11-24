@@ -212,16 +212,18 @@ acceptance of the result.
 - Nothing else; findings are reported, not fixed.
 
 **TODOs:**
-1. One read-only `ops-scout` per area the plan added or changed, in parallel: the PNG writer, the
-   command line and settings, the render loop and the progress line, and the docs this plan touched.
-2. One independent read-only `ops-scout` cross-checking every finding, claim by claim, with evidence.
-3. The orchestrator writes the dated note in `benchmarks/` from those returns.
+1. The phase implementer reads the four areas the plan added or changed, one batched read per area:
+   the PNG writer, the command line and settings, the render loop and progress line, and the docs
+   this plan touched. Every finding cites `path:line` from the current tree.
+2. One independent read-only `phase-implementation-reviewer` session cross-checks every claim in the
+   note, claim by claim, with evidence.
+3. The phase implementer writes the dated note in `benchmarks/` from those returns.
 4. Render the scene, compare it with requirements 11 to 13, and put the result to the user.
 
 **Must not:**
 - Fix anything inside this phase; findings go to the user.
-- Skip the cross-check, merge areas into one scout, or write the note from memory.
-- Change product code, docs or the plan's phase rows beyond flipping its own row.
+- Skip the cross-check, merge areas into one read, or write the note from memory.
+- Change product code, docs, the phase files or the plan's status rows.
 
 **Verification shape:**
 - The note exists with every finding backed by file:line evidence.
