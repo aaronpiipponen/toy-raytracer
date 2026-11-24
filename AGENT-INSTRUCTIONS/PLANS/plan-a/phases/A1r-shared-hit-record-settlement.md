@@ -111,8 +111,10 @@ only product code this plan will own is A1's and A2's, as already detailed.
 **Build plan:**
 1. `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md`, status table - confirm the advancer's edit: the
    `A1r` row sits directly above `A1`, is `active` with `Phase file`
-   `phases/A1r-shared-hit-record-settlement.md`, and the `A1` row is `planned`, depends on `A1r`,
-   with `Phase file` `-`. Every other row is unchanged. Change nothing else in the table.
+   `phases/A1r-shared-hit-record-settlement.md`, and the `A1` row is `planned`, depends on `A1r`, and
+   its `Phase file` points at its unchanged detail `phases/A1-diffuse-and-metal-materials.md` so A1 can
+   resume without a pointless re-detail. Every other row is unchanged. Change nothing else in the
+   table.
 2. `AGENT-INSTRUCTIONS/PLANS/plan-a/phases/A1r-shared-hit-record-settlement.md` - re-read the
    settlement above line by line against `PLANS/shared/plan-a-A1+plan-b-B1.md`. If any statement
    disagrees with the shared design, stop and report drift to the orchestrator; do not edit product
@@ -133,7 +135,7 @@ only product code this plan will own is A1's and A2's, as already detailed.
 
 **Touched files:**
 <!-- touched-files:start -->
-- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - changed: status table gains the `A1r` row and moves `A1` to `planned` with no phase file
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - changed: status table gains the `A1r` row, `A1` moves to `planned` behind it and keeps its existing detailed phase file
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/phases/A1r-shared-hit-record-settlement.md` - created: the settlement record for this branch and the merge
 - Adds: nothing
 <!-- touched-files:end -->
@@ -167,7 +169,7 @@ only product code this plan will own is A1's and A2's, as already detailed.
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied.
 - [ ] Every statement in the settlement matches `PLANS/shared/plan-a-A1+plan-b-B1.md`; no contradiction remains.
-- [ ] `full-plan.md` has exactly one `active` row (`A1r`), `A1` is `planned` with no phase file, and every other row is unchanged.
+- [ ] `full-plan.md` has exactly one `active` row (`A1r`), `A1` is `planned` with its existing detailed phase file, and every other row is unchanged.
 - [ ] `phases/A1-diffuse-and-metal-materials.md` is byte-identical to its pre-phase content and still matches the shared design's plan-a paragraph.
 - [ ] No product code, test, `docs/` page, `Cargo.toml` or configuration changed; `git status --short` in the plan worktree shows nothing from this phase.
 - [ ] `git diff --check` reports nothing at the workspace root; the changed plan documents were re-read.
