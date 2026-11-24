@@ -17,6 +17,7 @@
 |---|---|---|---|---|---|---|---|
 | C1 | PNG writer and command line | done | standard | - | `done/C1-png-writer-and-command-line.md` | the program writes a real PNG at the chosen size, path and format from the command line | fast gate green, the written PNG opens, PPM still writes |
 | C2 | (merged into C1) | not applicable | - | - | - | - | - |
+| C3r | Shared render settlement | done | minimal | C1 | `done/C3r-shared-render-settlement.md` | the merged render shape is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
 | C3 | Progress line | active | standard | C1 | `phases/C3-progress-line.md` | rendering shows the share of rows done on standard error | fast gate green, progress observed, image unchanged |
 | Z1 | Closing survey and user acceptance | planned | minimal | C1 + C3 | - | the closing survey note is written and the user accepts the result | the user accepts |
 
@@ -86,6 +87,15 @@ What later phases inherit:
 - One resolved settings value per render; later phases add behaviour behind it, not a second parse.
 
 ## Scoped phases
+
+### C3r - Shared render settlement
+
+Records the `render` design settled with the materials plan in
+`PLANS/shared/plan-a-A1+plan-c-C3.md`: the merged signature and nesting, one seeded `Rng` at the top
+of `render`, linear averaging with the single gamma 2 in `to_byte`, the two progress calls inside the
+row loop, A3's jitter draw order, the command-line `samples >= 1` guarantee and the fact that no test
+asserts sample-count invariance. No product code changes on this branch; C3's progress line already
+matches the settlement and keeps its existing detail.
 
 ### C1 - PNG writer and command line
 
@@ -227,5 +237,11 @@ release, which closes it.
 - The PNG is deliberately uncompressed stored blocks, as requirement 11 states; no size or speed
   optimisation is planned.
 - Jittered sampling and gamma correction are the materials plan's, not this plan's.
+- The merged `render` shape is settled with the materials plan in `PLANS/shared/plan-a-A1+plan-c-C3.md`
+  and recorded by C3r: one seeded `Rng` created at the top of `render` and threaded through
+  `ray_colour`, row then column then sample then bounce, averaging in linear space with the single
+  gamma 2 in `to_byte`, the two progress calls inside the row loop, A3's two jitter draws per sample
+  before the bounce trace, `samples >= 1` guaranteed by the command line, and no test asserting
+  sample-count invariance. The release merge is bound by that file.
 - Deferred to the release: deleting the now-unnecessary rendered-image fallback sentence in
   `AGENT-INSTRUCTIONS/LOCAL/gates.md` (see `docs-pass.md`). The README is updated in C1.

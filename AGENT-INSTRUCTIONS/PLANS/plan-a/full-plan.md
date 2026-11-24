@@ -15,9 +15,10 @@
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
 | A1r | Shared hit record settlement | done | minimal | - | done/A1r-shared-hit-record-settlement.md | the shared hit record design is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
-| A1 | Diffuse and metal materials | active | standard | A1r | phases/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
+| A1r2 | Shared render settlement | active | minimal | - | phases/A1r2-shared-render-settlement.md | the shared render settlement is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
+| A1 | Diffuse and metal materials | planned | standard | A1r2 | phases/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
 | A2 | Glass | planned | standard | A1 | - | a glass sphere refracts | gates green, rendered image shows a glass sphere |
-| A3 | Samples per pixel | planned | standard | A1 | - | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
+| A3 | Samples per pixel | planned | standard | A1 + A1r2 | - | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
 | Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
 
 ## How to implement this plan
@@ -56,6 +57,15 @@ merge. No product code changes on this branch; the geometry fields, the six-argu
 `Sphere`'s texture coordinates are the geometry plan's branch work and the merge's. A1 and A2 keep
 their existing detail.
 
+### A1r2 - Shared render settlement
+
+Records the render design settled with the output plan in
+`PLANS/shared/plan-a-A1+plan-c-C3.md`: A1's branch shape, the merged `render(width, height, samples)`
+taken from the output plan's C1, the nesting and the single generator, the progress and gamma
+ownership, the sample-count guarantees, A3's jitter draw order, and the release merge's obligations
+on plan-a's side. No product code changes on this branch. A1 keeps its existing detail, and A3 is
+detailed after this settlement.
+
 ### A1 - Diffuse and metal materials
 
 `src/material.rs` with the `Material` trait and two materials, diffuse (`Lambertian`, an albedo)
@@ -74,9 +84,13 @@ merged record. The scene gains a glass sphere.
 
 ### A3 - Samples per pixel
 
-`render` takes a sample count; each pixel averages that many rays jittered inside the pixel, sharing
-one seeded generator. The default is 16. This is the seam the output plan's command line uses for
-`--samples`.
+`render` takes a sample count, with 16 passed from `main` on this branch, and creates one seeded
+generator. Each pixel averages that many rays. Per sample it draws two jitter offsets for `u` and
+`v` from that generator before the bounce trace. Nesting is row, then column, then sample, then
+bounce, row-major; averaging is in linear space and gamma stays in `to_byte`. `src/main.rs` has no
+sample loop before this phase, so A3 creates it on this branch. The release merge takes the output
+plan's identical loop textually and keeps A3's jitter, and its command line passes `--samples`. The
+shared design is `PLANS/shared/plan-a-A1+plan-c-C3.md`.
 
 ### Z1 - Closing survey and user acceptance
 
