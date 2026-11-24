@@ -207,7 +207,7 @@
 **Tests:**
 - New: `src/material.rs` - `a_glass_ray_inside_reflects_on_total_internal_reflection`: a unit ray `(0.8, 0.0, 0.6)` recorded against outward normal `(0.0, 0.0, 1.0)` is a back face, so `normal` is `(0.0, 0.0, -1.0)` and `eta_ratio` is `1.5`; `1.5 * 0.8 > 1.0` reflects. Assert unit attenuation and direction `(0.8, 0.0, -0.6)` within `1e-9`.
 - New: `src/material.rs` - `a_glass_ray_bends_by_snell_when_it_enters`: a unit ray `(0.6, 0.0, -0.8)` recorded against outward normal `(0.0, 0.0, 1.0)` is a front face; `eta_ratio` is `1.0 / 1.5`, the refracted direction is `(0.4, 0.0, -0.916515…)`. Assert unit attenuation and that direction within `1e-9`. With `Rng::new(7)` the first draw is `0.8202`, above the Schlick reflectance `0.0403`, so the refraction branch is the stable outcome.
-- New: `src/sphere.rs` - `a_ray_from_inside_hits_the_back_face`: `Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5, <Lambertian>)` hit from origin `(0.0, 0.0, -2.0)` along `(0.0, 0.0, -1.0)` returns `t` 0.5, `!hit.front_face`, normal `(0.0, 0.0, 1.0)`, `v` 0.0 and `u` 0.75.
+- New: `src/sphere.rs` - `a_ray_from_inside_hits_the_back_face`: `Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5, <Lambertian>)` hit from origin `(0.0, 0.0, -2.0)` along `(0.0, 0.0, -1.0)` returns `t` 0.5, `!hit.front_face`, normal `(0.0, 0.0, 1.0)`, `v` 0.5 and `u` 0.75.
 - Changed: `src/sphere.rs` - `a_ray_through_the_center_hits_the_near_surface` keeps its `t` and normal assertions and adds `front_face`, `u` 0.25 and `v` 0.5.
 - Changed: `src/material.rs` - the three existing tests and `record_with` use `HitRecord::new`; the absorbed test now uses `Metal::new(albedo, 1.0)` at a grazing angle. No assertion is weakened except the absorbed test's fuzz, which is required for the branch to be reachable with a ray-facing normal.
 - Deleted: none. Three new test functions, four adapted tests, no deletion, within the REPO-RULES §3a maximum of three new functions.
@@ -225,7 +225,7 @@
 - [ ] `Sphere` computes `(u, v)` by the shared formula on both roots and records the face side.
 - [ ] `Dielectric` refracts by Snell, reflects on total internal reflection, chooses by Schlick with the seeded generator and returns unit attenuation.
 - [ ] The scene has one glass sphere of refractive index 1.5 and the other three spheres are unchanged.
-- [ ] The six named tests pass; the test budget is respected and the receipt reports functions added/deleted.
+- [ ] The seven named tests pass; the test budget is respected and the receipt reports functions added/deleted.
 - [ ] Fast phase gate passes, and the rendered-image conditional gate was run once and the image inspected.
 - [ ] `docs/requirements.md` and `README.md` were re-read and need no change.
 - [ ] `Cargo.toml` has no dependency, the seeded generator remains the only randomness, and no plan-b file changed.
