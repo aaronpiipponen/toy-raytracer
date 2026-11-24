@@ -113,7 +113,7 @@ Steps:
    branch revision. It checks every finding claim by claim against the tree, marks each claim
    confirmed, rejected or corrected with its evidence, checks that every changed file and
    requirements 1 to 6 sit in at least one area, and adds any claim the areas missed. No per-area
-   checker runs.
+   checker runs. Save its report verbatim under a `Cross-check` heading in the same returns file.
 5. Write `benchmarks/closing-survey-<date>.md` from the saved returns and the cross-check, in this
    order:
    - the date, branch, surveyed base `e180476` to head `46a5c02`, the method sentence and the area
@@ -132,16 +132,18 @@ Steps:
    - a user decision section, empty until the user accepts.
    Write no finding that lacks evidence, no history rundown and no plan-close-out claim.
 6. Render the final scene once at the default settings and show the image to the user:
-   `~/.cargo/bin/cargo run --release > /tmp/opencode/z1-accept.ppm`. Convert the PPM to PNG with
+   `~/.cargo/bin/cargo run --release > /tmp/opencode/z1-accept.ppm`. Create
    `/tmp/opencode/z1_ppm_to_png.py`, a scratch standard-library Python script outside the repository
-   that reads the P3 file and writes an RGB PNG. Open the PNG with the image reader and check it
-   against requirements 1 to 6 before showing it. Record the command, exit status, byte size, image
+   that reads the P3 file named by its first argument and writes an 8-bit RGB PNG to its second, then
+   run `python3 /tmp/opencode/z1_ppm_to_png.py /tmp/opencode/z1-accept.ppm
+   /tmp/opencode/z1-accept.png`. Open `/tmp/opencode/z1-accept.png` with the image reader and check
+   it against requirements 1 to 6 before showing it. Record the command, exit status, image
    dimensions and what the image shows in the note's acceptance section. Do not run the render twice
    and do not redo A3's byte comparison: A3's receipt holds two byte-identical release PPMs at
    `46a5c02`.
-7. Report the note and the rendered image to the user, present each finding, and ask for acceptance
-   of the survey findings and the image. Fix nothing. On acceptance, record the date and the accepted
-   findings in the note's user decision section, then compress this phase into
+7. Report the note and `/tmp/opencode/z1-accept.png` to the user, present each finding, and ask for
+   acceptance of the survey findings and the image. Fix nothing. On acceptance, record the date and
+   the accepted findings in the note's user decision section, then compress this phase into
    `done/Z1-closing-survey-and-user-acceptance.md` and flip the `full-plan.md` row to `done`. Do not
    archive the plan and do not open remediation work; the release owns closure.
 
@@ -160,7 +162,7 @@ Steps:
 - `phases/Z1-closing-survey.md` - created: this phase document.
 - `benchmarks/closing-survey-<date>.md` - created: the dated survey note.
 - `benchmarks/closing-survey-returns-<date>.md` - created: the four area returns and the cross-check return, saved verbatim.
-- `full-plan.md` - changed: the Z1 `Phase file` cell points at this document, and on acceptance the Z1 row flips to `done`.
+- `full-plan.md` - changed on acceptance: the Z1 row flips to `done`.
 - `done/Z1-closing-survey-and-user-acceptance.md` - created on acceptance: the frozen contract.
 - Adds: nothing outside the plan folder.
 <!-- touched-files:end -->
@@ -194,7 +196,7 @@ Steps:
   judgment no automated check replaces.
 - 1. Open `benchmarks/closing-survey-<date>.md` and read every confirmed finding, the cross-check
   outcome, the remediation candidates and the user-review list.
-- 2. Open the rendered image from `/tmp/opencode/` at 200 by 100 pixels. Confirm requirements 1 to 6:
+- 2. Open `/tmp/opencode/z1-accept.png` at 200 by 100 pixels. Confirm requirements 1 to 6:
   the red-brown matte centre sphere and the light matte ground, the grey metal sphere with its
   blurred reflection, the glass sphere showing a refracted image of the scene, and edges smoothed by
   the 16 jittered samples.
