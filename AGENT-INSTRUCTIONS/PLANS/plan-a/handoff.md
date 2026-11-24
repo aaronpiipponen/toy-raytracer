@@ -2,21 +2,19 @@
 
 ## Next action
 
-Start the A3 implementer (`phase_subagent` with phase id A3). On its receipt, spawn a fresh
-`phase-advancer` in `REVIEW AND ADVANCE` for A3.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` for A3 with the implementer's
+receipt. Then the closing survey phase Z1 becomes the next unit.
 
 ## Current state
 
-A1 and A2 are done and frozen; the branch is at `80d833c`. A3 is active and detailed at
-`phases/A3-samples-per-pixel.md`. I corrected two things in the detail before starting:
-the jitter now centres each draw in its own pixel (`+ next_f64() - 0.5`) so samples are
-inside the pixel and the scene keeps A2's geometry instead of shifting half a pixel; and
-the temporary source-edit small render was removed from the image gate, leaving the default
-renders, the byte comparison and the A2-worktree comparison as the evidence. A3 adds two
-tests (same settings reproduce, sample count changes colours), adapts the sky test, and
-follows `PLANS/shared/plan-a-A1+plan-c-C3.md`. The three shared designs are settled and
-their pairs closed. `/workflow-reload` remains optional for the user. Autonomous mode
-covers routine loop choices only; every product decision goes to the user.
+A1, A2 and A3 are implemented; A3 is verified at `46a5c02` (base `80d833c`): `render` takes
+`samples`, the row/column/sample/bounce loop with two centred jitter draws per sample from
+the one seeded generator, 16 passed from `main`, the sky test adapted plus two new tests
+(12 pass), fast gate green, two renders byte-identical, the image smoother than A2's, one
+review round with no finding. Z1 (closing survey and user acceptance) is the last row,
+currently planned. The three shared designs are settled and their pairs closed.
+`/workflow-reload` remains optional for the user. Autonomous mode covers routine loop
+choices only; every product decision goes to the user.
 
 ## Learned rules
 
