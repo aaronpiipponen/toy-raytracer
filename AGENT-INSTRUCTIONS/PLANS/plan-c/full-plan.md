@@ -19,7 +19,7 @@
 | C2 | (merged into C1) | not applicable | - | - | - | - | - |
 | C3 | Progress line | done | standard | C1 | `done/C3-progress-line.md` | rendering shows the share of rows done on standard error | fast gate green, progress observed, image unchanged |
 | Z1r | Shared render seam resolution | done | minimal | C1 + C3 | `done/Z1r-shared-render-seam.md` | the shared design is recorded and plan-c's render seam and acceptance render are confirmed against it | documentation gate green, acceptance render observed |
-| Z1 | Closing survey and user acceptance | active | minimal | C1 + C3 | `phases/Z1-closing-survey.md` | the closing survey note is written and the user accepts the result | the user accepts |
+| Z1 | Closing survey and user acceptance | done | minimal | C1 + C3 | `done/Z1-closing-survey.md` | the closing survey note is written and the user accepts the result | the user accepts |
 
 C2 was folded into C1 so that PPM never becomes unreachable code and the format choice exists in
 the same change that makes `render.png` the default.
@@ -228,7 +228,7 @@ render evidence is recorded.
 
 ### Z1 - Closing survey and user acceptance
 
-**Status:** active.
+**Status:** done.
 **Depends on:** C1 + C3.
 **Scope:** the binding closing survey of everything this plan added or changed, then the user's
 acceptance of the result.

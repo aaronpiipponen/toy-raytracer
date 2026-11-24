@@ -1,6 +1,6 @@
 ## Phase A3 - Samples per pixel
 
-**Status:** planned.
+**Status:** active.
 **Depends on:** A1 (`done/A1-diffuse-and-metal-materials.md`) and A2 (`done/A2-glass.md`).
 **Scope:** `render` in `src/main.rs` takes a sample count and averages that many jittered rays per pixel, with one seeded generator shared across the whole image. `main` passes a new default of 16. No command-line option, no output-format change, no material, scene or bounce-limit change.
 **Gate level:** standard - bounded runtime behaviour in the render loop, with no schema, durable state, security boundary or cross-package contract. The rendered-image conditional gate applies because the render loop changes.
@@ -15,7 +15,7 @@
 - `src/main.rs:54-77` - `scene()` holds four spheres: diffuse red-brown centre, diffuse grey ground, metal at `(0.85, -0.25, -1.3)` and the glass sphere at `(-1.1, 0.0, -1.5)`. The scene stays unchanged.
 - `src/rng.rs:8-9` and `src/rng.rs:20-22` - `Rng::new(seed: u64)` and `next_f64(&mut self) -> f64`, which returns a value in `0..1`.
 - `src/camera.rs:31-36` - `Camera::ray(&self, u: f64, v: f64) -> Ray` maps viewport coordinates in `0..=1` from the lower left.
-- `src/vec3.rs:82` - `pub type Colour = Vec3`, and `Vec3` implements `Add`, `Div<f64>` and `PartialEq`.
+- `src/vec3.rs:83` - `pub type Colour = Vec3`, and `Vec3` implements `Add`, `Div<f64>` and `PartialEq`.
 - A1 contract: one `Rng` seeded with `SEED` is shared across every pixel, the bounce limit and gamma are in place, and `Cargo.toml` has no dependency.
 - A2 contract: `ray_colour` reaches glass through `hit.material`, so the render loop needs no material knowledge.
 
