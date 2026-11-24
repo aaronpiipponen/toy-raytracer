@@ -67,9 +67,9 @@ bounding boxes or the render loop. No legacy or defensive code is added or delet
    that `normal` always faces against the ray and that the record carries the face side and texture
    coordinates. Reword the existing `point` comment from `// The origin of the bounce rays the
    materials plan adds.` to `// The origin of the bounce rays.` so no code comment refers to a plan;
-   do not otherwise reword existing code. The three new fields carry `#[allow(dead_code)]` for the same reason `point` does:
-   nothing outside `#[cfg(test)]` code reads them until later phases, and `cargo clippy -- -D
-   warnings` must stay clean.
+   do not otherwise reword existing code. The three new fields carry `#[allow(dead_code)]` for the
+   same reason `point` does: nothing outside `#[cfg(test)]` code reads them until later phases, and
+   `cargo clippy -- -D warnings` must stay clean.
 
 2. `src/hittable.rs`, add `impl HitRecord` directly below the struct with exactly this associated
    function and no other constructor:
