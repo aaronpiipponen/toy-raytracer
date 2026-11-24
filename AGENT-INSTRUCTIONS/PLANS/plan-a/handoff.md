@@ -2,19 +2,19 @@
 
 ## Next action
 
-Run `phase-advancer` in REVIEW AND ADVANCE for R1 (base `566b11c`, tested head `b22d647`). In the same
-round, complete Z1: its survey note and returns exist and the user accepted the survey and image, so
-compress Z1 to `done/` with that acceptance and the note path, flip its row to `done`. After that the
-plan's phases are all done and the plan is ready for the release; report the outcome to the user.
+NONE for this plan. Every phase row is `done` and the closing survey is accepted; the plan awaits the
+release (which also closes and archives it) and the user's explicit closure authorization. Do not
+archive it here.
 
 ## Current state
 
-A1 done (`de1cf31`), A2 done (`a1d640a`), A3 done (`566b11c`); A3r done; R1 implemented at head
-`b22d647` (byte-identical render, 12 tests) and awaits review-and-advance. The user ACCEPTED the closing
-survey (`benchmarks/closing-survey-2026-11-24.md`) and the image at `566b11c`, and chose to fix the small
-cleanups (done in R1) and accept the test-coverage gaps. Z1 remains to be compressed with that
-acceptance. `docs-pass.md` holds four documentation items plus the answered triangle-material carry-over
-(`Lambertian` `(0.7, 0.3, 0.3)`), for the release.
+Plan-a (materials) is complete on branch `plan-a` at head `b22d647`, five commits `de1cf31`, `a1d640a`,
+`566b11c`, `7853f29`, `b22d647`, worktree clean. A1, A2, A3, A3r, R1 and Z1 are all `done`. The closing
+survey (`benchmarks/closing-survey-2026-11-24.md` with five returns) and the rendered image were accepted
+by the user; the accepted cleanups are landed (R1). Test-coverage gaps were accepted as-is by the user.
+`docs-pass.md` carries four documentation items plus the answered triangle-material carry-over
+(`Lambertian` `(0.7, 0.3, 0.3)`) for the release. Three coordinator pairs are closed with designs under
+`PLANS/shared/`.
 
 ## Learned rules
 
@@ -44,6 +44,8 @@ acceptance. `docs-pass.md` holds four documentation items plus the answered tria
 - After the survey, the user's accepted cleanups run as a small remediation phase; the accepted test
   gaps add no test, and the survey acceptance stands because the fixes change no behaviour.
 - Plan-folder edits are committed by the workflow plugin at the workspace root, never from the worktree.
+- Plan completion is not closure: the release closes and archives the plan, and archiving needs the
+  user's explicit authorization.
 
 ## Learned rules
 
