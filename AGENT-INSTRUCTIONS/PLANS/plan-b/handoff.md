@@ -2,31 +2,30 @@
 
 ## Next action
 
-Make the B2 `phase_subagent` call now that B2 passed the acceptance check. The coordinator hold
-`plan-a-A2+plan-b-B2` is armed, so that call is expected to be refused with `COORDINATOR HOLD`; the
-refusal records this plan's stop and the channel opens only after both plans have stopped. On the
-refusal: start nothing else, tell the user in one line, end the turn, and wait for the coordinator or
-the partner orchestrator.
+B2's implementer is running (`phase_subagent`, phase id B2) after the pair resolution. When it
+returns, check that its review loop finished, then start `REVIEW AND ADVANCE` for B2 with a fresh
+advancer.
 
 ## Current state
 
-B1 is done (`done/B1-face-side-and-texture-coordinates.md`), status row flipped. B2 is detailed at
-`phases/B2-planes-and-triangles.md`, status `active`, audited twice by the advancer (second pass
-PASS), and passed the orchestrator acceptance check on 2026-11-24 with one correction applied by the
-orchestrator: the two triangle tests sharing one fixture and ray were merged into
-`a_ray_through_the_triangle_hits_its_front_face_with_barycentric_coordinates`, so B2 now adds 2 test
-functions (within the §3a cap) and the fast gate counts 9 tests.
+B1 done (`done/B1-face-side-and-texture-coordinates.md`). Pair `plan-a-A2+plan-b-B2` is RESOLVED;
+the shared design is `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A2+plan-b-B2.md` and B2
+(`phases/B2-planes-and-triangles.md`) is the accepted plan-b resolution phase file. B2 stays
+material-less on this branch: `Plane`/`Triangle` with no material placeholder, records through the
+six-argument `HitRecord::new`, `HittableList::hit` Copy-based, two test functions. The release merge
+adds `material` to both shapes and their tests and gives the scene triangle a material; that
+material choice is a user-owned decision recorded in the shared design (recommendation: the same
+diffuse as the scene spheres) and must be asked at release, not picked.
 
-B2 is held: plan-a leads the settlement of the shared `HitRecord` shape (plan-a's record carries
-`Rc<dyn Material>` and is not `Copy`; ours carries `front_face`/`u`/`v` built only through
-`HitRecord::new`). B2's detail must be re-detailed after the shared design lands; its materials-less
-`HitRecord::new` assumption will not survive unchanged.
+Orchestrator acceptance check on B2 passed on 2026-11-24: scope matches requirement items 8 and 9;
+the plane and triangle hit maths, the (u, v) wrap and both test expectations were verified by hand;
+the scene triangle sits entirely in sky to the right of the sphere (base above the ground horizon,
+apex below the top edge, columns ~130-196); test budget is 2 added (I merged two same-fixture
+triangle tests into one); no records, receipts or defensive branches were added.
 
-Open item surfaced by the advancer: the shared repository map
-`AGENT-INSTRUCTIONS/LOCAL/project.md:5` already lists `material.rs`, which does not exist in this
-worktree (plan-a owns it, and this line is shared at the workspace root). B2 step 9 keeps existing
-entries and appends `plane.rs` and `triangle.rs`; the concurrent shared-file edit is a real risk to
-watch, not a B2 defect.
+Open item: the shared repository map `AGENT-INSTRUCTIONS/LOCAL/project.md:5` already lists
+`material.rs`, which does not exist in this worktree (plan-a owns it). B2 step 9 appends `plane.rs`
+and `triangle.rs` and keeps existing entries; watch for a concurrent shared-file edit.
 
 ## Learned rules
 
@@ -38,3 +37,5 @@ watch, not a B2 defect.
   `main`.
 - Test-cap hygiene is part of my acceptance check: merge near-duplicate test functions that share one
   fixture instead of spending the cap.
+- Parallel-plan splits: each branch stays compiling on its own; obligations that only the release
+  merge can satisfy live in the shared design file, never as placeholders in code.
