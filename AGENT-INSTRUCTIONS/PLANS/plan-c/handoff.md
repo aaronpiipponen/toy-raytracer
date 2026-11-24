@@ -2,23 +2,22 @@
 
 ## Next action
 
-The C3 implementer is running (pair plan-a-A1+plan-c-C3 was settled and the channel closed). When it
-returns: check for its `REVIEW:` line and finished review loop, extract the commit SHA, receipt and
-comments, then spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for C3, which also drafts
-Z1 (the closing survey).
+The C3 review-and-advance advancer is running. When it returns, run the orchestrator acceptance check
+on the Z1 closing-survey phase document it drafts (if it drafts it) before any Z1 implementer, and
+check that C3's compressed contract does not weaken the settled render shape.
 
 ## Current state
 
-- Shared design `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-c-C3.md` is agreed and closed. Both
-  resolution files passed the orchestrator check: `done/C3r-shared-render-settlement.md` here and
-  plan-a's `A1r2`.
-- C1 is done (`done/C1-png-writer-and-command-line.md`, commit `910a9c5`). C3 is active and detailed
-  at `phases/C3-progress-line.md`, unchanged by the settlement; gate level standard, 0 new tests,
-  1 adapted binary test, byte comparison against a pre-change render.
-- Z1 (closing survey and user acceptance) stays planned behind C3.
+- C1 done (`done/C1-png-writer-and-command-line.md`, commit `910a9c5`). C3 implemented at commit
+  `e194181`: progress line on standard error, image bytes unchanged, 0 new tests, 1 adapted binary
+  test, one review pass with no finding. C3 is awaiting the advancer's completion and compression.
+- Shared render settlement closed with plan-a (`PLANS/shared/plan-a-A1+plan-c-C3.md`,
+  `done/C3r-shared-render-settlement.md`). plan-a is finishing `A1r2` and then running its A1
+  implementer.
+- Z1 (closing survey and user acceptance) is the last phase, planned behind C3. Nothing in the plan
+  is currently blocked; no coordinator hold is active.
 - `docs-pass.md` holds the release item for the `gates.md` fallback sentence.
 - Autonomous mode is on for the routine loop only; every product decision still goes to the user.
-- No coordinator hold is active.
 
 ## Learned rules
 
