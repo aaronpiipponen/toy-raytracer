@@ -2,22 +2,23 @@
 
 ## Next action
 
-Waiting on the user's acceptance of Z1's closing survey and the final render (head `a0c585b`,
-`/tmp/opencode/acceptance-final.png`, note `benchmarks/closing-survey-2026-11-24.md`). On the
-user's acceptance, spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for Z1 with the
-acceptance result so it records the acceptance, compresses Z1 into `done/Z1-closing-survey.md` and
-flips its row; the plan is then ready for the release, which closes it.
+The user accepted the closing survey and the final render on 2026-11-24 ("accept all", including the
+recorded not-fixed items; no extra work authorized). The plan is under a coordinator hold: phase Z1
+overlaps plan-a's A3 in `src/main.rs` `render` (sample loop, progress write, doc comment and tests),
+and plan-c leads the settlement because C3 is already landed. Wait for the coordinator's CHANNEL OPEN
+message, then settle the shared design with plan-a's orchestrator, write
+`AGENT-INSTRUCTIONS/PLANS/shared/<pair>.md`, and run plan-c's resolution phase before closing Z1. Do
+not start Z1 or any implementer while held.
 
 ## Current state
 
-All implementation is done: C1 (with the survey remediation), C3 and the closing survey. Status
-table: C1 done, C2 not applicable, C3 done, Z1 active awaiting acceptance. Final head `a0c585b`;
-fast gate green, rendered images byte-identical to `0ad0f2b`. Final acceptance render at
-`a0c585b`: 400x200 PNG opens correctly, stdout empty, progress ends `100%` plus one newline.
-Survey note frozen at surveyed revision `0ad0f2b`; its six findings are fixed or recorded, nothing
-needs a phase. `docs-pass.md` holds three release items (`gates.md` fallback sentence, `project.md`
-and `repo-rules-domain.md` maps). No unresolved user decision except acceptance. Linked to the
-coordinator; no shared resource.
+All implementation is done: C1 (with the survey remediation), C3 and the closing survey. Final head
+`a0c585b`; fast gate green; final acceptance render produced and inspected at 400x200 with empty
+standard output and progress ending `100%` plus one newline. The user accepted the survey note
+`benchmarks/closing-survey-2026-11-24.md` and the render. Z1 is still `active`; the plan is not
+closed or archived. `docs-pass.md` holds three release items (`gates.md` fallback sentence,
+`project.md` and `repo-rules-domain.md` maps). Coordinator hold active on Z1; no shared resource.
+
 
 ## Learned rules
 
