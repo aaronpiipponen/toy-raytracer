@@ -1,5 +1,6 @@
 //! An infinite plane.
 
+use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
 use crate::ray::Ray;
 use crate::vec3::Vec3;
@@ -48,6 +49,11 @@ impl Hittable for Plane {
             u.rem_euclid(1.0),
             v.rem_euclid(1.0),
         ))
+    }
+
+    /// Return none: an infinite plane has no bounding box.
+    fn bounding_box(&self) -> Option<Aabb> {
+        None
     }
 }
 

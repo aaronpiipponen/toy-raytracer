@@ -1,5 +1,6 @@
 //! Render a fixed scene and write it to standard output as a PPM image.
 
+mod aabb;
 mod camera;
 mod hittable;
 mod plane;

@@ -1,5 +1,6 @@
 //! Anything a ray can hit, and the record of where it hit.
 
+use crate::aabb::Aabb;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
@@ -44,6 +45,9 @@ impl HitRecord {
 pub trait Hittable {
     /// The nearest hit with `t` in `t_min..t_max`, if any.
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
+
+    /// Return the axis-aligned box that holds every point of the object, or `None` when it has none.
+    fn bounding_box(&self) -> Option<Aabb>;
 }
 
 /// A scene: every object, hit in order of distance.
@@ -62,11 +66,45 @@ impl Hittable for HittableList {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let mut nearest: Option<HitRecord> = None;
         for object in &self.objects {
+            if object
+                .bounding_box()
+                .is_some_and(|bounds| !bounds.hit(ray, t_min, t_max))
+            {
+                continue;
+            }
             let limit = nearest.map_or(t_max, |hit| hit.t);
             if let Some(hit) = object.hit(ray, t_min, limit) {
                 nearest = Some(hit);
             }
         }
         nearest
+    }
+
+    /// Return none. The scene list is always tested as a whole, and each object reports its own box.
+    fn bounding_box(&self) -> Option<Aabb> {
+        None
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::plane::Plane;
+    use crate::sphere::Sphere;
+
+    #[test]
+    fn the_scene_list_still_hits_a_plane_that_has_no_box() {
+        let mut world = HittableList::default();
+        world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
+        world.add(Box::new(Plane::new(
+            Vec3::new(0.0, -0.5, 0.0),
+            Vec3::new(0.0, 1.0, 0.0),
+        )));
+        let ray = Ray::new(Vec3::new(5.0, 0.0, 0.0), Vec3::new(0.0, -1.0, 0.0));
+        let hit = world
+            .hit(&ray, 0.001, f64::INFINITY)
+            .expect("the ray hits the plane");
+        assert!((hit.t - 0.5).abs() < 1e-9);
+        assert_eq!(hit.normal, Vec3::new(0.0, 1.0, 0.0));
     }
 }

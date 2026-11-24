@@ -1,5 +1,6 @@
 //! Spheres.
 
+use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
 use crate::ray::Ray;
 use crate::vec3::Vec3;
@@ -41,6 +42,12 @@ impl Hittable for Sphere {
         let u = phi / (2.0 * PI);
         let v = theta / PI;
         Some(HitRecord::new(ray, t, point, outward_normal, u, v))
+    }
+
+    /// Return the box that holds the whole sphere.
+    fn bounding_box(&self) -> Option<Aabb> {
+        let radius = Vec3::new(self.radius, self.radius, self.radius);
+        Some(Aabb::new(self.center - radius, self.center + radius))
     }
 }
 
