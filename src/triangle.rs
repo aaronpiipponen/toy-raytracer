@@ -1,7 +1,10 @@
 //! Triangles.
 
+use std::rc::Rc;
+
 use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
@@ -10,12 +13,13 @@ pub struct Triangle {
     pub a: Vec3,
     pub b: Vec3,
     pub c: Vec3,
+    pub material: Rc<dyn Material>,
 }
 
 impl Triangle {
     /// Build a triangle from its three vertices, counter-clockwise seen from its front face.
-    pub fn new(a: Vec3, b: Vec3, c: Vec3) -> Self {
-        Triangle { a, b, c }
+    pub fn new(a: Vec3, b: Vec3, c: Vec3, material: Rc<dyn Material>) -> Self {
+        Triangle { a, b, c, material }
     }
 }
 
@@ -45,7 +49,15 @@ impl Hittable for Triangle {
         }
         let point = ray.at(t);
         let outward_normal = edge1.cross(edge2).unit();
-        Some(HitRecord::new(ray, t, point, outward_normal, u, v))
+        Some(HitRecord::new(
+            ray,
+            t,
+            point,
+            outward_normal,
+            u,
+            v,
+            Rc::clone(&self.material),
+        ))
     }
 
     fn bounding_box(&self) -> Option<Aabb> {
@@ -65,11 +77,24 @@ impl Hittable for Triangle {
 
 #[cfg(test)]
 mod tests {
+    use std::rc::Rc;
+
     use super::*;
+    use crate::material::Lambertian;
+    use crate::vec3::Colour;
+
+    fn grey_triangle(a: Vec3, b: Vec3, c: Vec3) -> Triangle {
+        Triangle::new(
+            a,
+            b,
+            c,
+            Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8))),
+        )
+    }
 
     #[test]
     fn a_ray_through_the_triangle_hits_its_front_face_with_barycentric_coordinates() {
-        let triangle = Triangle::new(
+        let triangle = grey_triangle(
             Vec3::new(0.0, 0.0, -1.0),
             Vec3::new(1.0, 0.0, -1.0),
             Vec3::new(0.0, 1.0, -1.0),
@@ -87,7 +112,7 @@ mod tests {
 
     #[test]
     fn the_triangle_reports_a_box_around_its_vertices() {
-        let triangle = Triangle::new(
+        let triangle = grey_triangle(
             Vec3::new(2.0, -1.0, -3.0),
             Vec3::new(-1.0, 4.0, -2.0),
             Vec3::new(0.5, 0.0, -6.0),

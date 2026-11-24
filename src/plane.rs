@@ -1,6 +1,9 @@
 //! Planes.
 
+use std::rc::Rc;
+
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
@@ -8,12 +11,17 @@ use crate::vec3::Vec3;
 pub struct Plane {
     pub point: Vec3,
     pub normal: Vec3,
+    pub material: Rc<dyn Material>,
 }
 
 impl Plane {
     /// Build a plane through `point` with unit normal `normal`.
-    pub fn new(point: Vec3, normal: Vec3) -> Self {
-        Plane { point, normal }
+    pub fn new(point: Vec3, normal: Vec3, material: Rc<dyn Material>) -> Self {
+        Plane {
+            point,
+            normal,
+            material,
+        }
     }
 }
 
@@ -36,17 +44,33 @@ impl Hittable for Plane {
         let bitangent = self.normal.cross(tangent);
         let u = point.dot(tangent).rem_euclid(1.0);
         let v = point.dot(bitangent).rem_euclid(1.0);
-        Some(HitRecord::new(ray, t, point, self.normal, u, v))
+        Some(HitRecord::new(
+            ray,
+            t,
+            point,
+            self.normal,
+            u,
+            v,
+            Rc::clone(&self.material),
+        ))
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::rc::Rc;
+
     use super::*;
+    use crate::material::Lambertian;
+    use crate::vec3::Colour;
 
     #[test]
     fn a_ray_through_the_plane_records_the_hit_and_texture_coordinates_that_wrap() {
-        let plane = Plane::new(Vec3::new(0.0, 0.0, -2.0), Vec3::new(0.0, 0.0, 1.0));
+        let plane = Plane::new(
+            Vec3::new(0.0, 0.0, -2.0),
+            Vec3::new(0.0, 0.0, 1.0),
+            Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8))),
+        );
         let ray = Ray::new(Vec3::new(2.25, -0.5, 0.0), Vec3::new(0.0, 0.0, -1.0));
         let hit = plane.hit(&ray, 0.001, f64::INFINITY).expect("the ray hits");
         assert!((hit.t - 2.0).abs() < 1e-9);
