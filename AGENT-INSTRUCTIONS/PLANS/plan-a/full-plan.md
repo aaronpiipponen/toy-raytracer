@@ -14,10 +14,10 @@
 
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
-| A1 | Diffuse and metal materials | active | standard | - | - | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
+| A1 | Diffuse and metal materials | active | standard | - | phases/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
 | A2 | Glass | planned | standard | A1 | - | a glass sphere refracts | gates green, rendered image shows a glass sphere |
 | A3 | Samples per pixel | planned | standard | A1 | - | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
-| Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the user accepts the result | the user accepts |
+| Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
 
 ## How to implement this plan
 
@@ -32,6 +32,9 @@ Commit whenever useful. Run the fast gate in `AGENT-INSTRUCTIONS/LOCAL/gates.md`
 - The hit record carries the material of the object that was hit, so the render loop can scatter
   without knowing the object.
 - All randomness uses `src/rng.rs` with a fixed seed.
+- Glass tells entering from leaving from the outward normal already on the hit record and the ray's
+  direction; it adds no face flag of its own. The shared shape with the geometry plan's face-side
+  change is settled through the coordinator before A2 is detailed.
 
 ## Starting state
 
@@ -52,18 +55,67 @@ diffuse material, the ground a diffuse material, and adds a metal sphere.
 ### A2 - Glass
 
 A `Dielectric` material with a refractive index: Snell's law, total internal reflection, Schlick's
-approximation. Refraction needs to know whether the ray enters or leaves the surface; the scene
-gains a glass sphere.
+approximation. It tells entering from leaving from the outward normal on the hit record and the
+ray's direction, and works with the normal in the glass's frame. The scene gains a glass sphere.
+The face-side shape shared with the geometry plan is settled with that plan through the coordinator
+before this phase is detailed.
 
 ### A3 - Samples per pixel
 
-`render` takes a sample count; each pixel averages that many rays jittered inside the pixel. The
-default is 16.
+`render` takes a sample count; each pixel averages that many rays jittered inside the pixel, sharing
+one seeded generator. The default is 16. This is the seam the output plan's command line uses for
+`--samples`.
 
 ### Z1 - Closing survey and user acceptance
 
-Render the scene, compare it with the requirements, and ask the user to accept.
+**Status:** planned.
+**Depends on:** A1, A2, A3.
+**Scope:** a read-only survey of everything this plan added or changed, then the user's acceptance of
+the rendered image.
+**Expected gate level:** minimal.
+
+**Starting state / reason:**
+- The plan is finished when requirements 1 to 6 hold in the rendered image and the user accepts the
+  result.
+- This is the plan's only closing survey. Its findings go to the user; nothing is fixed here.
+
+**Areas to survey (one read-only scout each, run in parallel):**
+- `src/material.rs` and the material trait: diffuse, metal and glass behaviour against requirements
+  1 to 4; unnecessary complexity, duplication and dead code.
+- `src/hittable.rs` and `src/sphere.rs`: the material seam on the hit record and how objects get
+  their material.
+- `src/main.rs` and `src/rng.rs`: the bounce loop, gamma, sampling loop and the scene, and that every
+  random value comes from the seeded generator.
+- Tests and docs: `docs/requirements.md` and `README.md` still accurate; test bloat against
+  REPO-RULES §3a; drift from the user's decisions.
+
+**TODOs:**
+1. Dispatch one independent read-only `ops-scout` per area above, in parallel; each reads whatever
+   context outside its area it needs, and reports out-of-scope observations with the evidence it has.
+2. Dispatch one independent read-only `ops-scout` to cross-check every finding claim by claim
+   against evidence.
+3. The orchestrator writes `benchmarks/closing-survey-<date>.md` from the saved returns: confirmed
+   findings, out-of-scope observations, unnecessary complexity, duplication, dead code, redundant
+   checks or records, test bloat, stale docs and drift from the user's decisions.
+4. Report the note to the user. Fix nothing in this phase; clear defects and drift from the user's
+   decisions go to remediation rounds, and a change needing a phase of its own or a user-owned
+   decision goes to the note's user-review list.
+5. Render the final scene and walk the user through it.
+
+**Must not:**
+- Change product code, tests or documentation in this phase.
+- Narrow the survey to a diff-only review; each scout covers the whole area the plan changed.
+- Close or archive the plan.
+
+**Verification shape:**
+- Documentation-only gate for the note: changed-file reread plus `git diff --check`.
+- Rendered-image gate on the final revision, as survey evidence and for the user's acceptance.
+
+**Exit:** the survey note exists and the user has accepted the rendered result.
+**Move-on gate:** the user accepts the survey findings and the rendered image.
 
 ## Carry-overs
 
-None.
+- A2 reads the outward normal the hit record carries today. The geometry plan's face-side change
+  replaces that normal with one that always faces the ray; the shape both plans share is settled
+  through the coordinator before A2 is detailed, and A2 must keep working under it.
