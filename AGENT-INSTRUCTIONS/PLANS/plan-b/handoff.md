@@ -2,14 +2,19 @@
 
 ## Next action
 
-`phase-advancer` is detailing initial active phase B1 (`DETAIL ACTIVE`) in the background. When it
-returns `DETAIL READY`, run the orchestrator acceptance check on
-`AGENT-INSTRUCTIONS/PLANS/plan-b/phases/B1*.md` before starting the B1 implementer.
+B1 is detailed and passed the orchestrator acceptance check. The coordinator holds B1 as the
+`plan-a-A1` / `plan-b-B1` overlap; plan-b leads. The `phase_subagent` start for B1 was attempted and
+refused, which records the stop. Next: when the coordinator opens the channel, settle the shared
+`HitRecord` design in `AGENT-INSTRUCTIONS/PLANS/shared/<pair>.md`, spawn `DETAIL RESOLUTION` for B1, run the
+acceptance check on the resolution phase file, close the channel, then implement B1.
 
 ## Current state
 
-Scoped plan with four phases, all product work, standard gate for B1-B3 and minimal for Z1. B1 is
-active and has no phase document yet. `full-plan.md` cites the requirements items and its starting
-state matches the code.
+- `phases/B1-face-side-and-texture-coordinates.md` - detailed, `DETAIL READY`, spec-auditor pass PASS.
+- B1 remains `active` in `full-plan.md`; no implementation exists.
+- Commit `66097bd` removed a plan reference from a `vec3.rs` comment (orchestrator slip fix).
+- Autonomous mode is enabled for small, easily undoable, behaviour-neutral choices only;
+  `autonomous-decisions.md` is created when the first such decision is recorded. Product decisions
+  still go to the user.
 
 ## Learned rules

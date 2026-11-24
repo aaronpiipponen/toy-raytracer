@@ -15,7 +15,7 @@
 
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
-| C1 | PNG writer and command line | active | standard | - | - | the program writes a real PNG at the chosen size, path and format from the command line | fast gate green, the written PNG opens, PPM still writes |
+| C1 | PNG writer and command line | active | standard | - | `phases/C1-png-writer-and-command-line.md` | the program writes a real PNG at the chosen size, path and format from the command line | fast gate green, the written PNG opens, PPM still writes |
 | C2 | (merged into C1) | not applicable | - | - | - | - | - |
 | C3 | Progress line | planned | minimal | C1 | - | rendering shows the share of rows done on standard error | fast gate green, progress observed, image unchanged |
 | Z1 | Closing survey and user acceptance | planned | minimal | C1 + C3 | - | the closing survey note is written and the user accepts the result | the user accepts |
