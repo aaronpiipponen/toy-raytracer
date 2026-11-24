@@ -2,22 +2,20 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `DETAIL ACTIVE` for the survey remediation unit `R1`
-(two accepted defects from the closing survey). Then an implementer, then review, then
-close Z1 and report the plan ready for the release.
+Start the R1 implementer (`phase_subagent` with phase id R1). On its receipt, spawn a fresh
+`phase-advancer` in `REVIEW AND ADVANCE` for R1. Then close Z1 with the user's recorded
+acceptance and report the plan ready for the release.
 
 ## Current state
 
-The plan's product work is done: A1, A2 and A3 are frozen at `46a5c02`; the closing survey
-Z1 ran with four area scouts plus one cross-check; the note is
-`benchmarks/closing-survey-2026-11-24.md` (returns beside it) and the user accepted the
-findings and the image, so Z1's own gate is met. The user approved two remediations: R1 the
-hit record's ray-parameter wording and the `0.001` epsilon wording, R2 the whole-image sky
-test shrunk to a small image with a few pixels asserted plus one correcting line in
-`PLANS/shared/plan-a-A1+plan-c-C3.md`. `Vec3::cross` stays untouched; the geometry plan's
-plane phase and the release merge resolve it. Recording the acceptance and closing Z1
-happen after R1 lands. Autonomous mode covers routine loop choices only; every product
-decision goes to the user.
+A1, A2 and A3 are frozen at `46a5c02`. The closing survey note
+`benchmarks/closing-survey-2026-11-24.md` holds the accepted findings and the user's dated
+decision: fix the ray-parameter wording, shrink the sky test and correct the one shared
+render-note line, leave `Vec3::cross` to the geometry plan and the release merge. R1 is
+active and detailed at `phases/R1-closing-survey-fixes.md`; Z1 is planned depending on R1.
+R1 changes doc comments, one code comment, one test's size and one shared-file line; the
+rendered bytes must be identical. Autonomous mode covers routine loop choices only; every
+product decision goes to the user.
 
 ## Learned rules
 
