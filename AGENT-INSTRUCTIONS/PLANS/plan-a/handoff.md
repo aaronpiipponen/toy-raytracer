@@ -2,16 +2,17 @@
 
 ## Next action
 
-Wait for plan-b's `channel_notify` that its Z1 resolution section is written; then accept both
-resolution files (plan-a A3 already accepted; plan-b's Z1 phase file section), `channel_close`, and
-start A3's implementer with `phase_subagent` (`A3`).
+Start A3's implementer with `phase_subagent` (`A3`). When it returns, take its receipt into REVIEW AND
+ADVANCE for A3, then detail and run plan-a's closing survey Z1.
 
 ## Current state
 
-A1 done (`de1cf31`); A2 done (`a1d640a`); A3r done. Pair `plan-a-A3+plan-b-Z1` is settled in
-`PLANS/shared/plan-a-A3+plan-b-Z1.md`; plan-a's A3 resolution records the union and passed acceptance.
-plan-b is adding its Z1 resolution section. A3 is active (samples per pixel) and awaiting
-implementation. Then plan-a's Z1 (closing survey). `docs-pass.md` holds one item for the release.
+A1 done (`de1cf31`); A2 done (`a1d640a`); A3r done. Pairs `plan-a-A2+plan-b-B2`,
+`plan-a-A3+plan-c-Z1` and `plan-a-A3+plan-b-Z1` are all resolved and closed; the geometry union is
+recorded in `PLANS/shared/plan-a-A3+plan-b-Z1.md` and the render seam in
+`PLANS/shared/plan-a-A3+plan-c-Z1.md`. A3 (samples per pixel) is active and its resolution is
+accepted; it awaits implementation. plan-a's Z1 (closing survey + user image acceptance) follows.
+`docs-pass.md` holds one item for the release.
 
 ## Learned rules
 

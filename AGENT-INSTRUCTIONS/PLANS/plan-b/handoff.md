@@ -2,14 +2,13 @@
 
 ## Next action
 
-The Z1 resolution record is written and accepted on this side; the plan-a orchestrator was notified
-with `channel_notify` and will accept both files and close the pair. Wait for `RESOLVED`, then
-continue with the user's Z1 acceptance.
-
-The user's Z1 acceptance is still outstanding and the survey already passed with no defect; on
-`RESOLVED` plus the user's yes, start a fresh advancer with `REVIEW AND ADVANCE: Review and advance
-phase Z1 of plan-b`, passing the survey note path, the render evidence and the acceptance wording.
-Then stop - release and closure are not this session's work.
+Wait for the user's Z1 acceptance. The pair `plan-a-A3+plan-b-Z1` is RESOLVED and the Z1 resolution
+record is in the phase file; the survey is complete and the survey verdict is "no confirmed clear
+defect". On the user's yes: start a fresh advancer with `REVIEW AND ADVANCE: Review and advance phase
+Z1 of plan-b`, passing the survey note path (`benchmarks/closing-survey-2026-11-24.md`), the render
+evidence (md5 `13b3bc0a3cf5c41df684e179c1d3e93d`) and the user's acceptance wording; then remove
+`/tmp/opencode/plan-b-acceptance.ppm`, `plan-b-acceptance.png` and `ppm2png.py` and stop - release and
+closure are not this session's work. On a named blocker, open the remediation unit the user asks for.
 
 ## Current state
 
