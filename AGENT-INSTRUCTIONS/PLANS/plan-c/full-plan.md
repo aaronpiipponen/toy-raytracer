@@ -106,8 +106,9 @@ output side of the product match requirements 11 and 12.
 - `src/png.rs` - new module with the writer.
 - `src/main.rs` - option parsing, the resolved settings, the render signature, `main`.
 - `README.md` - the run example.
-- `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the stale rendered-image fallback line.
 - `docs/requirements.md` - only if the change contradicts a stated behaviour; otherwise leave it.
+- `AGENT-INSTRUCTIONS/LOCAL/gates.md` - read only, for the rendered-image gate; it is shared by every
+  worktree and stays unchanged here.
 
 **TODOs:**
 1. Add `src/png.rs`: a writer taking the width, the height, the pixels and a `Write`, producing the
