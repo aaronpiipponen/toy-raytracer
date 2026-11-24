@@ -15,10 +15,10 @@
 
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
-| C1 | PNG writer and command line | done | standard | - | `done/C1-png-writer-and-command-line.md` | the program writes a real PNG at the chosen size, path and format from the command line | fast gate green, the written PNG opens, PPM still writes |
+| C1 | PNG writer and command line | active | standard | - | `phases/C1-survey-remediation.md` | the program writes a real PNG at the chosen size, path and format from the command line | fast gate green, the written PNG opens, PPM still writes |
 | C2 | (merged into C1) | not applicable | - | - | - | - | - |
 | C3 | Progress line | done | standard | C1 | `done/C3-progress-line.md` | rendering shows the share of rows done on standard error | fast gate green, progress observed, image unchanged |
-| Z1 | Closing survey and user acceptance | active | minimal | C1 + C3 | `phases/Z1-closing-survey.md` | the closing survey note is written and the user accepts the result | the user accepts |
+| Z1 | Closing survey and user acceptance | planned | minimal | C1 + C3 | `phases/Z1-closing-survey.md` | the closing survey note is written and the user accepts the result | the user accepts |
 
 C2 was folded into C1 so that PPM never becomes unreachable code and the format choice exists in
 the same change that makes `render.png` the default.
@@ -89,7 +89,7 @@ What later phases inherit:
 
 ### C1 - PNG writer and command line
 
-**Status:** done.
+**Status:** active (survey remediation in `phases/C1-survey-remediation.md`).
 **Depends on:** none (the first phase).
 **Scope:** the program stops writing PPM to standard output and instead resolves a small set of
 command-line options and writes the image to a file as PNG or PPM. This is the phase that makes the
@@ -189,7 +189,7 @@ apply.
 
 ### Z1 - Closing survey and user acceptance
 
-**Status:** active.
+**Status:** planned (the survey note is written; acceptance waits for the C1 remediation).
 **Depends on:** C1 + C3.
 **Scope:** the binding closing survey of everything this plan added or changed, then the user's
 acceptance of the result.
