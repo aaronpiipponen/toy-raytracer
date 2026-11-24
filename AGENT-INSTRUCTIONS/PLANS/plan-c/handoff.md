@@ -2,16 +2,17 @@
 
 ## Next action
 
-Start C1's implementer with `phase_subagent` and the active phase id `C1`. C1's phase document
-passed the orchestrator acceptance check; no open decision blocks it.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for C1 with the implementer receipt on
+session `ses_df1a35a60ffeVcYGNHTtZTwKe9` (tested head `fb4d00c`, base `e180476`).
 
 ## Current state
 
-The plan is scoped and C1 is detailed in `phases/C1-png-writer-and-command-line.md`. C1 carries the
-PNG writer and the command line together, so C2 is `not applicable`. No code is implemented yet.
-`docs-pass.md` holds one release item (the shared `gates.md` fallback sentence), and
-`autonomous-decisions.md` records the `--format` over extension precedence C1 relies on. The
-plan is linked to the coordinator; `workspace.json` names no shared resource.
+C1 (PNG writer and command line) is implemented and verified by its implementer: fast gate green,
+rendered-image gate green in both formats, `USER-SPECIFIC TEST: NOT REQUIRED`. Its review loop ended
+with no real finding at `fb4d00c`. The phase is still `active` in `full-plan.md`; compression into
+`done/C1-...md`, the status flip and next-phase detailing belong to the advancer. C2 is
+`not applicable`. `docs-pass.md` holds the shared `gates.md` release item; `autonomous-decisions.md`
+holds the `--format` precedence. Linked to the coordinator; no shared resource.
 
 ## Learned rules
 
