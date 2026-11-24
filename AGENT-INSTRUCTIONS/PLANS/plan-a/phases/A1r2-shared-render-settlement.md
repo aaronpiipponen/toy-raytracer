@@ -78,14 +78,14 @@ guard, test, config key or permanent documentation.
    sample count reproduces byte-identically across runs.
 4. `ray_colour` keeps its name and its 50-bounce material loop, returns linear radiance, returns
    black at the bounce limit and the sky gradient on a miss.
-5. Averaging happens in linear space in `render`. `to_byte` applies gamma 2 (`sqrt`) once to the
-   averaged channel and stays the single output conversion both the PNG and PPM writers use. Gamma
-   is never applied per sample.
+5. Averaging happens in linear space in `render`. Gamma 2 comes from A1 on this branch:
+   `to_byte` applies `sqrt` once to the averaged channel. The merge keeps one `to_byte` body with
+   that `sqrt`, and both the PNG and PPM writers use it. Gamma is never applied per sample.
 6. `render` returns the pixel vector unchanged to `run(&Settings)`, which encodes and writes it as
    C1 leaves it. Neither writer changes in this settlement.
-7. The progress line is C1's two `eprint`/`eprintln` calls inside the row loop after the column
-   loop, inside `render`. It counts rows only and is independent of samples and bounces. A1 and A3
-   do not move, rename or re-implement it; the merge keeps plan-c's calls.
+7. The progress line is the output plan's C3 two `eprint`/`eprintln` calls inside the row loop
+   after the column loop, inside `render`. It counts rows only and is independent of samples and
+   bounces. A1 and A3 do not move, rename or re-implement it; the merge keeps plan-c's calls.
 8. `samples` is always at least 1 by the time `render` runs: C1's option parser rejects a value below
    1 with the usage line and exit status 2, and `tests/cli.rs` covers `--samples 0`. Nothing in
    `render`, A1 or A3 adds a second guard for it. Once materials consume the generator the image
