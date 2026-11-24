@@ -4,7 +4,7 @@
 **Depends on:** A1 (`done/A1-diffuse-and-metal-materials.md`) and A2 (`done/A2-glass.md`).
 **Scope:** `render` in `src/main.rs` takes a sample count and averages that many jittered rays per pixel, with one seeded generator shared across the whole image. `main` passes a new default of 16. No command-line option, no output-format change, no material, scene or bounce-limit change.
 **Gate level:** standard - bounded runtime behaviour in the render loop, with no schema, durable state, security boundary or cross-package contract. The rendered-image conditional gate applies because the render loop changes.
-**Simplicity statement:** The sample count has one supported range, at least one sample, validated only by the command line in the merged product. `render` carries no sample-count guard. The phase adds no clamping, retry, fallback or per-pixel generator. Width or height of zero remains unhandled as it is today; the command line validates its own values in the output plan. No code is deleted.
+**Simplicity statement:** The sample count has one supported range, at least one sample, validated only by the command line in the merged product. `render` carries no sample-count guard. The phase adds no clamping, retry, fallback or per-pixel generator. Width or height of zero goes unhandled by `render`, and the command line validates its own values in the output plan. No code is deleted.
 
 **Current state (verified):**
 - `src/main.rs:22-25` - `const WIDTH: usize = 200`, `const HEIGHT: usize = 100`, `const SEED: u64 = 7`, `const MAX_BOUNCES: usize = 50`.
@@ -20,7 +20,7 @@
 - A2 contract: `ray_colour` reaches glass through `hit.material`, so the render loop needs no material knowledge.
 
 **Read first (do not invent):**
-- `src/main.rs` - the constants at lines 22-25 (a new `SAMPLES` joins them), the `render` doc comment and body at lines 79-93, `main` at lines 118-121 and the test at lines 123-131. This phase edits only those items. `ray_colour` at lines 27-46 and `to_byte` at lines 95-97 are read for context and stay unchanged.
+- `src/main.rs` - the constants at lines 22-25 (a new `SAMPLES` joins them), the `render` doc comment and body at lines 79-93, `main` at lines 118-121 and the test module at lines 123-132. This phase edits only those items. `ray_colour` at lines 27-46 and `to_byte` at lines 95-97 are read for context and stay unchanged.
 - `src/rng.rs` - `Rng::new(seed: u64)` and `next_f64(&mut self) -> f64`; the generator is the only source of randomness.
 - `src/camera.rs` - `Camera::ray`; sample coordinates are passed unchanged into it.
 - `src/vec3.rs` - `Colour`, `Add` and `Div<f64>`; the accumulation uses them.
