@@ -2,16 +2,15 @@
 
 ## Next action
 
-Spawn one fresh `phase-advancer` with DETAIL RESOLUTION for both plans (write plan-a's A2 resolution
-and plan-b's B2 resolution from the shared design). Then accept both files, `channel_close` naming
-plan-b's B2 file, and start A2's implementer with `phase_subagent` (`A2`).
+Start A2's implementer with `phase_subagent` (`A2`). When it returns, take its receipt into REVIEW AND
+ADVANCE for A2, then implement A3.
 
 ## Current state
 
-A1 done (head `de1cf31`). Pair `plan-a-A2+plan-b-B2` settled in
-`PLANS/shared/plan-a-A2+plan-b-B2.md`; plan-a's A2 resolution `phases/A2-glass.md` exists and passed
-an earlier acceptance check. Per the user, one advancer now writes both plans' resolution files.
-A3 is `next` (detailed and accepted, queued behind A2). `docs-pass.md` holds one item for the release.
+A1 done (head `de1cf31`). Pair `plan-a-A2+plan-b-B2` closed; both resolution phase files accepted
+(plan-a `phases/A2-glass.md`, plan-b `phases/B2-planes-and-triangles.md`) against
+`PLANS/shared/plan-a-A2+plan-b-B2.md`. A2's resolution awaits implementation; A3 is `next` (detailed
+and accepted). `docs-pass.md` holds one item for the release.
 
 ## Learned rules
 
@@ -25,5 +24,7 @@ A3 is `next` (detailed and accepted, queued behind A2). `docs-pass.md` holds one
   active queued phase to `next`.
 - When the user directs one advancer to write both plans' resolution files, it may write plan-b's
   phase document (not its code) per the shared design.
+- A coordinator hold lifts only on `channel_close`; close the pair after accepting both resolution
+  phase files, before starting the resolution implementer.
 
 ## Learned rules
