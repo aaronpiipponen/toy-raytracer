@@ -21,24 +21,26 @@ guard, test, config key or permanent documentation.
 - `src/main.rs:40` - `fn render(width: usize, height: usize) -> Vec<Colour>` builds the scene and
   the camera, then pushes one `ray_colour(&camera.ray(u, v), &world)` per pixel. There is no sample
   loop and no sample count on this branch.
-- `src/main.rs:18` - `const WIDTH: usize = 200;` and `src/main.rs:19` - `const HEIGHT: usize = 100;`.
-  `src/main.rs:70` - `main` calls `render(WIDTH, HEIGHT)`; `src/main.rs:82` and `src/main.rs:89` -
+- `src/main.rs:20` - `const WIDTH: usize = 200;` and `src/main.rs:21` - `const HEIGHT: usize = 100;`.
+  `src/main.rs:78` - `main` calls `render(WIDTH, HEIGHT)`; `src/main.rs:88` and `src/main.rs:95` -
   the two tests call `render(WIDTH, HEIGHT)`.
 - `src/main.rs:24` - `fn ray_colour(ray: &Ray, world: &dyn Hittable) -> Colour` colours a hit by its
   normal and a miss by the sky gradient. A1 replaces this with the material bounce loop.
-- `src/main.rs:53` - `fn to_byte(channel: f64) -> u8` is `(255.999 * channel.clamp(0.0, 1.0)) as u8`.
+- `src/main.rs:54` - `fn to_byte(channel: f64) -> u8` is `(255.999 * channel.clamp(0.0, 1.0)) as u8`.
   A1 puts gamma 2 in this body.
-- `src/main.rs:24` - `ray_colour` and `src/main.rs:30` - `scene()` carry no `Rng`; `src/rng.rs` is
+- `src/main.rs:24` - `ray_colour` and `src/main.rs:32` - `scene()` carry no `Rng`; `src/rng.rs` is
   unused. A1 creates the generator in `render`.
 - `phases/A1-diffuse-and-metal-materials.md:28` - A1's detail keeps `render(width: usize, height:
   usize)`; `:108` - it keeps `WIDTH`/`HEIGHT`; `:122` - it creates `let mut rng = Rng::new(SEED);`
   once in `render` and passes `&mut rng` to `ray_colour`; `:124` - it applies gamma 2 in `to_byte`;
   `:126` - it gives the scene its diffuse and metal spheres. A1 is unchanged by this settlement.
-- `phases/A1-diffuse-and-metal-materials.md` is the only file under `phases/`. A3 has no detail file
-  and is `planned`.
-- `full-plan.md:18` - A1 is the `active` row behind A1r, `:19` - A2 planned, `:20` - A3 planned
-  depending on A1, `:21` - Z1 planned. This phase inserts A1r2 before A1, sets A1 back to `planned`
-  behind it and leaves A2, A3 and Z1 otherwise unchanged apart from A3's dependency.
+- `phases/A1-diffuse-and-metal-materials.md` is the only other file under `phases/`. A3 has no
+  detail file and is `planned`.
+- `full-plan.md:17` - A1r is `done`; `:18` - the A1r2 row this phase inserts, `active`; `:19` - A1
+  is set back to `planned` depending on A1r2 with its existing phase file; `:20` - A2 planned
+  depending on A1; `:21` - A3 planned depending on `A1 + A1r2`; `:22` - Z1 planned on A1, A2 and A3.
+- A1's detail header keeps its existing `Status` and `Depends on` metadata because this phase does
+  not edit that file. The `full-plan.md` status table is the source of truth for phase progress.
 - `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-c-C3.md` - the shared design this phase records.
 - `../plan-c/src/main.rs:23-26` - the output plan's landed C1 has `DEFAULT_WIDTH = 400`,
   `DEFAULT_HEIGHT = 200`, `DEFAULT_SAMPLES = 16`; `:61` - `fn render(width: usize, height: usize,
