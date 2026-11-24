@@ -2,21 +2,20 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `DETAIL RESOLUTION` for pair plan-a-A1+plan-b-B2 to write
-plan-a's `A1r3` and plan-b's `B2r` phase files from the agreed shared design. Then run my
-acceptance check on both, tell plan-b they are final, and wait for `RESOLVED`.
+Run plan-a's A1r3 unit: submit A1r3 to a fresh `phase-implementer`, then a fresh
+`phase-advancer` in `REVIEW AND ADVANCE`. A1 resumes after A1r3 is done.
 
 ## Current state
 
-The A1+B2 design is agreed and written to `PLANS/shared/plan-a-A1+plan-b-B2.md`: one
-composed scene (matte centre sphere, matte mid-grey ground plane, matte dull-green triangle,
-metal sphere), both new shapes gain a material field and pass it to the one hit-record
-constructor, the scene list keeps the borrow-based nearest record and adds B3's box test,
-and both resolution phases are documentation-only. Per the user's rule for this workspace,
-the leader (this session) writes both resolution phase files. A1 is held until the pair
-resolves; A1r2 is done and A1's detail is current at `e180476`. The docs-pass note about the
-stale `Vec3::cross` comment is dropped because plan-b's B2 deletes that comment.
-Autonomous mode covers routine loop choices only; every product decision goes to the user.
+The A1+B2 pair is resolved (plan-a led) and the channel is closed. `PLANS/shared/`
+holds all three settled designs: the hit record, the render shape and the scene
+composition. Plan-a's `A1r3` is the sole active row, gate `minimal`, documentation-only,
+recording plan-a's half of the scene settlement; `A1` is planned behind it with its
+existing detail current at `e180476`; `A3` depends on `A1 + A1r2`. Plan-b's `B2r` was
+written by this session and accepted by plan-b, which owns its row and compression. The
+`docs-pass.md` file was removed because plan-b's B2 deletes the stale `Vec3::cross`
+comment. Autonomous mode covers routine loop choices only; every product decision goes to
+the user.
 
 ## Learned rules
 
@@ -31,4 +30,4 @@ Autonomous mode covers routine loop choices only; every product decision goes to
 - A child's claimed correction must be checked against the file.
 - A1 must not duplicate the geometry plan's face side, texture coordinates, constructor or
   bounding boxes.
-- Resolution ids never reuse an existing id: the third resolution of A1 is `A1r3`.
+- Resolution ids never reuse an existing id: a future resolution of A1 is `A1r4`.
