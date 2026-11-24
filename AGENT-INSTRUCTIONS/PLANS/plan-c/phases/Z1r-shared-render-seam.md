@@ -165,8 +165,8 @@ being patched here.
   `AGENT-INSTRUCTIONS/LOCAL/gates.md`, `AGENT-INSTRUCTIONS/LOCAL/project.md`,
   `AGENT-INSTRUCTIONS/LOCAL/repo-rules-domain.md` or anything outside
   `AGENT-INSTRUCTIONS/PLANS/plan-c/`.
-- Do not reopen the survey, add a finding, fix anything, or record a new acceptance claim. The user
-  has accepted the survey note and the rendered result.
+- Do not reopen the survey, add a finding, fix anything, or record a new acceptance claim. The
+  user's acceptance of the survey note and the rendered result is given.
 - No new test function, no receipt, hash or manifest, and no extra evidence file.
 - Do not run the fast gate or rerun any gate for independent confidence. The documentation gate and
   the one acceptance render are the verification.
@@ -178,7 +178,8 @@ being patched here.
 - New/changed/deleted: none. Test functions added 0, deleted 0, changed 0, so the REPO-RULES §3a
   budget is untouched. The existing tests and `tests/cli.rs` are read only.
 - Fast gate: not run. No code or test changes, and the passing evidence at `a0c585b` stands.
-- Documentation-only gate: reread this phase file plus `git diff --check`.
+- Documentation-only gate: reread this phase file plus `git diff --check`, at the workspace root
+  step 7 names.
 - Conditional gates: rendered image, required once in step 6 as the resolution evidence for the
   render seam. Agent generation: not affected.
 - Slow gate (over two minutes): none. The 400 by 200, 16-sample render finishes in well under a

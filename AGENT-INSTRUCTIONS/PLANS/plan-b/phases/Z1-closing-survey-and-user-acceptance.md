@@ -37,8 +37,8 @@ after this phase, and archive follows the user's explicit authorization.
   whose `hit` walks the objects, computes `let limit = nearest.map_or(t_max, |hit| hit.t);`, skips an
   object whose `bounding_box()` misses with `bounds.hit(ray, t_min, limit)`, and keeps the nearest
   record.
-- `src/hittable.rs:85-119` - a `#[cfg(test)] mod tests` holding `Unreachable` and the list test named
-  under `Tests`.
+- `src/hittable.rs:85-119` - a `#[cfg(test)] mod tests` holding `Unreachable` and the list test
+  `the_list_tests_an_object_without_a_box_and_skips_one_whose_box_the_ray_misses`.
 - `src/sphere.rs:21-52` - `impl Hittable for Sphere` with the quadratic `hit` that derives `u` from
   `atan2` and `v` from `acos` on the outward normal, and `bounding_box` returning the center plus and
   minus the radius. `src/sphere.rs:54-99` - four tests.
@@ -96,7 +96,9 @@ after this phase, and archive follows the user's explicit authorization.
    together so they run in parallel. Each dispatch prompt names its area, tells the scout it may read
    whatever context outside the area it needs to judge it, tells it to report an out-of-scope problem
    as an out-of-scope observation with the evidence it already has without investigating further, and
-   does not restrict it to the diff:
+   does not restrict it to the diff. The orchestrator saves each return unchanged as
+   `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/returns/area-<number>-<subject>.md`, so the note is
+   written from a saved return and not from memory.
    - **Area 1, the hit record, the face side, texture coordinates and the sphere.**
      `src/hittable.rs` `HitRecord` and `HitRecord::new`, and `src/sphere.rs`, against requirement 7,
      requirement 8's sphere clause and design rule 1: `HitRecord` is the one record every shape
