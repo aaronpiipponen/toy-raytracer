@@ -2,17 +2,16 @@
 
 ## Next action
 
-Start A3's implementer with `phase_subagent` (`A3`). When it returns, take its receipt into REVIEW AND
-ADVANCE for A3, then detail and run plan-a's closing survey Z1.
+Run `phase-advancer` in REVIEW AND ADVANCE for phase A3 (base `a1d640a`, tested head `566b11c`); it
+promotes Z1. Then run `phase-advancer` DETAIL ACTIVE for Z1 (the closing survey) and perform the
+survey with read-only `ops-scout`s, writing the dated note.
 
 ## Current state
 
-A1 done (`de1cf31`); A2 done (`a1d640a`); A3r done. Pairs `plan-a-A2+plan-b-B2`,
-`plan-a-A3+plan-c-Z1` and `plan-a-A3+plan-b-Z1` are all resolved and closed; the geometry union is
-recorded in `PLANS/shared/plan-a-A3+plan-b-Z1.md` and the render seam in
-`PLANS/shared/plan-a-A3+plan-c-Z1.md`. A3 (samples per pixel) is active and its resolution is
-accepted; it awaits implementation. plan-a's Z1 (closing survey + user image acceptance) follows.
-`docs-pass.md` holds one item for the release.
+A1 done (`de1cf31`); A2 done (`a1d640a`); A3r done; A3 implemented at head `566b11c` (12 tests, review
+clean) and awaits review-and-advance. All three coordinator pairs are closed and their designs recorded
+under `PLANS/shared/`. Z1 (closing survey + the user's acceptance of the rendered image) follows and is
+the plan's only user gate. `docs-pass.md` holds one item for the release.
 
 ## Learned rules
 
@@ -35,6 +34,8 @@ accepted; it awaits implementation. plan-a's Z1 (closing survey + user image acc
   phase files, before starting the resolution implementer.
 - A resolved partner may receive a resolution-bookkeeping phase (documentation-only) that amends the held
   phase document in place; run it, then implement the held phase.
+- The branch's `render` doc sentence describes the merged product's progress line (frozen by the shared
+  designs); it is deliberately not branch-accurate and must not be edited again at the merge.
 
 ## Learned rules
 
