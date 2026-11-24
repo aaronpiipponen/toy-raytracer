@@ -2,8 +2,10 @@
 
 **Status:** active.
 **Depends on:** B2 (`done/B2-planes-and-triangles.md`): `Plane` and `Triangle` build their records
-through the six-argument `HitRecord::new`, `HittableList` is `Copy`-based, and the scene holds one
-material-less triangle. `HitRecord`, `Plane` and `Triangle` stay unchanged in this phase.
+through the six-argument `HitRecord::new`, `HittableList::hit` copies the nearest `HitRecord`, which
+is `Copy`, and the scene holds one material-less triangle. `HitRecord` and `Plane` stay unchanged in
+this phase, the `hit` bodies of `Sphere`, `Triangle` and `HittableList` keep their behaviour and
+their hit results, and `Sphere` and `Triangle` gain a `bounding_box` override.
 **Scope:** add `src/aabb.rs` with `Aabb { min, max }`, its `new` and a slab `hit` test; give
 `Hittable` a `bounding_box(&self) -> Option<Aabb>` method with a default body returning `None`;
 override it in `Sphere` (center plus and minus the radius) and `Triangle` (the corner-wise min and
