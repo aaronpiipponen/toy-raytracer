@@ -4,6 +4,7 @@ use crate::hittable::{HitRecord, Hittable};
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
+/// A triangle: its three vertices, counter-clockwise seen from its front face.
 pub struct Triangle {
     pub a: Vec3,
     pub b: Vec3,
