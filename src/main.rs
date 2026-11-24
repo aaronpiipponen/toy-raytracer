@@ -21,6 +21,7 @@ use vec3::{Colour, Vec3};
 
 const WIDTH: usize = 200;
 const HEIGHT: usize = 100;
+const SAMPLES: usize = 16;
 const SEED: u64 = 7;
 const MAX_BOUNCES: usize = 50;
 
@@ -76,17 +77,22 @@ fn scene() -> HittableList {
     world
 }
 
-/// Every pixel's colour, row by row from the top.
-fn render(width: usize, height: usize) -> Vec<Colour> {
+/// Every pixel's colour, row by row from the top, each pixel averaging `samples` jittered rays, with
+/// the share of finished rows reported on standard error.
+fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
     let world = scene();
     let camera = Camera::new(width as f64 / height as f64);
     let mut rng = Rng::new(SEED);
     let mut pixels = Vec::with_capacity(width * height);
     for row in (0..height).rev() {
         for column in 0..width {
-            let u = column as f64 / (width - 1) as f64;
-            let v = row as f64 / (height - 1) as f64;
-            pixels.push(ray_colour(&camera.ray(u, v), &world, &mut rng));
+            let mut pixel = Vec3::new(0.0, 0.0, 0.0);
+            for _ in 0..samples {
+                let u = (column as f64 + rng.next_f64()) / width as f64;
+                let v = (row as f64 + rng.next_f64()) / height as f64;
+                pixel = pixel + ray_colour(&camera.ray(u, v), &world, &mut rng);
+            }
+            pixels.push(pixel / samples as f64);
         }
     }
     pixels
@@ -116,7 +122,7 @@ fn write_ppm(
 }
 
 fn main() -> io::Result<()> {
-    let pixels = render(WIDTH, HEIGHT);
+    let pixels = render(WIDTH, HEIGHT, SAMPLES);
     write_ppm(&mut io::stdout().lock(), WIDTH, HEIGHT, &pixels)
 }
 
@@ -126,7 +132,17 @@ mod tests {
 
     #[test]
     fn the_top_row_is_sky() {
-        let pixels = render(WIDTH, HEIGHT);
+        let pixels = render(200, 100, 16);
         assert!(pixels[0].z > pixels[0].x, "the sky is bluer than it is red");
+    }
+
+    #[test]
+    fn two_renders_with_the_same_options_give_the_same_pixels() {
+        assert_eq!(render(20, 10, 2), render(20, 10, 2));
+    }
+
+    #[test]
+    fn the_sample_count_changes_the_pixels() {
+        assert_ne!(render(20, 10, 1), render(20, 10, 4));
     }
 }
