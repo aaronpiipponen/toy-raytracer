@@ -206,7 +206,7 @@ asked to design a repair. One release render is the only runtime work.
 
 **Rules / MUST NOT:**
 - Change no product code, test, `docs/` page, `README.md`, `Cargo.toml`, `AGENT-INSTRUCTIONS/LOCAL/`
-  file or other plan's file. `git status --short` stays empty.
+  file or other plan's file. `git status --short -- src Cargo.toml docs README.md` stays empty.
 - Fix nothing. Every finding is recorded with evidence and handed to the user. Do not open a
   remediation, do not add a test to cover a finding, and do not edit `docs-pass.md`.
 - Do not narrow an area scout to a diff review. Each scout reads the whole area the plan changed and
@@ -227,7 +227,8 @@ asked to design a repair. One release render is the only runtime work.
 **Tests:**
 - New: none. Changed: none. Deleted: none. This phase adds no test function; the suite stays at 13.
 - Fast gate: not required, because no product file changes. Documentation-only gate instead: reread
-  both new plan files, `git status --short` empty, `git diff --check` clean.
+  both new plan files, `git status --short -- src Cargo.toml docs README.md` empty,
+  `git diff --check` clean.
 - Conditional gates: rendered image, required as the acceptance subject and the survey's evidence.
   The command and expected observations are build plan step 6. Agent generation: not affected.
 - Slow gate (>2 minutes): none. The release build and both renders finish in well under a minute.
