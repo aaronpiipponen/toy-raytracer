@@ -38,8 +38,9 @@ and `done/C3-progress-line.md`, and the shared design
 - `README.md`, `docs/requirements.md` and `tests/cli.rs` are plan-c's. `tests/cli.rs` needs no
   change in the merge, because PNG-versus-PPM pixel equality does not depend on the materials.
 - The merged test module holds `the_top_row_is_sky` adapted to the literal call
-  `render(200, 100, 16)` with its assertion unchanged, `two_renders_with_the_same_options_give_the_same_pixels`
-  and `the_sample_count_changes_the_pixels`, both with literal calls only.
+  `render(200, 100, 16)` with its assertion unchanged,
+  `two_renders_with_the_same_options_give_the_same_pixels` and
+  `the_sample_count_changes_the_pixels`, both with literal calls only.
   `the_center_pixel_shows_the_sphere_facing_the_camera` does not survive the merge, because
   materials replace normal colouring.
 
@@ -49,11 +50,15 @@ and `done/C3-progress-line.md`, and the shared design
 - `src/main.rs:23-25` holds the three defaults, `:111` reads `DEFAULT_SAMPLES` into `samples`,
   `:131-133` rejects a count below 1, and `:186` passes `settings.samples` into `render`.
 - A search of `src/` finds no `SAMPLES`, `WIDTH` or `HEIGHT` constant.
-- The acceptance render at `a0c585b` through
-  `target/release/toy-raytracer --width 400 --height 200 --samples 16 --output
-  /tmp/opencode/resolution.png` exited with status 0. The PNG is 400 by 200, 8-bit RGB,
-  non-interlaced, and opens showing the sphere over the blue-to-white sky and the green ground
-  plane. Standard output is 0 bytes. Standard error is 783 bytes of percentages separated by `\r`,
-  ending `100%` plus one newline.
+- The acceptance render at `a0c585b` ran the built binary:
+
+  ```bash
+  target/release/toy-raytracer --width 400 --height 200 --samples 16 \
+    --output /tmp/opencode/resolution.png
+  ```
+
+  It exited with status 0. The PNG is 400 by 200, 8-bit RGB, non-interlaced, and opens showing
+  the sphere over the blue-to-white sky and the green ground plane. Standard output is 0 bytes.
+  Standard error is 783 bytes of percentages separated by `\r`, ending `100%` plus one newline.
 - This phase changes no code or test, so the fast-gate evidence at `a0c585b` stands. The
   documentation gate and the acceptance render are its evidence.

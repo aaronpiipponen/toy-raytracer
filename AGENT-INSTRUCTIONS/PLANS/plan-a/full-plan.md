@@ -16,7 +16,7 @@
 |---|---|---|---|---|---|---|---|
 | A1 | Diffuse and metal materials | done | standard | - | done/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
 | A2 | Glass | done | standard | A1 | done/A2-glass.md | a glass sphere refracts | gates green, the rendered image shows a refracting glass sphere |
-| A3r | Samples per pixel resolution | active | minimal | A1 + A2 | phases/A3r-samples-resolution.md | A3 is amended to the shared render design and the release merge contract is recorded | documentation gate green, A3 ready to implement after the pair resolves |
+| A3r | Samples per pixel resolution | done | minimal | A1 + A2 | done/A3r-samples-resolution.md | A3 is amended to the shared render design and the release merge contract is recorded | documentation gate green, A3 ready to implement after the pair resolves |
 | A3 | Samples per pixel | planned | standard | A1 + A2 | phases/A3-samples-per-pixel.md | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
 | Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
 

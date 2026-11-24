@@ -18,8 +18,8 @@
 | C1 | PNG writer and command line | done | standard | - | `done/C1-survey-remediation.md` | the program writes a real PNG at the chosen size, path and format from the command line | fast gate green, the written PNG opens, PPM still writes |
 | C2 | (merged into C1) | not applicable | - | - | - | - | - |
 | C3 | Progress line | done | standard | C1 | `done/C3-progress-line.md` | rendering shows the share of rows done on standard error | fast gate green, progress observed, image unchanged |
-| Z1r | Shared render seam resolution | active | minimal | C1 + C3 | `phases/Z1r-shared-render-seam.md` | the shared design is recorded and plan-c's render seam and acceptance render are confirmed against it | documentation gate green, acceptance render observed |
-| Z1 | Closing survey and user acceptance | planned | minimal | C1 + C3 | - | the closing survey note is written and the user accepts the result | the user accepts |
+| Z1r | Shared render seam resolution | done | minimal | C1 + C3 | `done/Z1r-shared-render-seam.md` | the shared design is recorded and plan-c's render seam and acceptance render are confirmed against it | documentation gate green, acceptance render observed |
+| Z1 | Closing survey and user acceptance | active | minimal | C1 + C3 | `phases/Z1-closing-survey.md` | the closing survey note is written and the user accepts the result | the user accepts |
 
 C2 was folded into C1 so that PPM never becomes unreachable code and the format choice exists in
 the same change that makes `render.png` the default.
@@ -190,7 +190,7 @@ apply.
 
 ### Z1r - Shared render seam resolution
 
-**Status:** active.
+**Status:** done.
 **Depends on:** C1 + C3 and the shared design `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md`.
 **Scope:** record the shared render design in the plan, confirm plan-c's landed `render` seam and
 frozen C1/C3 contracts against it, and re-run plan-c's acceptance render. No product code, test,
@@ -228,7 +228,7 @@ render evidence is recorded.
 
 ### Z1 - Closing survey and user acceptance
 
-**Status:** planned.
+**Status:** active.
 **Depends on:** C1 + C3.
 **Scope:** the binding closing survey of everything this plan added or changed, then the user's
 acceptance of the result.

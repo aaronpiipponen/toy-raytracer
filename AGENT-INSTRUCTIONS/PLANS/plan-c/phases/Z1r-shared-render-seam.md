@@ -224,7 +224,8 @@ is the single default, `main` to `run` passes `settings.samples`, and `render` c
 sample-count validation because `parse_args` rejects a count below 1.
 
 The merged test module holds `the_top_row_is_sky` adapted to the literal call
-`render(200, 100, 16)` with its assertion unchanged, `two_renders_with_the_same_options_give_the_same_pixels` and
+`render(200, 100, 16)` with its assertion unchanged,
+`two_renders_with_the_same_options_give_the_same_pixels` and
 `the_sample_count_changes_the_pixels`, both with literal calls only.
 `the_center_pixel_shows_the_sphere_facing_the_camera` does not survive the merge, because
 materials replace normal colouring.
@@ -237,39 +238,44 @@ and recorded above: the branch keeps the unjittered `column / (width - 1)` and
 `row / (height - 1)` mapping until the merge supplies jitter. No unexplained drift.
 
 **Acceptance render evidence (head `a0c585b`):**
-- `target/release/toy-raytracer --width 400 --height 200 --samples 16 --output
-  /tmp/opencode/resolution.png` exited with status 0.
+
+```bash
+target/release/toy-raytracer --width 400 --height 200 --samples 16 \
+  --output /tmp/opencode/resolution.png
+```
+
+- The command exited with status 0.
 - The file is a PNG of 400 by 200, 8-bit RGB, non-interlaced, and opens showing the sphere over
   the blue-to-white sky and the green ground plane.
 - Standard output is 0 bytes.
 - Standard error is 783 bytes of percentages separated by `\r`, ending `100%` plus one newline.
 
 **Completion checklist (gate):**
-- [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a (minimal) are satisfied.
-- [ ] The resolution record cites the shared design and states the `render` signature, the single
+- [x] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a (minimal) are satisfied.
+- [x] The resolution record cites the shared design and states the `render` signature, the single
   doc-comment sentence (including the merged "jittered" clause), the progress placement, the
   no-constant rule, the release merge split and the merged test module.
-- [ ] The check against branch `plan-c` confirms the signature, the doc sentence, the progress pair
+- [x] The check against branch `plan-c` confirms the signature, the doc sentence, the progress pair
   placement, the absence of `SAMPLES`, `WIDTH` and `HEIGHT`, `DEFAULT_SAMPLES = 16`, the `run`
   sample argument and the `parse_args` rejection below 1.
-- [ ] The acceptance render ran at the current head or its existing evidence at that head was read:
+- [x] The acceptance render ran at the current head or its existing evidence at that head was read:
   the PNG opens, standard output is 0 bytes, and standard error ends `100%` plus one newline.
-- [ ] `git diff --check` is clean and the phase file was reread after the edit.
-- [ ] No product code, test, configuration, README, `docs/` file or file outside
+- [x] `git diff --check` is clean and the phase file was reread after the edit.
+- [x] No product code, test, configuration, README, `docs/` file or file outside
   `AGENT-INSTRUCTIONS/PLANS/plan-c/` changed.
-- [ ] Test budget respected (REPO-RULES §3a); the record states 0 added, 0 deleted and 0 changed.
-- [ ] Revision-bound evidence is recorded: the head is `a0c585b` and no code or test moved, so the
+- [x] Test budget respected (REPO-RULES §3a); the record states 0 added, 0 deleted and 0 changed.
+- [x] Revision-bound evidence is recorded: the head is `a0c585b` and no code or test moved, so the
   fast-gate evidence at that revision stands, and the documentation gate plus the acceptance-render
   observation are this phase's evidence. No test receipt is produced for a phase with no code or
   test change.
-- [ ] The closing survey note and the user's acceptance are untouched, and no new acceptance claim
+- [x] The closing survey note and the user's acceptance are untouched, and no new acceptance claim
   is recorded.
-- [ ] On passing evidence: compress this file into `done/Z1r-shared-render-seam.md`, set the Z1r
+- [x] On passing evidence: compress this file into `done/Z1r-shared-render-seam.md`, set the Z1r
   status table row to `done` with that path, set the Z1 row to `active` with
   `phases/Z1-closing-survey.md`, set the Z1r scoped status line to `done`, set the Z1 scoped status
   line to `active`, and set the `**Status:**` line in `phases/Z1-closing-survey.md` to `active`.
   C1, C2 and C3 stay as they are.
-- [ ] The plan is not closed or archived.
+- [x] The plan is not closed or archived.
 
 **Exit:** the shared design is recorded as plan-c's resolution contract, plan-c's landed `render`
 seam and frozen C1/C3 contracts are confirmed against it, the acceptance render is observed and
