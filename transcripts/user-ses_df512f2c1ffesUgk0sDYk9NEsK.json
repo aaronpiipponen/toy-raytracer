@@ -1,0 +1,30 @@
+{
+  "info": {
+    "id": "ses_df512f2c1ffesUgk0sDYk9NEsK",
+    "projectID": "b95c041c0418ea0b6ba9efc911ff073721aa6a05",
+    "model": {
+      "id": "deepseek/deepseek-v4.1-flash",
+      "providerID": "commandcode",
+      "variant": "low"
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "time": {
+      "created": 1795479637325,
+      "updated": 1795479637325
+    },
+    "title": "User",
+    "location": {
+      "directory": "/home/opc/projects/toy-raytracer-runs/run003"
+    }
+  },
+  "messages": []
+}

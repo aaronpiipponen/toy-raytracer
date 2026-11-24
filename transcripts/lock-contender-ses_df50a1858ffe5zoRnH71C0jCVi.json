@@ -1,0 +1,173 @@
+{
+  "info": {
+    "id": "ses_df50a1858ffe5zoRnH71C0jCVi",
+    "projectID": "b95c041c0418ea0b6ba9efc911ff073721aa6a05",
+    "model": {
+      "id": "deepseek/deepseek-v4.1-flash",
+      "providerID": "commandcode",
+      "variant": "low"
+    },
+    "cost": 0.0015035579999999999,
+    "tokens": {
+      "input": 8889,
+      "output": 159,
+      "reasoning": 5,
+      "cache": {
+        "read": 23936,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1795480217524,
+      "updated": 1795480220442,
+      "busy": 1795480217670,
+      "idle": 1795480220448
+    },
+    "title": "Lock contender",
+    "location": {
+      "directory": "/home/opc/projects/toy-raytracer-runs/run003"
+    }
+  },
+  "messages": [
+    {
+      "id": "msg_20af5e8420011JuBdN2XLYhRXu",
+      "time": {
+        "created": 1795480217684
+      },
+      "text": "This is a lock test. Try to take the workspace resource named `render slot` with the lock_take tool, using the reason \"lock test contender\". Report the refusal exactly. Do not retry and do not use the resource.",
+      "type": "user"
+    },
+    {
+      "id": "msg_20af5e85a00101X43PIMdT328M",
+      "time": {
+        "created": 1795480217704,
+        "firstToken": 1795480218638,
+        "streamed": 1795480218839,
+        "completed": 1795480218846
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek/deepseek-v4.1-flash",
+        "providerID": "commandcode",
+        "variant": "low"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "I'll attempt to take the lock.\n\n"
+        },
+        {
+          "type": "tool",
+          "id": "call_4b74292844aa430cbd07785a",
+          "name": "execute",
+          "executed": false,
+          "state": {
+            "status": "completed",
+            "input": {
+              "code": "const r = await tools.lock_take({ resource: \"render slot\", reason: \"lock test contender\" });\nreturn r;"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "\"render slot\" is locked by session ses_df50a5852ffeWlf4x51KJRQaqx (plan none) since 2026-11-24T00:30:10.000Z: lock test holder. Wait for its release; do not use the resource meanwhile."
+              }
+            ],
+            "metadata": {
+              "toolCalls": [
+                {
+                  "tool": "lock_take",
+                  "status": "error",
+                  "input": {
+                    "resource": "render slot",
+                    "reason": "lock test contender"
+                  }
+                }
+              ],
+              "error": true,
+              "truncated": false
+            }
+          },
+          "time": {
+            "created": 1795480218700,
+            "ran": 1795480218819,
+            "completed": 1795480218830
+          }
+        }
+      ],
+      "snapshot": {
+        "start": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "end": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "files": []
+      },
+      "finish": "tool-calls",
+      "rawFinish": "tool_calls",
+      "cost": 0.0013635899999999998,
+      "tokens": {
+        "input": 8657,
+        "output": 70,
+        "reasoning": 0,
+        "cache": {
+          "read": 7680,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_20af5eced001dsxV297DcpGCtV",
+      "time": {
+        "created": 1795480218871,
+        "firstToken": 1795480220074,
+        "streamed": 1795480220434,
+        "completed": 1795480220442
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek/deepseek-v4.1-flash",
+        "providerID": "commandcode",
+        "variant": "low"
+      },
+      "content": [
+        {
+          "type": "reasoning",
+          "text": "Report exactly the refusal.",
+          "time": {
+            "created": 1795480220075,
+            "completed": 1795480220175
+          }
+        },
+        {
+          "type": "text",
+          "text": "`lock_take` refused. The exact message:\n\n> \"render slot\" is locked by session ses_df50a5852ffeWlf4x51KJRQaqx (plan none) since 2026-11-24T00:30:10.000Z: lock test holder. Wait for its release; do not use the resource meanwhile.\n\nI did not retry and did not use the resource."
+        }
+      ],
+      "snapshot": {
+        "start": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "end": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "files": []
+      },
+      "finish": "stop",
+      "rawFinish": "stop",
+      "cost": 0.000139968,
+      "tokens": {
+        "input": 232,
+        "output": 89,
+        "reasoning": 5,
+        "cache": {
+          "read": 16256,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_20af5f320001oH2ZabUiwOssTW",
+      "time": {
+        "created": 1795480220448
+      },
+      "type": "idle",
+      "outcome": "succeeded"
+    }
+  ]
+}

@@ -1,0 +1,446 @@
+{
+  "info": {
+    "id": "ses_df50a5852ffeWlf4x51KJRQaqx",
+    "projectID": "b95c041c0418ea0b6ba9efc911ff073721aa6a05",
+    "model": {
+      "id": "deepseek/deepseek-v4.1-flash",
+      "providerID": "commandcode",
+      "variant": "low"
+    },
+    "cost": 0.0021919979999999997,
+    "tokens": {
+      "input": 11257,
+      "output": 326,
+      "reasoning": 67,
+      "cache": {
+        "read": 89216,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1795480201148,
+      "updated": 1795480225498,
+      "busy": 1795480220837,
+      "idle": 1795480225505
+    },
+    "title": "Lock holder",
+    "location": {
+      "directory": "/home/opc/projects/toy-raytracer-runs/run003"
+    }
+  },
+  "messages": [
+    {
+      "id": "msg_20af5ba59001VlYsYT1yLdzfPi",
+      "time": {
+        "created": 1795480205956
+      },
+      "text": "This is a lock test. Take the workspace resource named `render slot` with the lock_take tool, using the reason \"lock test holder\". Keep the lock held and reply with the tool result. Do not release it yet.",
+      "type": "user"
+    },
+    {
+      "id": "msg_20af5ba8b001yByKFAVRndhQFq",
+      "time": {
+        "created": 1795480205977,
+        "firstToken": 1795480207676,
+        "streamed": 1795480208139,
+        "completed": 1795480208146
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek/deepseek-v4.1-flash",
+        "providerID": "commandcode",
+        "variant": "low"
+      },
+      "content": [
+        {
+          "type": "reasoning",
+          "text": "The user wants me to take a lock with lock_take. I need to find the tool. It's in the code mode catalog under lock_take. Let me call it.\n\nLet me first search maybe for exact signature. The catalog lists \"lock_take (1 tool, none shown)\". I need signature. Use search.",
+          "time": {
+            "created": 1795480207678,
+            "completed": 1795480208056
+          }
+        },
+        {
+          "type": "tool",
+          "id": "call_00_cnlcpdhf3lwmr3yr7mejx3uo",
+          "name": "execute",
+          "executed": false,
+          "state": {
+            "status": "completed",
+            "input": {
+              "code": "const r = await search({ query: \"lock_take\" });\nreturn r;"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"items\":[{\"path\":\"tools.lock_take\",\"description\":\"Lock one of the workspace's shared resources before using it. Fails, naming the holder, when another session holds it; then wait and do not use the resource.\",\"signature\":\"tools.lock_take({\\n  /** Resource name from the workspace settings. */\\n  resource: string,\\n  /** What the lock is for. */\\n  reason: string,\\n}): Promise<string | null>\"}],\"remaining\":0,\"next\":null}"
+              }
+            ],
+            "metadata": {
+              "toolCalls": [
+                {
+                  "tool": "search",
+                  "status": "completed",
+                  "input": {
+                    "query": "lock_take"
+                  }
+                }
+              ],
+              "truncated": false
+            }
+          },
+          "time": {
+            "created": 1795480208058,
+            "ran": 1795480208127,
+            "completed": 1795480208137
+          }
+        }
+      ],
+      "snapshot": {
+        "start": "ee3016a8513b464b828b422fdd348ab9c20b62b4",
+        "end": "ee3016a8513b464b828b422fdd348ab9c20b62b4",
+        "files": []
+      },
+      "finish": "tool-calls",
+      "rawFinish": "tool_calls",
+      "cost": 0.001618632,
+      "tokens": {
+        "input": 10192,
+        "output": 52,
+        "reasoning": 67,
+        "cache": {
+          "read": 6144,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_20af5c322001hEn0onvVArfp8c",
+      "time": {
+        "created": 1795480208172,
+        "firstToken": 1795480209860,
+        "streamed": 1795480210005,
+        "completed": 1795480210046
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek/deepseek-v4.1-flash",
+        "providerID": "commandcode",
+        "variant": "low"
+      },
+      "content": [
+        {
+          "type": "tool",
+          "id": "call_00_zqk00yo1geshu9uptu1af5bs",
+          "name": "execute",
+          "executed": false,
+          "state": {
+            "status": "completed",
+            "input": {
+              "code": "return await tools.lock_take({ resource: \"render slot\", reason: \"lock test holder\" });"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Locked \"render slot\" since 2026-11-24T00:30:10.000Z. Release it with lock_release when done."
+              }
+            ],
+            "metadata": {
+              "toolCalls": [
+                {
+                  "tool": "lock_take",
+                  "status": "completed",
+                  "input": {
+                    "resource": "render slot",
+                    "reason": "lock test holder"
+                  }
+                }
+              ],
+              "truncated": false
+            }
+          },
+          "time": {
+            "created": 1795480209862,
+            "ran": 1795480209985,
+            "completed": 1795480210003
+          }
+        }
+      ],
+      "snapshot": {
+        "start": "ee3016a8513b464b828b422fdd348ab9c20b62b4",
+        "end": "53a1f9456e58bdfabc31a3bb61e882a5100058ae",
+        "files": [
+          "AGENT-INSTRUCTIONS/PLANS/plan-b/phases/B1r-shared-hit-record-shape.md"
+        ]
+      },
+      "finish": "tool-calls",
+      "rawFinish": "tool_calls",
+      "cost": 0.00013231799999999998,
+      "tokens": {
+        "input": 321,
+        "output": 59,
+        "reasoning": 0,
+        "cache": {
+          "read": 16256,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_20af5ca8e001JF7W6c2OrP2CRr",
+      "time": {
+        "created": 1795480210072,
+        "firstToken": 1795480211921,
+        "streamed": 1795480212354,
+        "completed": 1795480212381
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek/deepseek-v4.1-flash",
+        "providerID": "commandcode",
+        "variant": "low"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Lock taken and held.\n\nTool result:\n\n> Locked \"render slot\" since 2026-11-24T00:30:10.000Z. Release it with lock_release when done.\n\nNote the tool reports the lock as held since `2026-11-24T00:30:10.000Z`, so the result includes a timestamp that is not necessarily this moment. I have not released it."
+        }
+      ],
+      "snapshot": {
+        "start": "53a1f9456e58bdfabc31a3bb61e882a5100058ae",
+        "end": "569e3692ea9c46cbd146bbbdcd728895a3cb562b",
+        "files": [
+          "AGENT-INSTRUCTIONS/PLANS/plan-c/phases/C1-png-writer-and-command-line.md"
+        ]
+      },
+      "finish": "stop",
+      "rawFinish": "stop",
+      "cost": 0.00012888599999999999,
+      "tokens": {
+        "input": 177,
+        "output": 88,
+        "reasoning": 0,
+        "cache": {
+          "read": 16512,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_20af5d3a6001KLqFkiFtPy6aPn",
+      "time": {
+        "created": 1795480212390
+      },
+      "type": "idle",
+      "outcome": "succeeded"
+    },
+    {
+      "id": "msg_20af5d3b4001HjofYzsO5YPP41",
+      "time": {
+        "created": 1795480220848
+      },
+      "text": "LOCK REMINDER: You still hold \"render slot\". Release each with lock_release as soon as the work that needs it is done.",
+      "description": "coordinator",
+      "type": "synthetic"
+    },
+    {
+      "id": "msg_20af5f4a1001VN4POE196o54wC",
+      "time": {
+        "created": 1795480220850
+      },
+      "text": "Release the `render slot` lock now with lock_release and reply with the result.",
+      "type": "user"
+    },
+    {
+      "id": "msg_20af5f4ba001G615mk6e5dCg7L",
+      "time": {
+        "created": 1795480220867,
+        "firstToken": 1795480222203,
+        "streamed": 1795480222322,
+        "completed": 1795480222339
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek/deepseek-v4.1-flash",
+        "providerID": "commandcode",
+        "variant": "low"
+      },
+      "content": [
+        {
+          "type": "tool",
+          "id": "call_00_x7la4krt8szd6i8hzop522x8",
+          "name": "execute",
+          "executed": false,
+          "state": {
+            "status": "completed",
+            "input": {
+              "code": "const r = await search({ query: \"lock_release\" });\nreturn r;"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"items\":[{\"path\":\"tools.lock_release\",\"description\":\"Release a resource lock this session or one of its children holds.\",\"signature\":\"tools.lock_release({\\n  /** Resource name. */\\n  resource: string,\\n}): Promise<string | null>\"}],\"remaining\":0,\"next\":null}"
+              }
+            ],
+            "metadata": {
+              "toolCalls": [
+                {
+                  "tool": "search",
+                  "status": "completed",
+                  "input": {
+                    "query": "lock_release"
+                  }
+                }
+              ],
+              "truncated": false
+            }
+          },
+          "time": {
+            "created": 1795480222205,
+            "ran": 1795480222319,
+            "completed": 1795480222329
+          }
+        }
+      ],
+      "snapshot": {
+        "start": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "end": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "files": []
+      },
+      "finish": "tool-calls",
+      "rawFinish": "tool_calls",
+      "cost": 0.00011067,
+      "tokens": {
+        "input": 197,
+        "output": 52,
+        "reasoning": 0,
+        "cache": {
+          "read": 16640,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_20af5fa94001G5u7c1pBqdxlvZ",
+      "time": {
+        "created": 1795480222365,
+        "firstToken": 1795480223804,
+        "streamed": 1795480223925,
+        "completed": 1795480223933
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek/deepseek-v4.1-flash",
+        "providerID": "commandcode",
+        "variant": "low"
+      },
+      "content": [
+        {
+          "type": "tool",
+          "id": "call_00_ijktmbuk7r79zp7tl69s4758",
+          "name": "execute",
+          "executed": false,
+          "state": {
+            "status": "completed",
+            "input": {
+              "code": "return await tools.lock_release({ resource: \"render slot\" });"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Released \"render slot\"."
+              }
+            ],
+            "metadata": {
+              "toolCalls": [
+                {
+                  "tool": "lock_release",
+                  "status": "completed",
+                  "input": {
+                    "resource": "render slot"
+                  }
+                }
+              ],
+              "truncated": false
+            }
+          },
+          "time": {
+            "created": 1795480223806,
+            "ran": 1795480223886,
+            "completed": 1795480223899
+          }
+        }
+      ],
+      "snapshot": {
+        "start": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "end": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "files": []
+      },
+      "finish": "tool-calls",
+      "rawFinish": "tool_calls",
+      "cost": 0.000113004,
+      "tokens": {
+        "input": 210,
+        "output": 52,
+        "reasoning": 0,
+        "cache": {
+          "read": 16768,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_20af600cd001ptm7AqGSrgsXA4",
+      "time": {
+        "created": 1795480223959,
+        "firstToken": 1795480225385,
+        "streamed": 1795480225491,
+        "completed": 1795480225498
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek/deepseek-v4.1-flash",
+        "providerID": "commandcode",
+        "variant": "low"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Released.\n\nTool result:\n\n> Released \"render slot\".\n\nI no longer hold the `render slot` lock."
+        }
+      ],
+      "snapshot": {
+        "start": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "end": "5426fcf32f9c785d81f24c702fcc5dbe91f58527",
+        "files": []
+      },
+      "finish": "stop",
+      "rawFinish": "stop",
+      "cost": 0.000088488,
+      "tokens": {
+        "input": 160,
+        "output": 23,
+        "reasoning": 0,
+        "cache": {
+          "read": 16896,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_20af606e10015K41is16V3sR5a",
+      "time": {
+        "created": 1795480225505
+      },
+      "type": "idle",
+      "outcome": "succeeded"
+    }
+  ]
+}
