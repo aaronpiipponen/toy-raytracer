@@ -282,7 +282,7 @@ No legacy or defensive code is added or deleted.
 
 **User test (acceptance):**
 - **Executor:** agent.
-- Render at the default 200 by 100 size and inspect the image as described in the rendered-image gate: a flat light-blue triangle with straight edges sits on the right of the image, over the sky and the green ground, and the centred sphere is unchanged. The B1 image for comparison is `/tmp/opencode/b2/base.png` in this workspace, which shows the sphere and the sky with no triangle.
+- Render at the default 200 by 100 size and inspect the image as described in the rendered-image gate: a flat light-blue triangle with straight edges sits on the right of the image, over the sky and the green ground, and the centred sphere keeps its shaded normal colours. The triangle replaces sky and ground pixels along its two straight slanted edges and its horizontal base, and nothing else in the image changes.
 
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied.
