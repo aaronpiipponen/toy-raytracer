@@ -2,18 +2,19 @@
 
 ## Next action
 
-Start the A1 implementer (`phase_subagent` with phase id A1). On its receipt, spawn a fresh
-`phase-advancer` in `REVIEW AND ADVANCE` for A1.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` for A1 with the implementer's
+receipt. Then detail/start A2 unless a coordinator hold covers it.
 
 ## Current state
 
-A1r3 is done and compressed; A1 is the sole active row with its existing detail at
-`e180476`, header now depending on A1r3, and the advancer's spec audit fixed two items: the
-"no comment mentions a plan" gate now scopes to comments A1 writes (the `Vec3::cross`
-comment belongs to the geometry plan's branch), and the metal acceptance wording says
-blurred reflection and no large black patches. All three shared designs are settled and
-their pairs closed; no coordinator hold is active. Autonomous mode covers routine loop
-choices only; every product decision goes to the user.
+A1 is implemented and verified at commit `4869d5f` (base `e180476`): materials module,
+material on the hit record and spheres, 50-bounce loop with one seeded generator, gamma 2,
+and the three-material scene. Fast gate green, 7 tests pass, two renders byte-identical,
+image inspected. One review round, no real finding. The implementer edited the repository
+map in `AGENT-INSTRUCTIONS/LOCAL/project.md`, so the session's injected project context is
+slightly stale until the user runs `/workflow-reload`; it does not affect the loop. The
+three shared designs are settled and their pairs closed. Autonomous mode covers routine
+loop choices only; every product decision goes to the user.
 
 ## Learned rules
 
