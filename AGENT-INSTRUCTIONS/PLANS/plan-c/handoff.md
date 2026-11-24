@@ -2,17 +2,17 @@
 
 ## Next action
 
-Start C3's implementer with `phase_subagent` and the active phase id `C3`. C3's phase document
-passed the orchestrator acceptance check after one small fix (the progress-capture command now runs
-the built binary, since `cargo run` mixes its own lines into captured standard error).
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for C3 with the implementer receipt
+(session `ses_df19af86affeZlDyZOUtECnH0Z`, base `fb4d00c`, tested head `0ad0f2b`).
 
 ## Current state
 
-C1 is done (`done/C1-png-writer-and-command-line.md`, tested head `fb4d00c`). C3 (progress line) is
-`active` with gate `standard`, detailed in `phases/C3-progress-line.md`; no code for it is
-implemented yet. C2 is `not applicable`. Z1 (closing survey) follows once C3 is done. `docs-pass.md`
-holds the shared `gates.md` release item; `autonomous-decisions.md` holds the `--format` precedence.
-Linked to the coordinator; `workspace.json` names no shared resource.
+C1 done (`done/C1-png-writer-and-command-line.md`, head `fb4d00c`). C3 implemented and verified at
+`0ad0f2b`: fast gate green, progress stream checked (40 `\r`, one final newline, `100%`), stdout
+empty, image bytes unchanged, `USER-SPECIFIC TEST: NOT REQUIRED`; review found no real finding. C3
+is still `active`; its compression, the status flip and detailing Z1 (closing survey) belong to the
+advancer. `docs-pass.md` holds the shared `gates.md` release item; `autonomous-decisions.md` holds
+the `--format` precedence. Linked to the coordinator; no shared resource.
 
 ## Learned rules
 

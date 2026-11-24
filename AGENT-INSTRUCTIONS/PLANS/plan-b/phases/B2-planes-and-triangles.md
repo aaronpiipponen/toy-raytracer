@@ -251,17 +251,16 @@ No legacy or defensive code is added or deleted.
 - Do not change `the_center_pixel_shows_the_sphere_facing_the_camera` or `the_top_row_is_sky`; the triangle is placed so both stay true.
 - Do not clamp, wrap or offset texture coordinates beyond the formulas above, and do not normalise a plane normal, handle a zero-length normal, a zero-area triangle or a NaN input.
 - Do not add fields, helper functions, caches or builder types beyond the two modules above.
-- Do not add a test function beyond the three named here (REPO-RULES §3a).
+- Do not add a test function beyond the two named here (REPO-RULES §3a).
 - Do not touch `docs/`, `README.md`, `Cargo.toml`, another plan's files, or any other `AGENT-INSTRUCTIONS/` file; the repository map line is the only instruction-tree edit.
 - Do not write plan or phase references in code comments.
 
 **Tests:**
-- New (3 functions, the §3a maximum for this phase):
+- New (2 functions):
   - `src/plane.rs` - `a_ray_through_the_plane_records_the_hit_and_texture_coordinates_that_wrap`: plane `Plane::new(Vec3::new(0.0, 0.0, -2.0), Vec3::new(0.0, 0.0, 1.0))`, ray `Ray::new(Vec3::new(2.25, -0.5, 0.0), Vec3::new(0.0, 0.0, -1.0))`; the hit is `Some`, `t` is about `2.0`, `front_face` is true, `normal == Vec3::new(0.0, 0.0, 1.0)`, `u` is about `0.5` and `v` is about `0.25` (the `x` position `2.25` wraps), all within `1e-9`.
-  - `src/triangle.rs` - `a_ray_through_the_triangle_hits_its_front_face`: triangle `Triangle::new(Vec3::new(0.0, 0.0, -1.0), Vec3::new(1.0, 0.0, -1.0), Vec3::new(0.0, 1.0, -1.0))`, ray `Ray::new(Vec3::new(0.25, 0.25, 0.0), Vec3::new(0.0, 0.0, -1.0))`; the hit is `Some`, `t` is about `1.0`, `front_face` is true, and `normal == Vec3::new(0.0, 0.0, 1.0)`.
-  - `src/triangle.rs` - `the_triangle_hit_records_barycentric_texture_coordinates`: the same triangle and ray; `u` is about `0.25` and `v` is about `0.25`, each within `1e-9`.
+  - `src/triangle.rs` - `a_ray_through_the_triangle_hits_its_front_face_with_barycentric_coordinates`: triangle `Triangle::new(Vec3::new(0.0, 0.0, -1.0), Vec3::new(1.0, 0.0, -1.0), Vec3::new(0.0, 1.0, -1.0))`, ray `Ray::new(Vec3::new(0.25, 0.25, 0.0), Vec3::new(0.0, 0.0, -1.0))`; the hit is `Some`, `t` is about `1.0`, `front_face` is true, `normal == Vec3::new(0.0, 0.0, 1.0)`, and `u` is about `0.25` and `v` is about `0.25`, each within `1e-9`.
 - Changed: none. Deleted: none. The four existing `src/sphere.rs` tests, the `src/rng.rs` test and the two `src/main.rs` tests stay as they are.
-- Fast gate: `cargo test` (10 tests), `cargo build`, `cargo clippy -- -D warnings`, `cargo fmt --check`, `git diff --check`.
+- Fast gate: `cargo test` (9 tests), `cargo build`, `cargo clippy -- -D warnings`, `cargo fmt --check`, `git diff --check`.
 - Conditional gates: the rendered-image gate is required because the scene changes. Render `cargo run --release > /tmp/opencode/plan-b-b2.ppm`, convert it to PNG with the snippet below, open the PNG with the image reader, and confirm a flat light-blue triangle with straight edges on the right of the image, wholly against the sky, clear of the sphere, the ground and the image edges. The image is expected to differ from the B1 render, so no `cmp` comparison applies. Agent-generation gate: none, `AGENT-INSTRUCTIONS/SUBAGENTS/**` and model assignment are untouched.
 - Slow gate (>2 minutes): none.
 - Conversion snippet for the rendered PPM (a scratch file under `/tmp/opencode`, never committed):
@@ -293,7 +292,7 @@ No legacy or defensive code is added or deleted.
 - [ ] `src/main.rs` declares both modules without a plan comment and the scene holds the one triangle; `the_center_pixel_shows_the_sphere_facing_the_camera` and `the_top_row_is_sky` still pass unedited.
 - [ ] `Vec3::cross` has no `#[allow(dead_code)]` or plan comment and both new modules use it.
 - [ ] The rendered image shows the triangle and the sphere, inspected as described above.
-- [ ] Named tests pass and the test receipt reports 3 functions added, 0 deleted.
+- [ ] Named tests pass and the test receipt reports 2 functions added, 0 deleted.
 - [ ] Test budget respected (REPO-RULES §3a); any line counts are observations, not gates.
 - [ ] Fast phase gate and the rendered-image conditional gate pass; no slow gate applies.
 - [ ] `docs/` needed no change and `docs/requirements.md` items 8 and 9 are accurate; `README.md` is still accurate; the repository map lists both new modules and no page or comment refers to a plan.
