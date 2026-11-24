@@ -2,20 +2,23 @@
 
 ## Next action
 
-Start the R1 implementer (`phase_subagent` with phase id R1). On its receipt, spawn a fresh
-`phase-advancer` in `REVIEW AND ADVANCE` for R1. Then close Z1 with the user's recorded
-acceptance and report the plan ready for the release.
+Close Z1: the survey ran, the user accepted the findings and the image in writing, and R1
+fixed the two accepted defects. Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` for
+Z1 with the user's acceptance and R1's receipt as evidence, so it records the acceptance in
+the note's user-decision section, compresses Z1 into `done/`, and flips its row. Then report
+the plan complete and ready for the release.
 
 ## Current state
 
-A1, A2 and A3 are frozen at `46a5c02`. The closing survey note
-`benchmarks/closing-survey-2026-11-24.md` holds the accepted findings and the user's dated
-decision: fix the ray-parameter wording, shrink the sky test and correct the one shared
-render-note line, leave `Vec3::cross` to the geometry plan and the release merge. R1 is
-active and detailed at `phases/R1-closing-survey-fixes.md`; Z1 is planned depending on R1.
-R1 changes doc comments, one code comment, one test's size and one shared-file line; the
-rendered bytes must be identical. Autonomous mode covers routine loop choices only; every
-product decision goes to the user.
+All product work is landed and frozen at `a7ce19d`: materials (A1), glass (A2), jittered
+sampling (A3), and the two accepted survey fixes (R1: ray-parameter wording, small sky
+test, corrected shared render-note line). The closing survey note
+`benchmarks/closing-survey-2026-11-24.md` holds the findings, the user's dated acceptance
+and the decision to leave `Vec3::cross` to the geometry plan and the release merge. R1
+supersedes the old `the_top_row_is_sky` call recorded in `done/A3-samples-per-pixel.md`;
+the A3 contract stays frozen and the release merge follows R1. Z1 is the only remaining
+row, planned but its exit conditions are met. Autonomous mode covers routine loop choices
+only; every product decision goes to the user.
 
 ## Learned rules
 
@@ -40,3 +43,5 @@ product decision goes to the user.
   (`+ next_f64() - 0.5`), so the image keeps the previous revision's geometry.
 - The closing survey is orchestrator-run: no implementer writes the note and Z1 fixes
   nothing it finds; accepted findings become a separate remediation unit.
+- A later contract may supersede a frozen one; record the supersession in the new contract
+  and leave the old file frozen and unedited.
