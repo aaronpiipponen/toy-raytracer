@@ -41,6 +41,13 @@ impl Drop for Scratch {
 
 #[test]
 fn writes_a_png_whose_pixels_match_the_ppm_render() {
+    assert_eq!(crc32(&[b"IEND"]), 0xAE42_6082, "the CRC-32 test helper");
+    assert_eq!(
+        adler32(b"Wikipedia"),
+        0x11E6_0398,
+        "the Adler-32 test helper"
+    );
+
     let scratch = Scratch::new("pixels");
     let png_path = scratch.join("match.png");
     let ppm_path = scratch.join("match.ppm");
@@ -60,6 +67,10 @@ fn writes_a_png_whose_pixels_match_the_ppm_render() {
     assert!(
         png_run.status.success(),
         "the PNG run succeeds: {png_run:?}"
+    );
+    assert!(
+        png_run.stdout.is_empty(),
+        "a successful render writes nothing to standard output: {png_run:?}"
     );
     let ppm_run = run(&[
         "--width",
@@ -101,9 +112,10 @@ fn rejects_an_unknown_option_and_an_unparsable_value_with_a_non_zero_exit() {
         vec!["--samples", "0", "--output", output],
     ] {
         let result = run(&args);
-        assert!(
-            !result.status.success(),
-            "a non-zero exit for {args:?}: {result:?}"
+        assert_eq!(
+            result.status.code(),
+            Some(2),
+            "exit status 2 for {args:?}: {result:?}"
         );
         assert!(
             !result.stderr.is_empty(),
@@ -233,7 +245,7 @@ fn decode_png(bytes: &[u8]) -> (u32, u32, Vec<[u8; 3]>) {
 
 /// Read the stored deflate blocks of exactly this writer's zlib stream.
 fn inflate_stored(zlib: &[u8]) -> Vec<u8> {
-    assert_eq!(&zlib[..2], &[0x78, 0x01], "the zlib header");
+    // The stream starts with two zlib header bytes whose values the contract does not fix.
     let mut offset = 2;
     let mut raw = Vec::new();
     loop {

@@ -115,18 +115,16 @@ fn parse_args(args: &[String]) -> Result<Settings, String> {
     let mut index = 0;
     while index < args.len() {
         let option = args[index].as_str();
+        let value = || {
+            args.get(index + 1)
+                .map(String::as_str)
+                .ok_or_else(|| format!("{option} needs a value"))
+        };
         match option {
-            "--width" | "--height" | "--samples" | "--output" | "--format" => {}
-            other => return Err(format!("unknown option {other:?}")),
-        }
-        let value = args
-            .get(index + 1)
-            .ok_or_else(|| format!("{option} needs a value"))?;
-        index += 2;
-        match option {
-            "--width" => width = parse_dimension(option, value)?,
-            "--height" => height = parse_dimension(option, value)?,
+            "--width" => width = parse_dimension(option, value()?)?,
+            "--height" => height = parse_dimension(option, value()?)?,
             "--samples" => {
+                let value = value()?;
                 let count = value
                     .parse::<usize>()
                     .map_err(|_| format!("--samples: {value:?} is not a whole number"))?;
@@ -135,16 +133,17 @@ fn parse_args(args: &[String]) -> Result<Settings, String> {
                 }
                 samples = count;
             }
-            "--output" => output = PathBuf::from(value),
+            "--output" => output = PathBuf::from(value()?),
             "--format" => {
-                explicit_format = Some(match value.as_str() {
+                explicit_format = Some(match value()? {
                     "png" => Format::Png,
                     "ppm" => Format::Ppm,
                     other => return Err(format!("--format: unrecognised format {other:?}")),
                 });
             }
-            _ => unreachable!("only the five options reach this match"),
+            other => return Err(format!("unknown option {other:?}")),
         }
+        index += 2;
     }
 
     let format = resolve_format(explicit_format, &output)?;
