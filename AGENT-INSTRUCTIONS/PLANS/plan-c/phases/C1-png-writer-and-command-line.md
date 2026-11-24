@@ -43,7 +43,8 @@ format or extension is one clear error on standard error plus a non-zero exit. T
 - `AGENT-INSTRUCTIONS/LOCAL/gates.md:36` - the rendered-image command is already
   `cargo run --release -- --width 80 --height 40 --samples 4 --output /tmp/opencode/render.png`;
   line 39 still says "Until the command-line phase lands, `cargo run --release >
-  /tmp/opencode/render.ppm` instead."
+  /tmp/opencode/render.ppm` instead." This file is shared by every worktree and the phase does not
+  edit it; its stale fallback sentence is a release item in the plan's `docs-pass.md`.
 
 **Read first (do not invent):**
 - `src/main.rs` - the whole file; every changed signature above is read from it.
@@ -54,7 +55,8 @@ format or extension is one clear error on standard error plus a non-zero exit. T
   error rule. Item 12 does not state which of `--format` and the extension wins, so the settled
   precedence (explicit `--format` wins) adds no contradiction and `docs/requirements.md` stays
   unchanged.
-- `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the rendered-image gate command and the fallback line.
+- `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the rendered-image gate command this phase runs. The file
+  is read only, never edited.
 - `README.md` - the run example.
 - `Cargo.toml` - confirmation that no dependency may be added.
 
@@ -188,27 +190,7 @@ format or extension is one clear error on standard error plus a non-zero exit. T
     ```
     Leave the rest of the file unchanged.
 
-12. `AGENT-INSTRUCTIONS/LOCAL/gates.md` - this is a workspace source under a held edit. Load the
-    `agent-instructions` skill before editing it, keep the change content-only (no shared rule, no
-    new gate row), and make no other edit in that file. Replace line 39, the stale fallback
-    sentence, with this paragraph:
-
-    ```text
-    The same scene written as PPM, with the extension selecting the format:
-    ```
-
-    followed by this command block:
-
-    ```bash
-    cargo run --release -- --width 80 --height 40 --samples 4 --output /tmp/opencode/render.ppm
-    ```
-    Report in the verification receipt that `AGENT-INSTRUCTIONS/LOCAL/gates.md` changed, so the
-    orchestrator asks the user whether to run `/workflow-reload` in the session that made the edit.
-    Do not run the reload unasked. `AGENT-INSTRUCTIONS/` is the shared workspace link and is not part
-    of this worktree's repository: edit the file through the link and never stage or commit it with
-    Git from the worktree.
-
-13. `docs/requirements.md` - unchanged. Items 11 and 12 already describe this behaviour, and the
+12. `docs/requirements.md` - unchanged. Items 11 and 12 already describe this behaviour, and the
     precedence rule makes no stated requirement false.
 
 **Callers / wiring to update:**
@@ -235,8 +217,6 @@ format or extension is one clear error on standard error plus a non-zero exit. T
   `resolve_format`, `run`, `main`, the `render` sample count and `to_byte` visibility.
 - `tests/cli.rs` - created: three binary-level tests with their helpers.
 - `README.md` - changed: the run example uses the real command line.
-- `AGENT-INSTRUCTIONS/LOCAL/gates.md` - changed: the rendered-image fallback line becomes the PPM
-  command.
 - Adds: nothing.
 <!-- touched-files:end -->
 
@@ -260,9 +240,11 @@ format or extension is one clear error on standard error plus a non-zero exit. T
   and `env!("CARGO_BIN_EXE_toy-raytracer")`.
 - Do not assert that standard error is empty on a successful render; the progress line lands on
   standard error in C3.
-- No history, plan id or phase id in source comments, the README or `gates.md`.
-- Do not touch `docs/requirements.md`, `Cargo.toml`, `Cargo.lock`, `.gitignore` or any other
-  `AGENT-INSTRUCTIONS/` file.
+- No history, plan id or phase id in source comments or the README.
+- Do not edit `AGENT-INSTRUCTIONS/LOCAL/gates.md`. Every worktree shares it, and its stale fallback
+  sentence is a release item in the plan's `docs-pass.md`.
+- Do not touch `docs/requirements.md`, `Cargo.toml`, `Cargo.lock`, `.gitignore` or any file under
+  `AGENT-INSTRUCTIONS/`.
 
 **Tests:**
 - Changed: `src/main.rs` - `the_center_pixel_shows_the_sphere_facing_the_camera` and
@@ -334,10 +316,8 @@ format or extension is one clear error on standard error plus a non-zero exit. T
       reports those counts. Any line counts are observations, not gates.
 - [ ] Fast phase gate and the rendered-image conditional gate from
       `AGENT-INSTRUCTIONS/BUILDING/VERIFICATION-COMMITS-DEPLOY.md` §1 pass; no slow gate applies.
-- [ ] `README.md` shows the real command line and `AGENT-INSTRUCTIONS/LOCAL/gates.md` carries the PPM
-      command in place of the stale fallback line; neither refers to a plan.
-- [ ] The receipt notes the `AGENT-INSTRUCTIONS/LOCAL/gates.md` edit so the orchestrator asks about
-      `/workflow-reload`.
+- [ ] `README.md` shows the real command line and refers to no plan.
+- [ ] `AGENT-INSTRUCTIONS/LOCAL/gates.md` is unchanged.
 - [ ] Safety commit on branch `plan-c`.
 - [ ] Revision-bound verification receipt exists; the agent-run `User test` steps have passing
       evidence.
