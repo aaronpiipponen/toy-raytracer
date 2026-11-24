@@ -2,23 +2,26 @@
 
 ## Next action
 
-B2's `REVIEW AND ADVANCE` advancer is running. When it returns, read the next-phase handoff and run
-the acceptance check on B3's detail before its implementer.
+B3's implementer is running (`phase_subagent`, phase id B3). When it returns, check that its review
+loop finished, then start `REVIEW AND ADVANCE` for B3 with a fresh advancer.
 
 ## Current state
 
-B1 done. B2 is implemented at tested head `f3a3d2a` (base `4edcdba`) on branch `plan-b`: `Plane` and
-`Triangle` in `src/plane.rs` and `src/triangle.rs`, both on the six-argument `HitRecord::new`, one
-scene triangle, `Vec3::cross` cleaned of its allow and plan comment, repository map updated. Receipt:
-build, 9 tests, clippy `-D warnings`, fmt, `git diff --check` all green; rendered PNG inspected (flat
-light-blue triangle wholly in sky, clear of sphere/ground/edges); 2 tests added, 0 deleted, 0 changed;
-review loop finished (1 real finding fixed, second pass clean). No user test required. Status row and
-`done/B2` compression belong to the advancer.
+B1 and B2 are done (`done/B1-face-side-and-texture-coordinates.md`,
+`done/B2-planes-and-triangles.md`); B2 landed at `f3a3d2a` with the plane, the triangle, the scene
+triangle and the repository-map update. B3
+(`phases/B3-bounding-boxes.md`) is detailed, audited (two header self-contradictions fixed by the
+advancer), and passed the orchestrator acceptance check on 2026-11-24: it matches requirement item
+10; the slab predicate, the list-dispatch stub test and the triangle box numbers were verified by
+hand; the byte-identical render claim is sound because every object's box contains it; 3 tests added
+(the §3a cap) and no caching, receipts or defensive branches.
 
-Accepted deviations: `Triangle::hit` uses `!(0.0..=1.0).contains(&u)` because clippy rejects the
-phase's quoted `u < 0.0 || u > 1.0` (`manual_range_contains`); identical in-scope behaviour. The
-agent-instructions skill's `/workflow-reload` note for the shared `project.md` edit is unresolved and
-should be mentioned to the user, not run unasked.
+Open items:
+- The release must ask the user which material the scene triangle gets (recorded in
+  `PLANS/shared/plan-a-A2+plan-b-B2.md`).
+- The `/workflow-reload` note for the shared `project.md` edit is unresolved; mention it to the
+  user, never run it unasked.
+- The shared repository map is edited by both plans; watch for a concurrent edit.
 
 ## Learned rules
 
