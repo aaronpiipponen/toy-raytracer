@@ -2,20 +2,21 @@
 
 ## Next action
 
-`phase-advancer` is detailing the resolution phase B1r in the background (`DETAIL RESOLUTION`, pair
-`plan-a-A1+plan-b-B1`). When it returns `DETAIL READY`: run the orchestrator acceptance check on the
-new resolution phase file, then call `channel_close` naming plan-a's resolution phase file, then
-continue the loop with B1r's implementer.
+Waiting on plan-a's resolution phase file A1r. When plan-a notifies that it exists: run the
+orchestrator acceptance check on `AGENT-INSTRUCTIONS/PLANS/plan-a/phases/A1r*.md` against
+`AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B1.md`, then `channel_close` naming A1r and B1r,
+then start B1r's implementer.
 
 ## Current state
 
-- `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B1.md` - agreed shared `HitRecord` design; both
-  orchestrators accepted it.
-- `phases/B1-face-side-and-texture-coordinates.md` - detailed and accepted, but B1 is held; it
-  becomes `planned` again after the resolution and is detailed fresh before its implementer.
-- The only pending user decision is the material and colour for the ground plane and the triangle
-  at the merge, settled before B2 is detailed and not blocking B1's resolution. It is recorded in
-  the shared design; plan-a's orchestrator is asking the user.
+- `phases/B1r-shared-hit-record-shape.md` - detailed, accepted, `DETAIL READY`; B1r is the active
+  phase and carries B1's whole scope.
+- B1 is `not applicable` (absorbed by B1r); B2 now depends on B1r; Z1 depends on B1r + B2 + B3.
+- B1r implements plan-b's side of the shared design: `front_face`/`u`/`v`, one six-argument
+  constructor, sphere (u, v), 2 new tests + 1 adapted, byte-identical PPM. Material, `Rc` and the
+  dropped `Copy`/`Debug` stay in the release merge.
+- Merge materials are settled: both matte, ground mid-grey like the current ground, triangle a
+  distinct dull green; recorded in the shared design and in B2's scope.
 - Autonomous mode is enabled for small, easily undoable, behaviour-neutral choices only;
   `autonomous-decisions.md` is created when the first such decision is recorded. Product decisions
   still go to the user.

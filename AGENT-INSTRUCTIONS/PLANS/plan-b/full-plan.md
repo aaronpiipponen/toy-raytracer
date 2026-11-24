@@ -16,7 +16,7 @@
 |---|---|---|---|---|---|---|---|
 | B1r | Shared hit record shape | active | standard | - | `phases/B1r-shared-hit-record-shape.md` | the branch matches the shared hit record design | gates green |
 | B1 | Face side and texture coordinates | not applicable | standard | - | - | scope absorbed by B1r | - |
-| B2 | Planes and triangles | planned | standard | B1 | - | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
+| B2 | Planes and triangles | planned | standard | B1r | - | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
 | B3 | Bounding boxes | planned | standard | B2 | - | the scene list skips objects whose box the ray misses | gates green, same image as before |
 | Z1 | Closing survey and user acceptance | planned | minimal | B1r + B2 + B3 | - | the user accepts the result | the user accepts |
 
