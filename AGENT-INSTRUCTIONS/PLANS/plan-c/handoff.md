@@ -2,19 +2,21 @@
 
 ## Next action
 
-Start C1's remediation implementer with `phase_subagent` and phase id `C1`. The remediation phase
-document `phases/C1-survey-remediation.md` passed the orchestrator acceptance check: five small
-fixes, no new test function, no behaviour change, standard gate.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for C1's survey remediation with the
+implementer receipt (session `ses_df18a4e42ffeTZ2x0hFnCihNDg`, base `0ad0f2b`, tested head
+`a0c585b`). Then re-run the acceptance render at the final head and ask the user to accept the
+closing survey.
 
 ## Current state
 
-C1 and C3 are done (`done/` contracts; heads `fb4d00c`, `0ad0f2b`). Z1's closing survey ran on
-`0ad0f2b`: four area scouts plus one cross-check; the note is
-`benchmarks/closing-survey-2026-11-24.md`. It confirms six small defects (four in test proof, one
-`parse_args` duplication, one plan-record wording) and no material code defect. `docs-pass.md` was
-corrected and now also defers the `project.md` and `repo-rules-domain.md` map updates to the release.
-Acceptance render at `0ad0f2b`: 400x200 PNG opens correctly, stdout empty, progress ends `100%` plus
-one newline. No unresolved user decision. Linked to the coordinator; no shared resource.
+C1's survey remediation is implemented and verified at `a0c585b`: five small fixes, 0 test functions
+added, fast gate green, before/after render byte-identical, review found no real finding,
+`USER-SPECIFIC TEST: NOT REQUIRED`. The phase's compression and the C1/Z1 status bookkeeping
+(C1 back to `done`, Z1 `active`) belong to the advancer. The closing survey note is
+`benchmarks/closing-survey-2026-11-24.md` (surveyed revision `0ad0f2b`); its six findings are now
+handled, and its intentionally-unfixed list stands. `docs-pass.md` holds the `gates.md`,
+`project.md` and `repo-rules-domain.md` release items. No unresolved user decision. Linked to the
+coordinator; no shared resource.
 
 ## Learned rules
 
