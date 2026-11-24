@@ -2,17 +2,20 @@
 
 ## Next action
 
-Run Z1 (closing survey): dispatch four read-only `ops-scout` area scouts in parallel, save each return
-under `benchmarks/returns/`, dispatch one cross-check `ops-scout`, write
-`benchmarks/closing-survey-<date>.md` myself, run the branch acceptance render, then ask the user for
-acceptance of the note and image.
+Spawn `phase-advancer` DETAIL ACTIVE for a remediation phase `R1` (detail it from current code). R1
+fixes only the survey's accepted non-behavioural items: the two stale frozen records, the `Rng::new`
+seed-0 silent substitution, the duplicate scene-list surface, the repeated sphere test setup, and the
+`colour`/`pixel` naming split in `PLANS/shared/plan-a-A3+plan-c-Z1.md`. Test gaps are accepted as-is
+and add no test. Keep exactly one active row (R1), with Z1 `next` pending its final acceptance
+compression.
 
 ## Current state
 
-A1 done (`de1cf31`), A2 done (`a1d640a`), A3 done (`566b11c`); A3r done. All three coordinator pairs are
-closed; designs in `PLANS/shared/`. Z1 (the plan's closing survey and the only user gate) is active and
-detailed at `phases/Z1-closing-survey.md`. `docs-pass.md` holds four documentation items plus the
-answered release-merge carry-over (triangle material: `Lambertian` `(0.7, 0.3, 0.3)`).
+A1 done (`de1cf31`), A2 done (`a1d640a`), A3 done (`566b11c`); A3r done. Z1's closing survey is written
+(`benchmarks/closing-survey-2026-11-24.md` with five returns) and the user ACCEPTED the survey and the
+rendered image, and chose: fix the small cleanups and stale records in a short remediation round, accept
+the test-coverage gaps (no extra tests). R1 is that round. `docs-pass.md` holds four documentation items
+plus the answered triangle-material carry-over.
 
 ## Learned rules
 
@@ -39,6 +42,8 @@ answered release-merge carry-over (triangle material: `Lambertian` `(0.7, 0.3, 0
   designs); it is deliberately not branch-accurate and must not be edited again at the merge.
 - A survey phase runs no implementer: I dispatch the scouts myself, save their returns, write the note,
   and stop for the user's subjective image/survey acceptance.
+- After the survey, the user's accepted cleanups run as a small remediation phase; the accepted test
+  gaps add no test, and the survey acceptance stands because the fixes change no behaviour.
 
 ## Learned rules
 
