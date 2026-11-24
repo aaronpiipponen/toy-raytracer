@@ -140,4 +140,12 @@ samples. No normal-gradient colours and no black regions. Matches requirements 1
 
 ## User decision
 
-Pending. The user's acceptance of these findings and of the render above is the phase's final gate.
+2026-11-24: the user accepted the findings and the rendered image; the image was opened and judged
+against requirements 1 to 6. Decisions:
+
+- R1 is accepted and is fixed in the remediation unit.
+- R2 is accepted and is fixed in the same unit, including the one-line correction to
+  `PLANS/shared/plan-a-A1+plan-c-C3.md` so the shared render note and the merge agree.
+- S3 (`Vec3::cross` and its plan-naming comment) is resolved by the geometry plan's
+  plane-and-triangle phase and the release merge; nothing is changed in `src/vec3.rs` here.
+- No other finding is actioned; the rejected claims stay rejected.
