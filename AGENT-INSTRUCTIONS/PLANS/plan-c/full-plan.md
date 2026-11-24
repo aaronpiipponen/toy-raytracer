@@ -121,8 +121,8 @@ output side of the product match requirements 11 and 12.
 3. Make `main` render at the chosen size with the chosen sample count and write the chosen format to
    the chosen path, reporting an unwritable path instead of panicking.
 4. Give `render` the sample count and average that many rays per pixel; no jitter.
-5. Update the README run example and the `gates.md` rendered-image command so both show the real
-   command line.
+5. Update the README run example to the real command line; `gates.md` stays unchanged because its
+   stale fallback sentence is a release item in `docs-pass.md`.
 6. Adapt the two existing render tests to the new signature and add at most three new test
    functions covering the public behaviour: the binary writes a file that is a valid PNG whose
    pixels match the PPM rendering of the same scene; a bad option or bad value prints usage and
@@ -137,7 +137,7 @@ output side of the product match requirements 11 and 12.
 - Change the scene contents or the camera.
 - Test the exact usage wording or private parse helpers; test the public behaviour through the
   binary.
-- Leave the README or the `gates.md` command stale.
+- Leave the README stale, or edit `gates.md` at all.
 
 **Verification shape:**
 - Fast gate: `cargo build`, `cargo test`, `cargo clippy -- -D warnings`, `cargo fmt --check`,
