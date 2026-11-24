@@ -19,7 +19,7 @@
 | A1r3 | Shared scene settlement | done | minimal | - | done/A1r3-shared-scene-settlement.md | the shared scene design is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
 | A1 | Diffuse and metal materials | done | standard | A1r3 | done/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
 | A2 | Glass | done | standard | A1 | done/A2-glass.md | a glass sphere refracts | gates green, rendered image shows a glass sphere |
-| A3 | Samples per pixel | planned | standard | A1 + A1r2 | - | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
+| A3 | Samples per pixel | active | standard | A1 + A1r2 | phases/A3-samples-per-pixel.md | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
 | Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
 
 ## How to implement this plan

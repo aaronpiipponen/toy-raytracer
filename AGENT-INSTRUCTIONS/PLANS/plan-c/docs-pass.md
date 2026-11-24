@@ -32,9 +32,3 @@ or the geometry plan (`plan-b`), and each names the release that owns it. `plan-
   origin of the bounce rays the materials plan adds." names a future plan in product code, beside
   `#[allow(dead_code)]` on the field. Remove the comment when the materials work reads the field and
   the allowance beside it is gone. Do not delete the allowance early.
-
-- **Owner: `plan-b`'s release.** `src/vec3.rs` (the cross product): the comment "For the triangle
-  normals the geometry plan adds." names a future plan in product code, beside `#[allow(dead_code)]`
-  on the method. `plan-b`'s branch already removes the comment and the allowance because its triangles
-  call `cross`; the merge of `plan-b` resolves this entry. On `main` the comment and the allowance
-  remain until that merge.
