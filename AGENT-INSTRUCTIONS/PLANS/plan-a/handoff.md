@@ -31,3 +31,6 @@ the user.
 - A1 must not duplicate the geometry plan's face side, texture coordinates, constructor or
   bounding boxes.
 - Resolution ids never reuse an existing id: a future resolution of A1 is `A1r4`.
+- A documentation-only phase must not be left in a shell-check loop: send one narrow
+  follow-up to re-read the settlement against the shared file and return the receipt, and
+  never let a paper phase block the next product phase.
