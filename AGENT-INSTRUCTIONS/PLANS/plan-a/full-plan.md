@@ -15,7 +15,7 @@
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
 | A1 | Diffuse and metal materials | done | standard | - | done/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
-| A2 | Glass | blocked | standard | A1 | - | a glass sphere refracts | coordinator settles the shared face-side shape with the geometry plan, then A2 is detailed |
+| A2 | Glass | active | standard | A1 | phases/A2-glass.md | a glass sphere refracts | gates green, the rendered image shows a refracting glass sphere |
 | A3 | Samples per pixel | active | standard | A1 | phases/A3-samples-per-pixel.md | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
 | Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
 
