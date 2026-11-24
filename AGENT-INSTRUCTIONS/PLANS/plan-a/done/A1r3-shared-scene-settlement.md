@@ -21,8 +21,8 @@
     construction path is added. B2's normal normalisation and the plane's texture mapping are
     unchanged by the extra argument;
   - composes `scene()` in the order centre sphere, ground plane, triangle, metal sphere, with the
-    four materials: centre `Lambertian` `(0.7, 0.3, 0.3)`; ground plane `Lambertian`
-    `(0.8, 0.8, 0.8)`; triangle `Lambertian` `(0.35, 0.5, 0.25)`; metal sphere `Metal`
+    four materials: centre `Lambertian` `(0.7, 0.3, 0.3)`, ground plane `Lambertian`
+    `(0.8, 0.8, 0.8)`, triangle `Lambertian` `(0.35, 0.5, 0.25)`, and metal sphere `Metal`
     `(0.8, 0.8, 0.8)` with fuzz `0.3`;
   - keeps the borrow-based nearest record in `HittableList::hit`,
     `let limit = nearest.as_ref().map_or(t_max, |hit| hit.t);`, and adds B3's box test before each

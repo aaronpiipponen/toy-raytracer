@@ -196,7 +196,7 @@ or duplicate scatter path is added.
     `Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8)))` to `Sphere::new`.
   - Kept unchanged: `src/main.rs` - `the_top_row_is_sky`; `src/rng.rs` - `the_same_seed_gives_the_same_sequence`.
   - Budget: 3 new test functions (the §3a cap; not a quota), 1 deleted; no other test is added.
-- Fast gate: `~/.cargo/bin/cargo test --lib material`, `~/.cargo/bin/cargo test`, then
+- Fast gate: `~/.cargo/bin/cargo test material`, `~/.cargo/bin/cargo test`, then
   `~/.cargo/bin/cargo build`, `~/.cargo/bin/cargo clippy -- -D warnings`,
   `~/.cargo/bin/cargo fmt --check`, `git diff --check`.
 - Conditional gates: rendered image - required, because the render loop, the colours and the scene
