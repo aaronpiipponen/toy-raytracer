@@ -142,8 +142,8 @@ appears in `src/main.rs`, and no other material changes.
 
 **Callers / wiring to update:**
 - `src/main.rs:16` import line gains `Dielectric`; nothing else imports `material`.
-- `src/main.rs:54` `scene()` gains the one glass sphere; `render`, `ray_colour`, `sky_colour`,
-  `to_byte` and `write_ppm` are unchanged.
+- `src/main.rs:54` `scene()` gains the one glass sphere; `render`, `sky_colour` and `write_ppm` are
+  unchanged; `ray_colour` and `to_byte` change only their doc comments.
 - `src/material.rs` already exposes `reflect` and `random_unit_vector` to the new material in the
   same module; no visibility change and no import change is needed there (the tests module picks up
   `Dielectric` through `use super::*;`).
@@ -159,7 +159,7 @@ appears in `src/main.rs`, and no other material changes.
 **Touched files:**
 <!-- touched-files:start -->
 - `src/material.rs` - changed: `Dielectric`, `refract`, `schlick_reflectance`, three tests and the carry-over doc comments.
-- `src/main.rs` - changed: the `Dielectric` import and the glass sphere in `scene()`.
+- `src/main.rs` - changed: the `Dielectric` import, the glass sphere in `scene()`, and the `ray_colour` and `to_byte` doc comments.
 - `AGENT-INSTRUCTIONS/LOCAL/project.md` - changed: the repository map names the glass material.
 - Adds: nothing (no dependency, config key, migration or generated file).
 <!-- touched-files:end -->
