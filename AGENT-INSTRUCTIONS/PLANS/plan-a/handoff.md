@@ -2,20 +2,21 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `DETAIL RESOLUTION` for pair plan-a-A1+plan-c-C3 and
-plan-a's held phase A1, creating documentation-only phase `A1r2 - Shared render settlement`.
-Then acceptance-check it, notify plan-c of the path, and wait for `RESOLVED` before starting
-A1.
+Start the A1r2 implementer (documentation-only settlement). On its receipt, spawn a fresh
+`phase-advancer` in `REVIEW AND ADVANCE` for A1r2, then attempt the A1 implementer. A1 is
+held against plan-b's B2 (I lead that settlement), so expect `COORDINATOR HOLD`, record the
+stop, and wait for plan-b's orchestrator.
 
 ## Current state
 
-The plan-a/plan-c shared design is written at
-`PLANS/shared/plan-a-A1+plan-c-C3.md` and matches what I agreed, including the four notes I
-sent. Plan-c's C1 is landed on its branch; its C3 is detailed and held. Plan-a's A1 is
-still held against C3 by the coordinator until the pair resolves. A1r (the geometry-pair
-settlement) is done; A1's detail is current and unchanged. The user's ground-plane and
-triangle materials are settled. Autonomous mode covers routine loop choices only; every
-product decision goes to the user.
+The plan-a/plan-c pair is RESOLVED and plan-c closed the channel. Plan-a's A1r2
+(`phases/A1r2-shared-render-settlement.md`) records the shared render design and passed my
+acceptance check; gate `minimal`, documentation-only, A1's detail byte-identical. A1r2's
+status row is active and A1/A3 wait behind it. A new hold covers A1 against plan-b's B2
+(both rewrite `scene()`; B3 builds on the hit record and scene list). The geometry and
+render-merge designs are in `PLANS/shared/`. The user's ground-plane and triangle materials
+are settled (matte; mid-grey ground, dull green triangle). Autonomous mode covers routine
+loop choices only; every product decision goes to the user.
 
 ## Learned rules
 
@@ -28,4 +29,4 @@ product decision goes to the user.
   phase before `RESOLVED`.
 - A child's claimed correction must be checked against the file.
 - A1 must not duplicate the geometry plan's face side, texture coordinates or constructor.
-- Resolution ids never reuse an existing id: the second resolution of A1 is `A1r2`.
+- Resolution ids never reuse an existing id: the third resolution of A1 is `A1r3`.
