@@ -5,6 +5,8 @@ pub struct Rng {
 }
 
 impl Rng {
+    /// Return a generator seeded with `seed`.
+    /// Panics when `seed` is zero.
     pub fn new(seed: u64) -> Self {
         assert!(seed != 0, "the generator seed must be nonzero");
         Rng { state: seed }
