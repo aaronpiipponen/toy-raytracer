@@ -2,22 +2,23 @@
 
 ## Next action
 
-`phase-advancer` is reviewing and advancing B1r in the background. When it returns, read its
-next-phase handoff, detail B2 fresh (`DETAIL ACTIVE`) only after the status table shows it, then run
-the orchestrator acceptance check and start B2's implementer.
+B2 is held by the coordinator as pair `plan-a-A1+plan-b-B2` (plan-a leads). The `phase_subagent`
+start for B2 was attempted and refused, which records the stop. Next: answer plan-a's channel
+messages as the partner, wait for `RESOLVED`, run the orchestrator acceptance check on B2's
+resolution phase file, then continue the loop with it.
 
 ## Current state
 
-- B1r implemented and reviewed clean at `f0f11e2` (receipt: build, 7 tests, clippy, fmt,
-  `git diff --check`, byte-identical PPM; 2 tests added, 1 extended).
-- Reviewer notes: `docs/` needed no change; the constructor doc comment in the phase snippet was
-  written as a noun phrase while the code uses the imperative form the documentation style guide
-  requires. Compression/status flip belong to the advancer.
-- Pair `plan-a-A1+plan-b-B1` is closed; shared design final.
-- B1 is `not applicable`; B2 depends on B1r; Z1 depends on B1r + B2 + B3.
-- Autonomous mode is enabled for small, easily undoable, behaviour-neutral choices only;
-  `autonomous-decisions.md` is created when the first such decision is recorded. Product decisions
-  still go to the user.
+- B1r done at `f0f11e2`; B2 detailed and accepted (`phases/B2-planes-and-triangles.md`) but held.
+- B2 detail replaces the ground sphere with the ground plane at `y = -0.5` and adds a triangle at
+  `z = -2`; the user's merge-material decision already names "the ground plane" and the triangle.
+- Overlap with plan-a A1: `scene()` in `src/main.rs` (A1 gives materials and adds a metal sphere, B2
+  swaps in the plane and adds the triangle) and `src/hittable.rs` (A1 changes the record and
+  `HittableList::hit`, which B3's `bounding_box` builds on). The merged scene must combine both and
+  give the new shapes materials; the merge must also keep the normal-colouring until materials land.
+- Shared design for the earlier pair: `PLANS/shared/plan-a-A1+plan-b-B1.md` (final).
+- Autonomous mode: small, easily undoable, behaviour-neutral choices only; `autonomous-decisions.md`
+  when the first is recorded. Product decisions still go to the user.
 
 ## Learned rules
 

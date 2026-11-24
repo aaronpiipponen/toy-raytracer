@@ -134,16 +134,17 @@ guard, test, config key or permanent documentation.
    entry names the shared file, the branch-created sample loop, the 16 default, the two jitter draws
    per sample before the bounce trace and the row, column, sample, bounce nesting. Add nothing to
    A1's or A2's scoped entry.
-4. Confirm A1's detail is untouched:
-   `git diff --quiet -- AGENT-INSTRUCTIONS/PLANS/plan-a/phases/A1-diffuse-and-metal-materials.md`
-   prints nothing and exits zero. Do not re-detail it.
+4. Confirm A1's detail is untouched: no step in this phase writes
+   `phases/A1-diffuse-and-metal-materials.md`. Do not re-detail it.
 5. Confirm no product change: the worktree shows no change under `src/`, `tests/`, `docs/`,
    `Cargo.toml` or `AGENT-INSTRUCTIONS/LOCAL/` made by this phase. The only changed files are the
    plan documents named in "Touched files".
 6. Re-read both changed plan documents, run `git diff --check`, and correct only inaccurate plan
    text. No product code, test or `docs/` page is written.
 7. On that evidence, compress this file into `done/A1r2-shared-render-settlement.md` (frozen
-   contract only) and flip the `full-plan.md` A1r2 row to `done`, which promotes A1.
+   contract only) and flip the `full-plan.md` A1r2 row to `done`, which promotes A1. The compressed
+   contract keeps statement 5's gamma ownership: gamma 2 comes from A1 on this branch, and the
+   merge keeps one `to_byte` body with the `sqrt` for both writers.
 
 **Callers / wiring to update:**
 - `full-plan.md:17` status table - insert the A1r2 row and change A1's status to `planned` with
