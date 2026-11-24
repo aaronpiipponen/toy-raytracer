@@ -2,21 +2,31 @@
 
 ## Next action
 
-B1's `REVIEW AND ADVANCE` advancer is running. When it returns, read the next-phase handoff and run
-the acceptance check on B2's detail before its implementer.
+Make the B2 `phase_subagent` call now that B2 passed the acceptance check. The coordinator hold
+`plan-a-A2+plan-b-B2` is armed, so that call is expected to be refused with `COORDINATOR HOLD`; the
+refusal records this plan's stop and the channel opens only after both plans have stopped. On the
+refusal: start nothing else, tell the user in one line, end the turn, and wait for the coordinator or
+the partner orchestrator.
 
 ## Current state
 
-B1 (`phases/B1-face-side-and-texture-coordinates.md`) is implemented on branch `plan-b` at tested head
-`4edcdba` (base `e180476`): `HitRecord` carries `front_face`, `u`, `v`, built only through
-`HitRecord::new`, and `Sphere::hit` fills (u, v) from latitude and longitude. Receipt: build, test (7
-passed), clippy `-D warnings`, fmt, `git diff --check` all green; rendered PPM byte-identical to the
-base render; 2 tests added, 0 deleted, 1 changed; review loop finished (1 real finding fixed, second
-pass clean). No user test required. Plan status table still shows B1 `active` until the advancer
-flips it; `done/B1` compression also belongs to the advancer.
+B1 is done (`done/B1-face-side-and-texture-coordinates.md`), status row flipped. B2 is detailed at
+`phases/B2-planes-and-triangles.md`, status `active`, audited twice by the advancer (second pass
+PASS), and passed the orchestrator acceptance check on 2026-11-24 with one correction applied by the
+orchestrator: the two triangle tests sharing one fixture and ray were merged into
+`a_ray_through_the_triangle_hits_its_front_face_with_barycentric_coordinates`, so B2 now adds 2 test
+functions (within the §3a cap) and the fast gate counts 9 tests.
 
-Intentional deviation reported by the implementer: the `HitRecord::new` doc comment opens with
-"Build a hit record ..." to satisfy the documentation style guide's imperative rule. Accepted.
+B2 is held: plan-a leads the settlement of the shared `HitRecord` shape (plan-a's record carries
+`Rc<dyn Material>` and is not `Copy`; ours carries `front_face`/`u`/`v` built only through
+`HitRecord::new`). B2's detail must be re-detailed after the shared design lands; its materials-less
+`HitRecord::new` assumption will not survive unchanged.
+
+Open item surfaced by the advancer: the shared repository map
+`AGENT-INSTRUCTIONS/LOCAL/project.md:5` already lists `material.rs`, which does not exist in this
+worktree (plan-a owns it, and this line is shared at the workspace root). B2 step 9 keeps existing
+entries and appends `plane.rs` and `triangle.rs`; the concurrent shared-file edit is a real risk to
+watch, not a B2 defect.
 
 ## Learned rules
 
@@ -26,3 +36,5 @@ Intentional deviation reported by the implementer: the `HitRecord::new` doc comm
   plan closure.
 - Scope authorizes phase commits on branch `plan-b`: commit whenever useful, never squash, never to
   `main`.
+- Test-cap hygiene is part of my acceptance check: merge near-duplicate test functions that share one
+  fixture instead of spending the cap.
