@@ -67,6 +67,16 @@ gamma in `to_byte`, the sample-count guarantees, A3's jitter draw order, and the
 obligations on plan-a's side. No product code changes on this branch. A1 keeps its existing detail, and A3 is
 detailed after this settlement.
 
+### A1r3 - Shared scene settlement
+
+Records the scene composition settled with the geometry plan in
+`PLANS/shared/plan-a-A1+plan-b-B2.md`: A1's branch scene and render shape stay as detailed; at the
+release merge the ground sphere becomes the ground plane, the metal sphere stays, `Plane` and
+`Triangle` gain a material argument, the scene's four materials are the centre red-brown diffuse,
+mid-grey ground, dull green triangle and grey metal sphere, and `HittableList::hit` keeps the
+borrowed nearest record and adds B3's box test. No product code changes on this branch. A1 keeps
+its existing detail and resumes after this phase.
+
 ### A1 - Diffuse and metal materials
 
 `src/material.rs` with the `Material` trait and two materials, diffuse (`Lambertian`, an albedo)
