@@ -42,9 +42,9 @@ guard, test, config key or permanent documentation.
 - A1's detail header keeps its existing `Status` and `Depends on` metadata because this phase does
   not edit that file. The `full-plan.md` status table is the source of truth for phase progress.
 - `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-c-C3.md` - the shared design this phase records.
-- `../plan-c/src/main.rs:23-26` - the output plan's landed C1 has `DEFAULT_WIDTH = 400`,
-  `DEFAULT_HEIGHT = 200`, `DEFAULT_SAMPLES = 16`; `:61` - `fn render(width: usize, height: usize,
-  samples: usize) -> Vec<Colour>`; `:169` - `run` calls `render(settings.width, settings.height,
+- `../plan-c/src/main.rs:23-25` - the output plan's landed C1 has `DEFAULT_WIDTH = 400`,
+  `DEFAULT_HEIGHT = 200`, `DEFAULT_SAMPLES = 16`; `:62` - `fn render(width: usize, height: usize,
+  samples: usize) -> Vec<Colour>`; `:172` - `run` calls `render(settings.width, settings.height,
   settings.samples)`. That signature and path belong to the merge, not to this branch.
 
 **Read first (do not invent):**
