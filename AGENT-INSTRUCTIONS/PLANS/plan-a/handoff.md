@@ -2,22 +2,23 @@
 
 ## Next action
 
-Start the A1r implementer (documentation-only settlement phase). On its receipt, spawn a
-fresh `phase-advancer` in `REVIEW AND ADVANCE` for A1r, then the A1 implementer.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` for A1r with the implementer's
+receipt. Then make A1 active and attempt its implementer; A1 is held against plan-c's C3,
+so expect `COORDINATOR HOLD` and stop there.
 
 ## Current state
 
-The A1+B1 pair is RESOLVED. Plan-a's resolution phase is
-`phases/A1r-shared-hit-record-settlement.md` (gate `minimal`, no product code, no receipt
-commit invented); the status table has A1r `active` and A1 `planned`, still pointing at its
-unchanged detail `phases/A1-diffuse-and-metal-materials.md`. I corrected that A1 row's
-`Phase file`, which the leader's edit left empty. The shared design is
-`PLANS/shared/plan-a-A1+plan-b-B1.md`: plan-a's branch changes no record shape; the face
-side, (u, v), the seven-argument constructor, A2's face-side replacement and the new
-shapes' materials are the release merge's. A1 remains held-behind-A1r only in the phase
-order, not by the coordinator. The user's ground-plane and triangle materials are settled
-(matte; mid-grey ground, dull green triangle). Autonomous mode covers routine loop choices
-only; every product decision goes to the user.
+A1r's implementer returned a passing documentation-only receipt at unchanged head
+`e180476`; it corrected three citation ranges in the phase file and handed two items to the
+advancer (the merge's `HitRecord` doc-comment obligation, and A1's stale `Status`/`Depends
+on` header). The A1+B1 pair is RESOLVED; plan-a's branch recorded the shared design without
+product code. A new coordinator hold covers A1 against plan-c's C3 (plan-c leads): plan-c's
+C1 already put per-pixel averaging in `render` and changed `ray_colour`'s signature, so the
+settlement must fix where sampling and bounces nest, where the single `Rng` lives and how
+gamma applies to averaged samples; it also decides whether A3 still has work. The user's
+ground-plane and triangle materials are settled (matte; mid-grey ground, dull green
+triangle). Autonomous mode covers routine loop choices only; every product decision goes to
+the user.
 
 ## Learned rules
 
@@ -26,9 +27,7 @@ only; every product decision goes to the user.
   each in `autonomous-decisions.md`. Every product decision goes to the user.
 - Tell advancers and implementers the work kind (product here) and the gate level from the
   status table.
-- The shared design is authoritative for the resolution; when the leading plan writes a
-  file, stop the local advancer at once and hand the path over rather than let two copies
-  exist.
-- A child's claimed correction must be checked against the file; the leader reported fixing
-  A1's row but the status table still had an empty Phase file, which I fixed myself.
+- The shared design is authoritative for a resolution; when the leading plan writes a
+  file, stop the local advancer at once rather than let two copies exist.
+- A child's claimed correction must be checked against the file.
 - A1 must not duplicate the geometry plan's face side, texture coordinates or constructor.
