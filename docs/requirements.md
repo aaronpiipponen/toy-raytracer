@@ -1,13 +1,13 @@
 # Requirements
 
-A small raytracer with no dependencies beyond the Rust standard library. It renders one fixed scene
-and writes the image to a file. Every render is reproducible: the same options give the same bytes.
+A raytracer that uses only the Rust standard library and renders one fixed scene to a file with the
+same bytes for the same options.
 
 ## Materials
 
 1. Every object has a material. A ray that hits an object scatters by that material and the colour
    is the material's attenuation times the colour the scattered ray sees, up to a bounce limit of
-   50; a ray that reaches the limit is black.
+   50, and a ray that reaches the limit is black.
 2. Diffuse material scatters in a random direction around the surface normal and attenuates by its
    albedo.
 3. Metal material reflects about the normal, blurred by a fuzz factor in 0..=1, and attenuates by
@@ -26,13 +26,13 @@ and writes the image to a file. Every render is reproducible: the same options g
    planes by the hit point's position along two axes in the plane, modulo 1, and triangles by their
    barycentric coordinates.
 9. The scene can hold infinite planes (a point and a normal) and triangles (three vertices).
-10. Every object reports an axis-aligned bounding box, and the scene list tests a ray against an
-    object's box before the object. An infinite plane has no box and is always tested.
+10. Every finite object reports an axis-aligned bounding box, and the scene list tests a ray against
+    an object's box before the object. An infinite plane has no box and is always tested.
 
 ## Output and command line
 
-11. The image is written as PNG, with no external crate: one IDAT chunk holding zlib data made of
-    stored (uncompressed) deflate blocks, with correct CRC-32 and Adler-32 checksums. PPM stays
+11. The image is written as PNG by the program's own writer: one IDAT chunk holding zlib data made
+    of stored (uncompressed) deflate blocks, with correct CRC-32 and Adler-32 checksums. PPM is
     available.
 12. The command line takes `--width`, `--height`, `--samples`, `--output <path>` and
     `--format png|ppm`. The defaults are 400 by 200, 16 samples, `render.png` and the format from the

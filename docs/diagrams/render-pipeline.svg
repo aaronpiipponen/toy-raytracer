@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 448" role="img"
+     aria-labelledby="t d" font-family="system-ui, sans-serif">
+  <title id="t">Render pipeline for one sample</title>
+  <desc id="d">A jittered pixel position becomes a camera ray. The scene list finds the nearest hit.
+  A hit scatters at the material and repeats for at most 50 bounces. A miss takes the sky colour and
+  an absorbed ray is black. The sample joins the sample average, is gamma encoded and written to the
+  image file.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#a3a4b8"/>
+    </marker>
+  </defs>
+  <rect width="960" height="448" rx="12" fill="#232434"/>
+
+  <rect x="35" y="88" width="184" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="127" y="114" text-anchor="middle" font-size="16" fill="#ececf2">Jittered sample</text>
+  <text x="127" y="136" text-anchor="middle" font-size="14" fill="#a3a4b8">u, v in the pixel</text>
+
+  <rect x="267" y="88" width="180" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="357" y="114" text-anchor="middle" font-size="16" fill="#ececf2">Camera ray</text>
+  <text x="357" y="136" text-anchor="middle" font-size="14" fill="#a3a4b8">through the pixel</text>
+
+  <rect x="495" y="88" width="180" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="585" y="114" text-anchor="middle" font-size="16" fill="#ececf2">Scene list</text>
+  <text x="585" y="136" text-anchor="middle" font-size="14" fill="#a3a4b8">nearest hit</text>
+
+  <rect x="723" y="88" width="202" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="824" y="114" text-anchor="middle" font-size="16" fill="#ececf2">Material scatter</text>
+  <text x="824" y="136" text-anchor="middle" font-size="14" fill="#a3a4b8">attenuates colour</text>
+
+  <rect x="495" y="232" width="180" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="585" y="258" text-anchor="middle" font-size="16" fill="#ececf2">Sky colour</text>
+  <text x="585" y="280" text-anchor="middle" font-size="14" fill="#a3a4b8">white to blue</text>
+
+  <rect x="723" y="232" width="202" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="824" y="258" text-anchor="middle" font-size="16" fill="#ececf2">Black</text>
+  <text x="824" y="280" text-anchor="middle" font-size="14" fill="#a3a4b8">absorbed ray</text>
+
+  <rect x="267" y="352" width="180" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="357" y="378" text-anchor="middle" font-size="16" fill="#ececf2">Sample average</text>
+  <text x="357" y="400" text-anchor="middle" font-size="14" fill="#a3a4b8">over every sample</text>
+
+  <rect x="495" y="352" width="180" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="585" y="378" text-anchor="middle" font-size="16" fill="#ececf2">Gamma encode</text>
+  <text x="585" y="400" text-anchor="middle" font-size="14" fill="#a3a4b8">8-bit channels</text>
+
+  <rect x="723" y="352" width="202" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="824" y="378" text-anchor="middle" font-size="16" fill="#ececf2">Image file</text>
+  <text x="824" y="400" text-anchor="middle" font-size="14" fill="#a3a4b8">written at the end</text>
+
+  <line x1="219" y1="120" x2="267" y2="120" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="447" y1="120" x2="495" y2="120" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="675" y1="120" x2="723" y2="120" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="585" y1="152" x2="585" y2="232" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="824" y1="152" x2="824" y2="232" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M585 296 V312 H330 V352" fill="none" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M824 296 V336 H400 V352" fill="none" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="447" y1="384" x2="495" y2="384" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="675" y1="384" x2="723" y2="384" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M824 88 V56 H585 V88" fill="none" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <text x="689" y="110" font-size="14" fill="#a3a4b8">hit</text>
+  <text x="593" y="200" font-size="14" fill="#a3a4b8">miss</text>
+  <text x="832" y="200" font-size="14" fill="#a3a4b8">absorbed</text>
+  <text x="650" y="44" font-size="14" fill="#a3a4b8">repeat, at most 50</text>
+</svg>
