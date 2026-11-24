@@ -54,9 +54,9 @@ writes, and the acceptance render it runs.
 - `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the fast phase gate, the rendered-image gate command and
   the fallback sentence that the release removes.
 - `AGENT-INSTRUCTIONS/PLANS/plan-c/docs-pass.md` - the release item for that fallback sentence.
-- Commits `910a9c5` (C1) and `e194181` (C3) hold all of this plan's product changes. `git diff
-  910a9c5..e194181` changes `src/main.rs` and `tests/cli.rs`. `git show --stat 910a9c5` also lists
-  `README.md` and `src/png.rs`.
+- The plan's product changes are the PNG writer in `src/png.rs`, the command line and render changes
+  in `src/main.rs`, the CLI tests in `tests/cli.rs`, and the README run example; nothing else in the
+  tree was added or changed by this plan.
 - Cargo and its tools are not on `PATH`; call `~/.cargo/bin/cargo`.
 
 **Read first (do not invent):**
@@ -160,10 +160,12 @@ writes, and the acceptance render it runs.
   `path:line` it cites, and run `git diff --check` in the worktree. The release build in build plan
   step 4 is required only to run the acceptance binary. `cargo test`, `cargo clippy` and `cargo fmt`
   are not required because no Rust source changes.
-- Conditional gates: rendered image, required as the acceptance evidence. Use
-  `./target/release/toy-raytracer --output /tmp/opencode/z1-accept.png` at the defaults (400 by 200,
-  16 samples), open the PNG and confirm the sphere over the sky and ground, and compare a second
-  identical render with `cmp`. Agent generation: not touched.
+- Conditional gates: the rendered-image gate does not apply, because this phase changes neither the
+  render loop, a material, the camera nor the output format. The plan instead requires an acceptance
+  render through the real command line: `./target/release/toy-raytracer --output
+  /tmp/opencode/z1-accept.png` at the defaults (400 by 200, 16 samples), the PNG opened to confirm the
+  sphere over the sky and ground, and a second identical render compared with `cmp`. Agent
+  generation: not touched.
 - Slow gate (>2 minutes): none. The default release render finishes in seconds.
 
 **User test (acceptance):**
@@ -184,6 +186,9 @@ writes, and the acceptance render it runs.
 - [ ] `benchmarks/2026-11-24-closing-survey.md` exists, was written by the orchestrator, and holds
    one section per area with every finding backed by a `path:line` read from the current tree.
 - [ ] Each clean area states that it produced no finding and names what was checked.
+- [ ] The note ends with the acceptance-render section, recording exit status 0, empty standard
+   output, the observed progress range and terminating newline, the `cmp` result and the observed
+   image.
 - [ ] No `phase-implementer` implemented this phase and no `phase-implementation-reviewer`
    cross-checked the note.
 - [ ] The acceptance render was produced through the real command line, opens showing the sphere
