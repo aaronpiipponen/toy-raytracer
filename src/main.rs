@@ -57,7 +57,8 @@ fn scene() -> HittableList {
     world
 }
 
-/// Every pixel's colour, row by row from the top, each pixel averaging `samples` rays.
+/// Every pixel's colour, row by row from the top, each pixel averaging `samples` rays, with the
+/// share of finished rows reported on standard error.
 fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
     let world = scene();
     let camera = Camera::new(width as f64 / height as f64);
@@ -73,7 +74,10 @@ fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
             }
             pixels.push(colour / samples as f64);
         }
+        let done = height - row;
+        eprint!("\r{}%", done * 100 / height);
     }
+    eprintln!();
     pixels
 }
 
