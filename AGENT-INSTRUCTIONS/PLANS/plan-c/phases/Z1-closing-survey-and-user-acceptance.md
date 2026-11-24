@@ -63,7 +63,7 @@ re-survey after a fix, because no fix happens here. No new test is written.
 - `AGENT-INSTRUCTIONS/PLANS/plan-c/docs-pass.md` - the one deferred documentation item.
 
 **Build plan:**
-1. Read the four areas in one or two batched reads, then record each finding as it is confirmed.
+1. Read the four areas, one batched read per area, then record each finding as it is confirmed.
    The areas and their questions:
    - PNG writer: does `src/png.rs` produce what requirement 11 states, and does
      `tests/cli.rs:167-250` independently check chunk CRCs, the stored-block framing, the single
@@ -104,7 +104,7 @@ re-survey after a fix, because no fix happens here. No new test is written.
 **Callers / wiring to update:**
 - None. The phase changes no code, so no caller, import or configuration changes. The survey reads
   `render`'s caller `run` (`src/main.rs:172`) and the two unit-test callers
-  (`src/main.rs:200`, `src/main.rs:207`) as part of area three.
+  (`src/main.rs:203`, `src/main.rs:210`) as part of area three.
 
 **Config / schema / migrations:**
 - None. No configuration key, schema or migration exists in this project, and the phase adds none.
@@ -137,8 +137,9 @@ re-survey after a fix, because no fix happens here. No new test is written.
 - New/changed/deleted: none. This phase writes no test and changes no test function. Test functions
   added 0, deleted 0, changed 0.
 - Fast gate for this documentation-only phase: reread the created note for accuracy, check every
-  `path:line` it cites, and run `git diff --check` in the worktree. `cargo build`, `cargo test`,
-  `cargo clippy` and `cargo fmt` are not required because no Rust source changes.
+  `path:line` it cites, and run `git diff --check` in the worktree. The release build in build plan
+  step 4 is required only to run the acceptance binary. `cargo test`, `cargo clippy` and `cargo fmt`
+  are not required because no Rust source changes.
 - Conditional gates: rendered image, required as the acceptance evidence. Use
   `./target/release/toy-raytracer --output /tmp/opencode/z1-accept.png` at the defaults (400 by 200,
   16 samples), open the PNG and confirm the sphere over the sky and ground, and compare a second
