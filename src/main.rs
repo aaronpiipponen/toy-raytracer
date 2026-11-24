@@ -13,7 +13,7 @@ use std::rc::Rc;
 
 use camera::Camera;
 use hittable::{Hittable, HittableList};
-use material::{Lambertian, Metal};
+use material::{Dielectric, Lambertian, Metal};
 use ray::Ray;
 use rng::Rng;
 use sphere::Sphere;
@@ -67,6 +67,11 @@ fn scene() -> HittableList {
         Vec3::new(0.85, -0.25, -1.3),
         0.25,
         Rc::new(Metal::new(Colour::new(0.8, 0.8, 0.8), 0.3)),
+    )));
+    world.add(Box::new(Sphere::new(
+        Vec3::new(-1.1, 0.0, -1.5),
+        0.5,
+        Rc::new(Dielectric::new(1.5)),
     )));
     world
 }

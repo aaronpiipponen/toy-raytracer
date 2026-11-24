@@ -6,13 +6,47 @@ use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
-/// Where a ray hit a surface: the distance along the ray, the point, the outward normal and the
-/// material of the object.
+/// Where a ray hit a surface: the distance along the ray, the point, the normal facing the ray, the
+/// face side, the texture coordinates and the material of the object.
 pub struct HitRecord {
     pub t: f64,
     pub point: Vec3,
+    /// Faces against the incoming ray.
     pub normal: Vec3,
+    pub front_face: bool,
+    #[allow(dead_code)]
+    pub u: f64,
+    #[allow(dead_code)]
+    pub v: f64,
     pub material: Rc<dyn Material>,
+}
+
+impl HitRecord {
+    /// A record for a hit by `ray` at `point`, with `outward_normal` facing away from the object.
+    pub fn new(
+        ray: &Ray,
+        t: f64,
+        point: Vec3,
+        outward_normal: Vec3,
+        u: f64,
+        v: f64,
+        material: Rc<dyn Material>,
+    ) -> Self {
+        let front_face = ray.direction.dot(outward_normal) < 0.0;
+        HitRecord {
+            t,
+            point,
+            normal: if front_face {
+                outward_normal
+            } else {
+                -outward_normal
+            },
+            front_face,
+            u,
+            v,
+            material,
+        }
+    }
 }
 
 pub trait Hittable {

@@ -1,5 +1,6 @@
 //! Spheres.
 
+use std::f64::consts::PI;
 use std::rc::Rc;
 
 use crate::hittable::{HitRecord, Hittable};
@@ -42,12 +43,20 @@ impl Hittable for Sphere {
             }
         }
         let point = ray.at(t);
-        Some(HitRecord {
+        let outward_normal = (point - self.center) / self.radius;
+        let theta = (-outward_normal.y).acos();
+        let phi = (-outward_normal.z).atan2(outward_normal.x) + PI;
+        let u = phi / (2.0 * PI);
+        let v = theta / PI;
+        Some(HitRecord::new(
+            ray,
             t,
             point,
-            normal: (point - self.center) / self.radius,
-            material: Rc::clone(&self.material),
-        })
+            outward_normal,
+            u,
+            v,
+            Rc::clone(&self.material),
+        ))
     }
 }
 
@@ -72,6 +81,27 @@ mod tests {
             .expect("the ray hits");
         assert!((hit.t - 1.5).abs() < 1e-9);
         assert_eq!(hit.normal, Vec3::new(0.0, 0.0, 1.0));
+        assert!(hit.front_face);
+        assert!((hit.u - 0.25).abs() < 1e-9);
+        assert!((hit.v - 0.5).abs() < 1e-9);
+    }
+
+    #[test]
+    fn a_ray_from_inside_hits_the_back_face() {
+        let sphere = Sphere::new(
+            Vec3::new(0.0, 0.0, -2.0),
+            0.5,
+            Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8))),
+        );
+        let ray = Ray::new(Vec3::new(0.0, 0.0, -2.0), Vec3::new(0.0, 0.0, -1.0));
+        let hit = sphere
+            .hit(&ray, 0.001, f64::INFINITY)
+            .expect("the ray hits");
+        assert!((hit.t - 0.5).abs() < 1e-9);
+        assert!(!hit.front_face);
+        assert_eq!(hit.normal, Vec3::new(0.0, 0.0, 1.0));
+        assert!((hit.u - 0.75).abs() < 1e-9);
+        assert!((hit.v - 0.5).abs() < 1e-9);
     }
 
     #[test]
