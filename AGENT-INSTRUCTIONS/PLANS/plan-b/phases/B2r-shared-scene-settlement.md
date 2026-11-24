@@ -26,13 +26,13 @@ branch work. It names only the composition points the merge changes: the materia
   comment, and the three tests. It is byte-identical after this phase.
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/done/B1r-shared-hit-record-shape.md` - the six-argument
   `HitRecord::new` that sets the face side and the ray-facing normal, and the derived `Copy`.
-- `src/hittable.rs:9-42` - the current tree: the six-argument `HitRecord::new` and the
+- `src/hittable.rs:8-46` - the current tree: the six-argument `HitRecord::new` and the
   `Clone, Copy, Debug` derives that hold with no material field.
-- `src/hittable.rs:66` - `let limit = nearest.map_or(t_max, |hit| hit.t);` in `HittableList::hit`,
+- `src/hittable.rs:65` - `let limit = nearest.map_or(t_max, |hit| hit.t);` in `HittableList::hit`,
   the by-value form that copies the record.
-- `src/main.rs:29-34` - `scene()` with the centre sphere and the ground sphere, before B2 replaces
+- `src/main.rs:32-37` - `scene()` with the centre sphere and the ground sphere, before B2 replaces
   the ground sphere with the plane and adds the triangle.
-- `src/vec3.rs:22-29` - `Vec3::cross` with its `// For the triangle normals.` comment and
+- `src/vec3.rs:21-29` - `Vec3::cross` with its `// For the triangle normals.` comment and
   `#[allow(dead_code)]`, which B2 deletes.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/phases/A1-diffuse-and-metal-materials.md` - the materials plan's
   branch shape: the material field on `HitRecord`, `Rc<dyn Material>`, the bounce loop and the
@@ -177,10 +177,9 @@ The release merge combines this branch with the materials plan's branch. On plan
       is claimed for this branch.
 - [ ] The plan document is re-read for accuracy and `git diff --check` is clean.
 - [ ] No verification receipt or code safety commit is invented; the plan document is the change.
-- [ ] On passing evidence: plan-b's orchestrator compresses this file into
-      `done/B2r-shared-scene-settlement.md` (frozen contract only), adds the B2r status row and
-      scoped entry, sets B2 to `planned` behind B2r, later flips the B2r row to `done`, and then
-      promotes B2. This phase writes no status row itself.
+- [ ] On passing evidence: plan-b's `phase-advancer` compresses this file into
+      `done/B2r-shared-scene-settlement.md` (frozen contract only), flips the B2r status row to
+      `done`, and then promotes B2. This phase writes no status row itself.
 
 **Exit:** the shared scene design is recorded for this branch and the merge, B2's detail is
 unchanged, and B2 resumes with its existing detail.

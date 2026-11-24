@@ -2,21 +2,22 @@
 
 ## Next action
 
-B2 is held by the coordinator as pair `plan-a-A1+plan-b-B2` (plan-a leads). The `phase_subagent`
-start for B2 was attempted and refused, which records the stop. Next: answer plan-a's channel
-messages as the partner, wait for `RESOLVED`, run the orchestrator acceptance check on B2's
-resolution phase file, then continue the loop with it.
+`phase-advancer` is advancing B2r in the background. Pair `plan-a-A1+plan-b-B2` is settled:
+`PLANS/shared/plan-a-A1+plan-b-B2.md`, plan-a's `A1r3` and plan-b's
+`phases/B2r-shared-scene-settlement.md` both passed my check, and I sent plan-a `RESOLVED`. When the
+advancer returns, run the orchestrator acceptance check on B2's (re-)detail before starting B2's
+implementer.
 
 ## Current state
 
-- B1r done at `f0f11e2`; B2 detailed and accepted (`phases/B2-planes-and-triangles.md`) but held.
-- B2 detail replaces the ground sphere with the ground plane at `y = -0.5` and adds a triangle at
-  `z = -2`; the user's merge-material decision already names "the ground plane" and the triangle.
-- Overlap with plan-a A1: `scene()` in `src/main.rs` (A1 gives materials and adds a metal sphere, B2
-  swaps in the plane and adds the triangle) and `src/hittable.rs` (A1 changes the record and
-  `HittableList::hit`, which B3's `bounding_box` builds on). The merged scene must combine both and
-  give the new shapes materials; the merge must also keep the normal-colouring until materials land.
-- Shared design for the earlier pair: `PLANS/shared/plan-a-A1+plan-b-B1.md` (final).
+- B1r done at `f0f11e2`; B2 detailed and accepted but its implementation was held by the B2 overlap.
+- B2's detail (`phases/B2-planes-and-triangles.md`) is unchanged: plane at `y = -0.5`, triangle at
+  `z = -2`, six-argument `HitRecord::new`, no material, three new tests, no `docs/` change.
+- The B2 settlement (`phases/B2r-shared-scene-settlement.md`, written by plan-a as leader, corrected
+  by me) is documentation-only: plan-b's branch shape unchanged; the merge adds
+  `Rc<dyn Material>` to `Plane`/`Triangle`, composes the four-material scene, uses the borrowed
+  nearest record plus B3's box test, and keeps the plane's normalisation and `(u, v)` mapping.
+- B2r has no status row yet; adding it, compressing it and promoting B2 are the advancer's work.
 - Autonomous mode: small, easily undoable, behaviour-neutral choices only; `autonomous-decisions.md`
   when the first is recorded. Product decisions still go to the user.
 
@@ -27,3 +28,5 @@ resolution phase file, then continue the loop with it.
 - A dropped phase keeps its id as a `not applicable` row; a resolution phase that absorbs a held
   phase's whole scope takes that scope and later phases depend on it.
 - The plan-b branch must never add the material field or `Rc`; that is the release merge's work.
+- A resolution phase's own document is not a plan-state edit: status rows, `scope.md`, `done/` and
+  compression belong to the advancer, never to the child that writes the settlement.
