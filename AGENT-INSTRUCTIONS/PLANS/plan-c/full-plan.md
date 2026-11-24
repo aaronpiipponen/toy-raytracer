@@ -106,7 +106,8 @@ output side of the product match requirements 11 and 12.
 - `src/png.rs` - new module with the writer.
 - `src/main.rs` - option parsing, the resolved settings, the render signature, `main`.
 - `README.md` - the run example.
-- `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the stale rendered-image fallback line.
+- `AGENT-INSTRUCTIONS/LOCAL/gates.md` - read only here: it is shared by every worktree, and its
+  fallback sentence is deferred to the release (`docs-pass.md`).
 - `docs/requirements.md` - only if the change contradicts a stated behaviour; otherwise leave it.
 
 **TODOs:**
@@ -120,8 +121,8 @@ output side of the product match requirements 11 and 12.
 3. Make `main` render at the chosen size with the chosen sample count and write the chosen format to
    the chosen path, reporting an unwritable path instead of panicking.
 4. Give `render` the sample count and average that many rays per pixel; no jitter.
-5. Update the README run example and the `gates.md` rendered-image command so both show the real
-   command line.
+5. Update the README run example. Leave `AGENT-INSTRUCTIONS/LOCAL/gates.md` untouched; its fallback
+   sentence is deferred to the release.
 6. Adapt the two existing render tests to the new signature and add at most three new test
    functions covering the public behaviour: the binary writes a file that is a valid PNG whose
    pixels match the PPM rendering of the same scene; a bad option or bad value prints usage and
@@ -136,14 +137,14 @@ output side of the product match requirements 11 and 12.
 - Change the scene contents or the camera.
 - Test the exact usage wording or private parse helpers; test the public behaviour through the
   binary.
-- Leave the README or the `gates.md` command stale.
+- Leave the README run example stale, or edit the shared `AGENT-INSTRUCTIONS/LOCAL/gates.md`.
 
 **Verification shape:**
 - Fast gate: `cargo build`, `cargo test`, `cargo clippy -- -D warnings`, `cargo fmt --check`,
   `git diff --check`.
 - Rendered-image gate (this phase owns it): a small render through the real command line in both
   formats, the PNG opened and looked at, the PPM compared with the same-size render.
-- Documentation reread of the two changed lines plus `git diff --check`.
+- Documentation reread of the changed README lines plus `git diff --check`.
 
 **Exit:** `cargo run` writes `render.png`; size, sample count, output path and format are honoured;
 PPM still writes through `--format ppm`; a bad option prints usage and exits non-zero.
