@@ -57,7 +57,7 @@ pub trait Hittable {
 /// A scene: every object, hit in order of distance.
 #[derive(Default)]
 pub struct HittableList {
-    pub objects: Vec<Box<dyn Hittable>>,
+    objects: Vec<Box<dyn Hittable>>,
 }
 
 impl HittableList {

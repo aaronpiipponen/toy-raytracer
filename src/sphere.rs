@@ -68,13 +68,17 @@ mod tests {
     use crate::material::Lambertian;
     use crate::vec3::Colour;
 
-    #[test]
-    fn a_ray_through_the_center_hits_the_near_surface() {
-        let sphere = Sphere::new(
+    fn grey_sphere() -> Sphere {
+        Sphere::new(
             Vec3::new(0.0, 0.0, -2.0),
             0.5,
             Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8))),
-        );
+        )
+    }
+
+    #[test]
+    fn a_ray_through_the_center_hits_the_near_surface() {
+        let sphere = grey_sphere();
         let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         let hit = sphere
             .hit(&ray, 0.001, f64::INFINITY)
@@ -88,11 +92,7 @@ mod tests {
 
     #[test]
     fn a_ray_from_inside_hits_the_back_face() {
-        let sphere = Sphere::new(
-            Vec3::new(0.0, 0.0, -2.0),
-            0.5,
-            Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8))),
-        );
+        let sphere = grey_sphere();
         let ray = Ray::new(Vec3::new(0.0, 0.0, -2.0), Vec3::new(0.0, 0.0, -1.0));
         let hit = sphere
             .hit(&ray, 0.001, f64::INFINITY)
@@ -106,11 +106,7 @@ mod tests {
 
     #[test]
     fn a_ray_beside_the_sphere_misses() {
-        let sphere = Sphere::new(
-            Vec3::new(0.0, 0.0, -2.0),
-            0.5,
-            Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8))),
-        );
+        let sphere = grey_sphere();
         let ray = Ray::new(Vec3::new(1.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         assert!(sphere.hit(&ray, 0.001, f64::INFINITY).is_none());
     }

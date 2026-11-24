@@ -6,7 +6,8 @@ pub struct Rng {
 
 impl Rng {
     pub fn new(seed: u64) -> Self {
-        Rng { state: seed.max(1) }
+        assert!(seed != 0, "the generator seed must be nonzero");
+        Rng { state: seed }
     }
 
     pub fn next_u64(&mut self) -> u64 {
