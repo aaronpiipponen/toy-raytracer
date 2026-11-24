@@ -2,27 +2,26 @@
 
 ## Next action
 
-Z1's `REVIEW AND ADVANCE` advancer is running with the user's acceptance, to compress Z1 into
-`done/Z1-closing-survey-and-user-acceptance.md` and flip the status row. When it returns, confirm the
-status table shows all four phases done and report the outcome to the user; remove
-`/tmp/opencode/plan-b-acceptance.ppm`, `plan-b-acceptance.png` and `ppm2png.py`; then stop - release
-and closure are not this session's work.
+None on this session's side: the plan is complete (all four phases `done`) and ready for the release.
+The release orchestrator details and runs the release; plan closure and archive need the user's
+explicit authorization after it. If the user asks for the release here, start the release workflow from
+`AGENT-INSTRUCTIONS/BUILDING/RELEASE-WORKFLOW.md`.
 
 ## Current state
 
-B1, B2 and B3 are done; head `f85a183`. Z1 is active and its survey is complete: four area returns and
-the cross-check return are saved in `benchmarks/returns/`, and the dated note
-`benchmarks/closing-survey-2026-11-24.md` is written. Verdict: no confirmed clear defect; one
-shared-tree documentation item (repository map names `material.rs`, which this branch lacks; owner is
-the release merge), several nits, and a user-review list. Acceptance render:
-`/tmp/opencode/plan-b-acceptance.png` (PPM md5 `13b3bc0a3cf5c41df684e179c1d3e93d`, same as the B3
-before/after render); keep it until the user answers, then remove it with the PPM and
-`/tmp/opencode/ppm2png.py`.
+All phases done on branch `plan-b` at head `f85a183`; worktree clean, no untracked files, temporary
+acceptance render removed. Frozen contracts: `done/B1-...`, `done/B2-...`, `done/B3-...`,
+`done/Z1-...`. The survey record is `benchmarks/closing-survey-2026-11-24.md` with five saved returns in
+`benchmarks/returns/`; verdict: no confirmed clear defect. The user accepted the survey note and the
+rendered scene.
 
-Open items to carry:
-- Release must ask the user which material the scene triangle gets
-  (`PLANS/shared/plan-a-A2+plan-b-B2.md`).
-- `/workflow-reload` for the shared `project.md` edits is still a question for the user.
+Release carry-overs are listed in `done/Z1-closing-survey-and-user-acceptance.md`; the main ones:
+shared `project.md:5` names `material.rs` (true after the merge), the scene triangle's material is the
+user's open choice (recommendation: a diffuse in the scene spheres' family), the union design
+`PLANS/shared/plan-a-A3+plan-b-Z1.md` with the frozen triangle vertices and margins, and the render
+seam in `PLANS/shared/plan-a-A3+plan-c-Z1.md`.
+
+Still open for the user: whether to run `/workflow-reload` after the shared `project.md` edits (not run).
 
 ## Learned rules
 
