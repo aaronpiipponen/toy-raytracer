@@ -33,5 +33,5 @@
 
 - `src/sphere.rs` proves the near-surface front-face hit, the back-face hit from inside the sphere,
   the latitude and longitude texture coordinates of the near surface, and a miss beside the sphere.
-- `src/main.rs` keeps its two render tests; neither file's test changed for this phase beyond the
-  front-face assertion added to the near-surface test.
+- `src/main.rs` keeps its two render tests, which call `render(200, 100)` and pin the centre pixel
+  and the top row.
