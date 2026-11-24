@@ -26,10 +26,10 @@ phase deletes the `#[allow(dead_code)]` on `Vec3::cross`, which the triangle mak
 - `src/hittable.rs:44-47` - `pub trait Hittable { fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>; }`; it has no `bounding_box` method (B3 adds it).
 - `src/hittable.rs:49-72` - `HittableList` with `pub objects: Vec<Box<dyn Hittable>>`, `add(&mut self, object: Box<dyn Hittable>)`, and `hit` that keeps the nearest record; it needs no edit.
 - `src/vec3.rs:21-29` - `Vec3::cross(self, other: Vec3) -> Vec3` carries `// For the triangle normals.` and `#[allow(dead_code)]`; nothing calls it yet.
-- `src/vec3.rs:31-37` - `length(self) -> f64` and `unit(self) -> Vec3`; `src/vec3.rs:40-83` - `Sub`, `Neg`, `Mul<f64>`, `mul` by vector and `Div<f64>`.
+- `src/vec3.rs:40-80` - the `Add`, `Sub`, `Neg`, `Mul<f64>`, `Mul<Vec3>` and `Div<f64>` impls.
 - `src/vec3.rs:5` - `pub struct Vec3 { pub x: f64, pub y: f64, pub z: f64 }` with `PartialEq`.
 - `src/ray.rs:5-19` - `pub struct Ray { pub origin: Vec3, pub direction: Vec3 }`, `new` and `at(self, t: f64) -> Vec3`; the direction is not normalised.
-- `src/sphere.rs:20-47` - `impl Hittable for Sphere::hit` uses `HitRecord::new`; it is the model for the new shapes.
+- `src/sphere.rs:19-45` - `impl Hittable for Sphere::hit` uses `HitRecord::new`; it is the model for the new shapes.
 - `src/main.rs:3-10` - module list `camera, hittable, ray, rng, sphere, vec3`; `src/main.rs:14-18` - `use camera::Camera; use hittable::{Hittable, HittableList}; use ray::Ray; use sphere::Sphere; use vec3::{Colour, Vec3};`.
 - `src/main.rs:32-37` - `fn scene() -> HittableList` adds `Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)` and `Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)`; the second sphere's top is `y = -0.5`.
 - `src/main.rs:23-30` - `ray_colour` reads `hit.normal` and needs no edit.
