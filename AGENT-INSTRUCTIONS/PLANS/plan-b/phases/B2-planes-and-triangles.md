@@ -3,7 +3,9 @@
 **Status:** active.
 **Depends on:** B1r (`done/B1r-shared-hit-record-shape.md`): the six-argument
 `HitRecord::new(ray, t, point, outward_normal, u, v)` that sets the face side and turns the normal
-against the ray, and the rule that a shape records (u, v) without clamping.
+against the ray, and the rule that a shape records (u, v) without clamping. Also B2r
+(`done/B2r-shared-scene-settlement.md`): the settled scene composition, which leaves this phase's
+branch work material-free and binds only the release merge.
 **Scope:** add an infinite plane and a triangle as `Hittable` shapes, each with texture coordinates,
 and put both in the scene. The scene's second sphere, the large ground sphere at
 `(0.0, -100.5, -1.0)`, becomes the ground plane at `y = -0.5` with normal `(0.0, 1.0, 0.0)`, whose
@@ -46,6 +48,7 @@ phase deletes the `#[allow(dead_code)]` on `Vec3::cross`, which the triangle mak
 - `docs/requirements.md` items 7 to 10 - the behaviour this phase makes real; item 10 (bounding boxes) is B3.
 - `AGENT-INSTRUCTIONS/LOCAL/gates.md` - the fast gate and the rendered-image command.
 - `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B1.md` - the merge note that the ground plane and the triangle get materials at the release merge; no material exists on this branch.
+- `AGENT-INSTRUCTIONS/PLANS/plan-b/done/B2r-shared-scene-settlement.md` - the settled branch shape and the release merge's obligations; this phase implements only the branch half, which carries no material.
 
 **Build plan:**
 1. `src/plane.rs` - create the module with exactly this content (the tests come from the `Tests`

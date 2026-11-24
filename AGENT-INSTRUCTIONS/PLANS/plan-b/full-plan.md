@@ -16,7 +16,8 @@
 |---|---|---|---|---|---|---|---|
 | B1r | Shared hit record shape | done | standard | - | `done/B1r-shared-hit-record-shape.md` | the branch matches the shared hit record design | gates green |
 | B1 | Face side and texture coordinates | not applicable | standard | - | - | scope absorbed by B1r | - |
-| B2 | Planes and triangles | active | standard | B1r | `phases/B2-planes-and-triangles.md` | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
+| B2r | Shared scene settlement | done | minimal | - | `done/B2r-shared-scene-settlement.md` | the shared scene design is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
+| B2 | Planes and triangles | active | standard | B1r + B2r | `phases/B2-planes-and-triangles.md` | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
 | B3 | Bounding boxes | planned | standard | B2 | - | the scene list skips objects whose box the ray misses | gates green, same image as before |
 | Z1 | Closing survey and user acceptance | planned | minimal | B1r + B2 + B3 | - | the user accepts the result | the user accepts |
 
@@ -47,6 +48,14 @@ plan; B1 stays as the record of the original intent.
 outward normal. `Sphere` fills (u, v) from latitude and longitude. The normal-colouring in
 `src/main.rs` keeps working.
 
+### B2r - Shared scene settlement
+
+Records the scene composition settled with the materials plan in
+`PLANS/shared/plan-a-A1+plan-b-B2.md`: B2's branch shape stays as detailed and stays material-free,
+and the release merge gives `Plane` and `Triangle` a material argument, composes the four-material
+scene, keeps the borrowed nearest record and adds B3's box test. No product code changes on this
+branch. The frozen contract is `done/B2r-shared-scene-settlement.md`.
+
 ### B2 - Planes and triangles
 
 `src/plane.rs` (a point and a normal; (u, v) from the hit position along two in-plane axes, modulo
@@ -68,4 +77,8 @@ this phase. Also render the scene, compare it with the requirements, and ask the
 
 ## Carry-overs
 
-None.
+- The release merge's obligations on this branch are in `done/B2r-shared-scene-settlement.md`:
+  `Plane::new` and `Triangle::new` take the object's material as the last argument, the scene is the
+  centre sphere, the ground plane, the triangle and the metal sphere with the four named materials,
+  and `HittableList::hit` keeps the borrowed nearest record and adds B3's box test. B2, B3 and Z1
+  change no material on this branch.

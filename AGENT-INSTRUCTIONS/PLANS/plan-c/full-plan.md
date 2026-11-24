@@ -19,7 +19,10 @@
 | C2 | (merged into C1) | not applicable | - | - | - | - | - |
 | C3r | Shared render settlement | done | minimal | C1 | `done/C3r-shared-render-settlement.md` | the merged render shape is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
 | C3 | Progress line | done | standard | C1 | `done/C3-progress-line.md` | rendering shows the share of rows done on standard error | fast gate green, progress observed, image unchanged |
-| Z1 | Closing survey and user acceptance | active | minimal | C1 + C3 | `phases/Z1-closing-survey-and-user-acceptance.md` | the closing survey note is written and the user accepts the result | the user accepts |
+| Z1 | Closing survey and user acceptance | done | minimal | C1 + C3 | `done/Z1-closing-survey-and-user-acceptance.md` | the closing survey note is written and the user accepts the result | the user accepts |
+
+Every phase is done or not applicable. The plan's work is complete and awaits the release, which
+closes it.
 
 C2 was folded into C1 so that PPM never becomes unreachable code and the format choice exists in
 the same change that makes `render.png` the default.
@@ -163,7 +166,7 @@ work committed.
 
 ### C3 - Progress line
 
-**Status:** active.
+**Status:** done.
 **Depends on:** C1 (it consumes the render loop and the resolved settings C1 leaves).
 **Scope:** while rendering, the program reports the share of rows done on standard error, updating
 one line instead of printing a new one per row.
@@ -198,7 +201,7 @@ one line instead of printing a new one per row.
 
 ### Z1 - Closing survey and user acceptance
 
-**Status:** active.
+**Status:** done.
 **Depends on:** C1 + C3.
 **Scope:** the binding closing survey of everything this plan added or changed, then the user's
 acceptance of the result. The orchestrator executes it: it dispatches the scouts, writes the note and
