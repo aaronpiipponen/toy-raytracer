@@ -32,9 +32,9 @@ Commit whenever useful. Run the fast gate in `AGENT-INSTRUCTIONS/LOCAL/gates.md`
 - The hit record carries the material of the object that was hit, so the render loop can scatter
   without knowing the object.
 - All randomness uses `src/rng.rs` with a fixed seed.
-- Glass tells entering from leaving from the outward normal already on the hit record and the ray's
-  direction; it adds no face flag of its own. The shared shape with the geometry plan's face-side
-  change is settled through the coordinator before A2 is detailed.
+- Glass tells entering from leaving from the hit record's `front_face` flag and the ray-facing
+  `normal`; it adds no face flag of its own. The shared shape with the geometry plan is settled in
+  `PLANS/shared/plan-a-A2+plan-b-B2.md`.
 
 ## Starting state
 
@@ -55,10 +55,9 @@ diffuse material, the ground a diffuse material, and adds a metal sphere.
 ### A2 - Glass
 
 A `Dielectric` material with a refractive index: Snell's law, total internal reflection, Schlick's
-approximation. It tells entering from leaving from the outward normal on the hit record and the
-ray's direction, and works with the normal in the glass's frame. The scene gains a glass sphere.
-The face-side shape shared with the geometry plan is settled with that plan through the coordinator
-before this phase is detailed.
+approximation. It tells entering from leaving from the hit record's `front_face` flag and the
+ray-facing `normal`, and works with the normal in the glass's frame. The scene gains a glass sphere.
+The face-side shape shared with the geometry plan is settled in `PLANS/shared/plan-a-A2+plan-b-B2.md`.
 
 ### A3 - Samples per pixel
 
@@ -116,6 +115,6 @@ the rendered image.
 
 ## Carry-overs
 
-- A2 reads the outward normal the hit record carries today. The geometry plan's face-side change
-  replaces that normal with one that always faces the ray; the shape both plans share is settled
-  through the coordinator before A2 is detailed, and A2 must keep working under it.
+- A2 reads the `front_face` flag and the ray-facing `normal` the settled record carries; the shared
+  shape is in `PLANS/shared/plan-a-A2+plan-b-B2.md`. The glass must keep working when the geometry
+  plan's shapes join the same record.

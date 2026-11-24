@@ -20,10 +20,10 @@ to the user-review list. The plan is neither closed nor archived here: the relea
 the user accepts.
 
 **Current state (verified):**
-- The plan's changes sit in the branch range `e1293ef..0ad0f2b`: `src/png.rs` is a new module
-  (`write_png`, `write_chunk`, `crc32`, `adler32`, `SIGNATURE`, `MAX_STORED_BLOCK`), `src/main.rs`
-  gains `Format`, `Settings`, `parse_args`, `parse_dimension`, `resolve_format`, `run` and the
-  progress output in `render`, `tests/cli.rs` is a new binary test file with three tests, and
+- The plan's changes sit in the branch range `e1293ef..0ad0f2b`: `src/png.rs` holds the PNG
+  writer (`write_png`, `write_chunk`, `crc32`, `adler32`, `SIGNATURE`, `MAX_STORED_BLOCK`),
+  `src/main.rs` holds `Format`, `Settings`, `parse_args`, `parse_dimension`, `resolve_format`,
+  `run` and the progress output in `render`, `tests/cli.rs` holds the three binary tests, and
   `README.md` shows the real run command.
 - `docs/requirements.md` items 11 to 13 state the output and command-line behaviour. That file and
   `AGENT-INSTRUCTIONS/LOCAL/gates.md` are unchanged by this plan.
