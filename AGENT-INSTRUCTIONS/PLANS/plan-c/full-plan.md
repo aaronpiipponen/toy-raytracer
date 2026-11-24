@@ -226,4 +226,5 @@ release, which closes it.
 - The PNG is deliberately uncompressed stored blocks, as requirement 11 states; no size or speed
   optimisation is planned.
 - Jittered sampling and gamma correction are the materials plan's, not this plan's.
-- No deferred documentation items; the README and `gates.md` are updated in C1.
+- Deferred to the release: deleting the now-unnecessary rendered-image fallback sentence in
+  `AGENT-INSTRUCTIONS/LOCAL/gates.md` (see `docs-pass.md`). The README is updated in C1.
