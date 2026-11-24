@@ -182,9 +182,10 @@ reseed or per-sample gamma. The phase adds no adaptive sampling, no sample-count
      the sample average.
   5. Compare with the single-sample image of the previous revision: `git worktree add --detach
      /tmp/opencode/a2-image 80d833c`, run `cargo run --release > /tmp/opencode/render-a2.ppm`
-     inside that worktree, convert and open it the same way, then `git worktree remove
-     /tmp/opencode/a2-image`. The A2 image has hard stair steps along the sphere edges. The A3
-     image shows intermediate tones along those edges.
+     inside that worktree, run the same python script with `src` set to
+     `/tmp/opencode/render-a2.ppm` and `dst` to `/tmp/opencode/render-a2.png`, open that PNG, then
+     `git worktree remove /tmp/opencode/a2-image`. The A2 image has hard stair steps along the
+     sphere edges. The A3 image shows intermediate tones along those edges.
   6. Small render with few samples, after the safety commit: temporarily set
      `const WIDTH: usize = 80;` and `const HEIGHT: usize = 40;` and change the `main` call to
      `render(WIDTH, HEIGHT, 4)`. `write_ppm` already receives `WIDTH` and `HEIGHT`, so the PPM
