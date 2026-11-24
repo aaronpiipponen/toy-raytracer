@@ -109,9 +109,10 @@ no rendering, sampling, material, scene, writer or command-line behaviour change
    &world, &mut rng);` becomes `pixel = pixel + ray_colour(&camera.ray(u, v), &world, &mut rng);`, and
    `pixels.push(colour / samples as f64);` becomes `pixels.push(pixel / samples as f64);`. No other
    line of that file changes, and no plan-c file is touched.
-7. `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - the R1 row already reads `active`; without a
-   phase file. Set its `Phase file` cell to `phases/R1-survey-cleanups.md`. Leave the Z1 row `next`
-   and every other row unchanged.
+7. `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - no edit is required. The R1 row is already
+   `active` with `Phase file` set to `phases/R1-survey-cleanups.md`, Z1 is `next`, and the implementer
+   changes nothing in this file. Flipping R1 to `done` happens on passing evidence per the completion
+   checklist.
 
 **Callers / wiring to update:**
 
@@ -142,7 +143,6 @@ no rendering, sampling, material, scene, writer or command-line behaviour change
   described with the ray-facing normal, `front_face` and the shared shape file.
 - `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md` - changed: the `render` snippet names the
   accumulator `pixel`.
-- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - changed: the R1 row's phase file path.
 - Adds: nothing.
 <!-- touched-files:end -->
 
@@ -172,8 +172,8 @@ no rendering, sampling, material, scene, writer or command-line behaviour change
   the shared local helper. `src/rng.rs` - `the_same_seed_gives_the_same_sequence` is unchanged and
   keeps passing under the assertion.
 - Fast gate: `~/.cargo/bin/cargo build`, `~/.cargo/bin/cargo test`, `~/.cargo/bin/cargo clippy --
-  -D warnings`, `~/.cargo/bin/cargo fmt --check`, `git diff --check`. `cargo test` must still report
-  12 passing tests.
+  -D warnings`, `~/.cargo/bin/cargo fmt --check`, `git diff --check`. Every existing test passes; the
+  test count the run reports is an observation for the receipt, not an acceptance gate.
 - Conditional gates: rendered image, required. Capture the PPM before the first code edit and again
   after the last one, at the default 200 by 100, 16 samples, and compare:
   ```bash
@@ -211,7 +211,8 @@ no rendering, sampling, material, scene, writer or command-line behaviour change
   file changed.
 - [ ] `cmp` shows the default 200 by 100, 16-sample PPM is byte-identical to the pre-change render and
   both sha256 values are `5457ef7a788539f5f5b0145e7c20fd178a77f0d184663b83fcd38d299a54665b`.
-- [ ] Named tests pass; `cargo test` reports 12 passing tests.
+- [ ] Every named and existing test passes, with no test function added or deleted; the reported
+  test count is recorded as an observation only.
 - [ ] Test budget respected (REPO-RULES §3a); the receipt reports 0 added, 0 deleted, 3 adapted.
 - [ ] Fast phase gate and the rendered-image conditional gate pass.
 - [ ] No `docs/` page needs a change, and none is stale or wrong after this phase.
