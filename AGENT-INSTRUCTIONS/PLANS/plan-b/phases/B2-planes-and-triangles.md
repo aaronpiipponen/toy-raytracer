@@ -49,7 +49,8 @@ phase deletes the `#[allow(dead_code)]` on `Vec3::cross`, which the triangle mak
 
 **Build plan:**
 1. `src/plane.rs` - create the module with exactly this content (the tests come from the `Tests`
-   section and sit in a `#[cfg(test)] mod tests` below the implementation):
+   section and sit in a `#[cfg(test)] mod tests` block below the implementation, opened with
+   `use super::*;`):
 
    ```rust
    //! An infinite plane.
@@ -65,7 +66,7 @@ phase deletes the `#[allow(dead_code)]` on `Vec3::cross`, which the triangle mak
    }
 
    impl Plane {
-       /// A plane through `point` with `normal` scaled to unit length.
+       /// Return a plane through `point` with `normal` scaled to unit length.
        pub fn new(point: Vec3, normal: Vec3) -> Self {
            Plane {
                point,
@@ -111,7 +112,7 @@ phase deletes the `#[allow(dead_code)]` on `Vec3::cross`, which the triangle mak
    gives (u, v) in `0..1` for negative as well as positive coordinates.
 
 2. `src/triangle.rs` - create the module with exactly this content (tests from the `Tests`
-   section):
+   section, in a `#[cfg(test)] mod tests` block opened with `use super::*;`):
 
    ```rust
    //! A triangle.
@@ -128,7 +129,7 @@ phase deletes the `#[allow(dead_code)]` on `Vec3::cross`, which the triangle mak
    }
 
    impl Triangle {
-       /// A triangle through the three vertices.
+       /// Return a triangle through the three vertices.
        pub fn new(a: Vec3, b: Vec3, c: Vec3) -> Self {
            Triangle { a, b, c }
        }
