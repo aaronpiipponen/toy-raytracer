@@ -2,11 +2,9 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` to detail the closing survey's remediation of C1 (see the brief in
-this round's message). Input: `benchmarks/closing-survey-2026-11-24.md` and the raw returns in
-`benchmarks/returns/`. The advancer must produce `phases/C1-survey-remediation.md` and set the status
-table to C1 `active` (that file) with Z1 `planned`, because Z1's survey is written and its acceptance
-waits for the remediation.
+Start C1's remediation implementer with `phase_subagent` and phase id `C1`. The remediation phase
+document `phases/C1-survey-remediation.md` passed the orchestrator acceptance check: five small
+fixes, no new test function, no behaviour change, standard gate.
 
 ## Current state
 
