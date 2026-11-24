@@ -15,8 +15,8 @@
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
 | A1r | Shared hit record settlement | done | minimal | - | done/A1r-shared-hit-record-settlement.md | the shared hit record design is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
-| A1r2 | Shared render settlement | active | minimal | - | phases/A1r2-shared-render-settlement.md | the shared render settlement is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
-| A1 | Diffuse and metal materials | planned | standard | A1r2 | phases/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
+| A1r2 | Shared render settlement | done | minimal | - | done/A1r2-shared-render-settlement.md | the shared render settlement is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
+| A1 | Diffuse and metal materials | active | standard | A1r2 | phases/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
 | A2 | Glass | planned | standard | A1 | - | a glass sphere refracts | gates green, rendered image shows a glass sphere |
 | A3 | Samples per pixel | planned | standard | A1 + A1r2 | - | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
 | Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
