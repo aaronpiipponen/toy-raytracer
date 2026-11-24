@@ -252,7 +252,7 @@ appears in `src/main.rs`, and no other material changes.
 - [ ] Safety commit on branch `plan-a`.
 - [ ] Revision-bound verification receipt exists (base revision plus tested head SHA, command
       results, omitted conditional gates with reasons, test-budget line); user test evidence is the
-      two-step render check above.
+      render comparison and the image inspection above.
 - [ ] On passing evidence: compress this file into `done/A2-glass.md` (frozen contract only) and flip
       the `full-plan.md` A2 row to `done`.
 
