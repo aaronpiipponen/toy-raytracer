@@ -90,7 +90,7 @@ the fixed order, so A3's detail and the merge cannot disagree about where the dr
 ## Tests at the merge
 
 - A1's deletion of `the_center_pixel_shows_the_sphere_facing_the_camera` stands.
-- `the_top_row_is_sky` stays with plan-c's signature: `render(200, 100, 16)`.
+- `the_top_row_is_sky` renders a small image, `render(40, 20, 4)`, and asserts a few pixels of its top row.
 - `tests/cli.rs` stays exactly as plan-c's C3 leaves it.
 - plan-a's `src/material.rs`, `src/sphere.rs` and `src/hittable.rs` tests are unaffected by this pair
   (the `HitRecord` shape is the other pair's settlement).
