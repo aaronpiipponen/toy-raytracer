@@ -20,7 +20,7 @@
 | A1 | Diffuse and metal materials | done | standard | A1r3 | done/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
 | A2 | Glass | done | standard | A1 | done/A2-glass.md | a glass sphere refracts | gates green, rendered image shows a glass sphere |
 | A3 | Samples per pixel | done | standard | A1 + A1r2 | done/A3-samples-per-pixel.md | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
-| Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3, R1 | phases/Z1-closing-survey.md | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
+| Z1 | Closing survey and user acceptance | done | minimal | A1 + A2 + A3, R1 | done/Z1-closing-survey-and-user-acceptance.md | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
 | R1 | Closing survey fixes | done | minimal | the accepted closing survey | done/R1-closing-survey-fixes.md | the two accepted survey defects are fixed and their gates pass | fast gate and the named test pass, survey note records the fix |
 
 ## How to implement this plan
@@ -106,52 +106,10 @@ shared design is `PLANS/shared/plan-a-A1+plan-c-C3.md`.
 
 ### Z1 - Closing survey and user acceptance
 
-**Status:** active.
-**Phase file:** `phases/Z1-closing-survey.md`.
-**Depends on:** A1, A2, A3.
-**Scope:** a read-only survey of everything this plan added or changed, then the user's acceptance of
-the rendered image.
-**Expected gate level:** minimal.
-
-**Starting state / reason:**
-- The plan is finished when requirements 1 to 6 hold in the rendered image and the user accepts the
-  result.
-- This is the plan's only closing survey. Its findings go to the user; nothing is fixed here.
-
-**Areas to survey (one read-only scout each, run in parallel):**
-- `src/material.rs` and the material trait: diffuse, metal and glass behaviour against requirements
-  1 to 4; unnecessary complexity, duplication and dead code.
-- `src/hittable.rs` and `src/sphere.rs`: the material seam on the hit record and how objects get
-  their material.
-- `src/main.rs` and `src/rng.rs`: the bounce loop, gamma, sampling loop and the scene, and that every
-  random value comes from the seeded generator.
-- Tests and docs: `docs/requirements.md` and `README.md` still accurate; test bloat against
-  REPO-RULES §3a; drift from the user's decisions.
-
-**TODOs:**
-1. Dispatch one independent read-only `ops-scout` per area above, in parallel; each reads whatever
-   context outside its area it needs, and reports out-of-scope observations with the evidence it has.
-2. Dispatch one independent read-only `ops-scout` to cross-check every finding claim by claim
-   against evidence.
-3. The orchestrator writes `benchmarks/closing-survey-<date>.md` from the saved returns: confirmed
-   findings, out-of-scope observations, unnecessary complexity, duplication, dead code, redundant
-   checks or records, test bloat, stale docs and drift from the user's decisions.
-4. Report the note to the user. Fix nothing in this phase; clear defects and drift from the user's
-   decisions go to remediation rounds, and a change needing a phase of its own or a user-owned
-   decision goes to the note's user-review list.
-5. Render the final scene and walk the user through it.
-
-**Must not:**
-- Change product code, tests or documentation in this phase.
-- Narrow the survey to a diff-only review; each scout covers the whole area the plan changed.
-- Close or archive the plan.
-
-**Verification shape:**
-- Documentation-only gate for the note: changed-file reread plus `git diff --check`.
-- Rendered-image gate on the final revision, as survey evidence and for the user's acceptance.
-
-**Exit:** the survey note exists and the user has accepted the rendered result.
-**Move-on gate:** the user accepts the survey findings and the rendered image.
+`benchmarks/closing-survey-2026-11-24.md` holds the survey of everything this plan added or
+changed, with its returns in `benchmarks/closing-survey-returns-2026-11-24.md`; the user accepted
+the findings and the final image on 2026-11-24. The two accepted defects were fixed by R1, and
+`Vec3::cross` is left to the geometry plan and the release merge.
 
 ## Carry-overs
 
