@@ -198,35 +198,42 @@ one line instead of printing a new one per row.
 
 ### Z1 - Closing survey and user acceptance
 
-**Status:** planned.
+**Status:** active.
 **Depends on:** C1 + C3.
 **Scope:** the binding closing survey of everything this plan added or changed, then the user's
-acceptance of the result.
+acceptance of the result. The orchestrator executes it: it dispatches the scouts, writes the note and
+runs the acceptance render.
 **Expected gate level:** minimal.
 
 **Starting state / reason:**
 - The plan's last phase is a read-only survey of the whole plan's work, not a fix round.
 
 **Likely areas to touch:**
-- `AGENT-INSTRUCTIONS/PLANS/plan-c/benchmarks/` - the dated survey note.
+- `AGENT-INSTRUCTIONS/PLANS/plan-c/benchmarks/` - the dated survey note the orchestrator writes.
 - Nothing else; findings are reported, not fixed.
 
 **TODOs:**
-1. The phase implementer reads the four areas the plan added or changed, one batched read per area:
-   the PNG writer, the command line and settings, the render loop and progress line, and the docs
-   this plan touched. Every finding cites `path:line` from the current tree.
-2. One independent read-only `phase-implementation-reviewer` session cross-checks every claim in the
-   note, claim by claim, with evidence.
-3. The phase implementer writes the dated note in `benchmarks/` from those returns.
-4. Render the scene, compare it with requirements 11 to 13, and put the result to the user.
+1. Dispatch one independent read-only `ops-scout` per area the plan added or changed, all four in
+   parallel: the PNG writer, the command line and settings, the render loop and progress line, and
+   the docs this plan touched. Each reads whatever context outside its area it needs, and reports an
+   out-of-scope problem with the evidence it already has instead of investigating it.
+2. Dispatch ONE independent read-only `ops-scout` to cross-check every saved finding, claim by claim,
+   with evidence. Areas get no per-area checker.
+3. The orchestrator writes the dated note in `benchmarks/` from the saved returns and the
+   cross-check. Every finding cites `path:line` from the current tree.
+4. The orchestrator renders the scene through the real command line, compares it with requirements
+   11 to 13, and presents the note, the findings and the render to the user.
 
 **Must not:**
 - Fix anything inside this phase; findings go to the user.
-- Skip the cross-check, merge areas into one read, or write the note from memory.
+- Delegate the note to a phase implementer or a reviewer, skip the cross-check, merge areas into one
+  read, or write the note from memory.
+- Tell a scout to report only on the diff.
 - Change product code, docs, the phase files or the plan's status rows.
 
 **Verification shape:**
-- The note exists with every finding backed by file:line evidence.
+- The four scout returns and the cross-check return exist; the note, written by the orchestrator,
+  backs every finding with file:line evidence.
 - The acceptance render is produced through the real command line.
 
 **Exit:** the dated survey note is written and the user has accepted the result.
