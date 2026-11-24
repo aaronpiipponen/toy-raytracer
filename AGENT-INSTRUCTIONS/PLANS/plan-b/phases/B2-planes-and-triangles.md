@@ -191,16 +191,18 @@ No legacy or defensive code is added or deleted.
 
    ```rust
    world.add(Box::new(Triangle::new(
-       Vec3::new(0.9, -0.9, -1.0),
-       Vec3::new(1.9, -0.9, -1.0),
-       Vec3::new(1.4, 0.3, -1.0),
+       Vec3::new(0.9, -0.4, -1.0),
+       Vec3::new(1.9, -0.4, -1.0),
+       Vec3::new(1.4, 0.6, -1.0),
    )));
    ```
 
    The triangle lies in the viewport plane at `z = -1`, to the right of the sphere and below the top
-   row, so it covers pixels around columns 144 to 194 and rows 35 to 94. It faces the camera with
-   normal `(0, 0, 1)`, so `ray_colour` paints it the flat colour `(0.5, 0.5, 1.0)`. The centre pixel
-   and the top-left pixel stay on the sphere and the sky.
+   row. It covers pixels around columns 144 to 194 and rows 20 to 69, all of them above the ground
+   sphere's silhouette, which starts around row 74 at these columns, so no part of it is occluded.
+   It faces the camera with normal `(0, 0, 1)`, so `ray_colour` paints it the flat colour
+   `(0.5, 0.5, 1.0)` against the sky gradient. The centre pixel and the top-left pixel stay on the
+   sphere and the sky.
 
 6. `src/vec3.rs`, `cross` (`src/vec3.rs:21-29`) - delete the comment `// For the triangle normals the
    geometry plan adds.` and the `#[allow(dead_code)]` attribute above `pub fn cross`. The two new
@@ -259,9 +261,9 @@ No legacy or defensive code is added or deleted.
   - `src/plane.rs` - `a_ray_through_the_plane_records_the_hit_and_texture_coordinates_that_wrap`: plane `Plane::new(Vec3::new(0.0, 0.0, -2.0), Vec3::new(0.0, 0.0, 1.0))`, ray `Ray::new(Vec3::new(2.25, -0.5, 0.0), Vec3::new(0.0, 0.0, -1.0))`; the hit is `Some`, `t` is about `2.0`, `front_face` is true, `normal == Vec3::new(0.0, 0.0, 1.0)`, `u` is about `0.5` and `v` is about `0.25` (the `x` position `2.25` wraps), all within `1e-9`.
   - `src/triangle.rs` - `a_ray_through_the_triangle_hits_its_front_face`: triangle `Triangle::new(Vec3::new(0.0, 0.0, -1.0), Vec3::new(1.0, 0.0, -1.0), Vec3::new(0.0, 1.0, -1.0))`, ray `Ray::new(Vec3::new(0.25, 0.25, 0.0), Vec3::new(0.0, 0.0, -1.0))`; the hit is `Some`, `t` is about `1.0`, `front_face` is true, and `normal == Vec3::new(0.0, 0.0, 1.0)`.
   - `src/triangle.rs` - `the_triangle_hit_records_barycentric_texture_coordinates`: the same triangle and ray; `u` is about `0.25` and `v` is about `0.25`, each within `1e-9`.
-- Changed: none. Deleted: none. The three existing `src/sphere.rs` tests and the two `src/main.rs` tests stay as they are.
+- Changed: none. Deleted: none. The four existing `src/sphere.rs` tests, the `src/rng.rs` test and the two `src/main.rs` tests stay as they are.
 - Fast gate: `cargo test` (10 tests), `cargo build`, `cargo clippy -- -D warnings`, `cargo fmt --check`, `git diff --check`.
-- Conditional gates: the rendered-image gate is required because the scene changes. Render `cargo run --release > /tmp/opencode/plan-b-b2.ppm`, convert it to PNG with the snippet below, open the PNG with the image reader, and confirm a flat light-blue triangle with straight edges on the right of the image, distinct from the sky gradient and the green ground. The image is expected to differ from the B1 render, so no `cmp` comparison applies. Agent-generation gate: none, `AGENT-INSTRUCTIONS/SUBAGENTS/**` and model assignment are untouched.
+- Conditional gates: the rendered-image gate is required because the scene changes. Render `cargo run --release > /tmp/opencode/plan-b-b2.ppm`, convert it to PNG with the snippet below, open the PNG with the image reader, and confirm a flat light-blue triangle with straight edges on the right of the image, wholly against the sky, clear of the sphere, the ground and the image edges. The image is expected to differ from the B1 render, so no `cmp` comparison applies. Agent-generation gate: none, `AGENT-INSTRUCTIONS/SUBAGENTS/**` and model assignment are untouched.
 - Slow gate (>2 minutes): none.
 - Conversion snippet for the rendered PPM (a scratch file under `/tmp/opencode`, never committed):
 
@@ -282,7 +284,7 @@ No legacy or defensive code is added or deleted.
 
 **User test (acceptance):**
 - **Executor:** agent.
-- Render at the default 200 by 100 size and inspect the image as described in the rendered-image gate: a flat light-blue triangle with straight edges sits on the right of the image, over the sky and the green ground, and the centred sphere keeps its shaded normal colours. The triangle replaces sky and ground pixels along its two straight slanted edges and its horizontal base, and nothing else in the image changes.
+- Render at the default 200 by 100 size and inspect the image as described in the rendered-image gate: a flat light-blue triangle with straight edges and a horizontal base sits on the right of the image, wholly in the sky above the green ground, and the centred sphere keeps its shaded normal colours. The triangle replaces sky pixels along its two slanted edges and its base, and nothing else in the image changes.
 
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied.
