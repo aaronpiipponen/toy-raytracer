@@ -56,7 +56,7 @@ fn reflect(v: Vec3, n: Vec3) -> Vec3 {
     v - n * (2.0 * v.dot(n))
 }
 
-/// A random direction on the unit sphere, drawn from `rng` by rejection sampling.
+/// Return a random direction on the unit sphere, drawn from `rng` by rejection sampling.
 fn random_unit_vector(rng: &mut Rng) -> Vec3 {
     loop {
         let p = Vec3::new(
