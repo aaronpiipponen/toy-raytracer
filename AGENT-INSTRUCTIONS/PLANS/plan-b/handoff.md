@@ -2,20 +2,24 @@
 
 ## Next action
 
-Executing the closing survey Z1 (the orchestrator runs it): six read-only `ops-scout` area returns in
-parallel are saved to `survey-returns-2026-11-24.md`, then one fresh cross-checker, then the note at
-`benchmarks/2026-11-24-closing-survey.md`, then the acceptance render, then the user's acceptance.
+Waiting on the user's acceptance of the Z1 closing survey note
+(`AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/2026-11-24-closing-survey.md`) and the rendered scene
+(`/tmp/opencode/z1-accept.ppm`). On acceptance, record the decision in the note's **User decision**
+section and spawn a fresh `phase-advancer` to compress Z1 and close the plan. If the user names a
+defect, add it to the note's **For the user** list and decide on a remediation round without fixing it
+inside Z1.
 
 ## Current state
 
-- B1r, B2r, B2, B3 done; HEAD `c25007c`; survey base `e180476`; seven changed files match the phase
-  document exactly.
-- `docs-pass.md` holds the release item for the repository map; the user approved deferring it and
-  forbade editing `project.md` or running `/workflow-reload` now.
-- Z1 writes only plan records; nothing is fixed in it; its move-on gate is the user's acceptance of
-  the note and the rendered scene.
-- Autonomous mode: small, easily undoable, behaviour-neutral choices only. Product decisions and the
-  acceptance itself are the user's.
+- Plan implementation complete at `c25007c`: B1r, B2r, B2 and B3 done; all 13 tests, build, clippy,
+  fmt clean; rendered image unchanged since B2 and byte-identical across B3 and Z1.
+- Z1 survey done: six area returns saved, one independent cross-check done, dated note written; no
+  finding was fixed.
+- `docs-pass.md` holds the repository-map release item; the user forbade editing `project.md` or
+  running `/workflow-reload` from this worktree.
+- After user acceptance the release follows: it merges plan-a (materials) and plan-c (output) with
+  this branch, resolves the settled conflicts, lands the deferred documentation item, and closes the
+  plan.
 
 ## Learned rules
 
