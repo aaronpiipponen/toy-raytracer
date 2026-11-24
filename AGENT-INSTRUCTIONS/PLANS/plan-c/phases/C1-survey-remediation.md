@@ -316,10 +316,11 @@ showing the sphere over the blue-to-white sky and the green ground plane (`file`
       tested head.
 - [ ] On passing evidence: compress this file into `done/C1-survey-remediation.md` (frozen contract
       only; the `phases/` file stays as written, as the earlier phases' detailed files do), set the C1
-      row in `full-plan.md` back to `done` with phase file `done/C1-survey-remediation.md`, set the C1
-      scoped `**Status:**` line back to `done` naming that file, set the Z1 row back to `active` with
-      phase file `phases/Z1-closing-survey.md`, and set the Z1 scoped `**Status:**` line back to
-      `active`.
+      row in `full-plan.md` back to `done` with phase file `done/C1-survey-remediation.md`, replace the
+      C1 scoped `**Status:**` line with `**Status:** done.`, set the Z1 table row's Status from
+      `planned` to `active` with phase file `phases/Z1-closing-survey.md`, and replace the Z1 scoped
+      `**Status:**` line with `**Status:** active.` (drop its "waits for the C1 remediation"
+      parenthetical, which the completed remediation makes false).
 
 **Exit:** the two checksum helpers are proven independently by published known answers, the PNG test
 proves empty standard output, the rejected-input test proves status 2, the decoder no longer pins the
