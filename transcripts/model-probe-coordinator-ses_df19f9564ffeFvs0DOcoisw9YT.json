@@ -1,0 +1,85 @@
+{
+  "info": {
+    "id": "ses_df19f9564ffeFvs0DOcoisw9YT",
+    "projectID": "b95c041c0418ea0b6ba9efc911ff073721aa6a05",
+    "agent": "coordinator",
+    "cost": 0.000661362,
+    "tokens": {
+      "input": 4227,
+      "output": 2,
+      "reasoning": 0,
+      "cache": {
+        "read": 8704,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1795537529519,
+      "updated": 1795537537557,
+      "busy": 1795537536109,
+      "idle": 1795537537563
+    },
+    "title": "Model probe coordinator",
+    "location": {
+      "directory": "/home/opc/projects/toy-raytracer-runs/run004"
+    }
+  },
+  "messages": [
+    {
+      "id": "msg_20e608469001EVEC2A70yHfZNL",
+      "time": {
+        "created": 1795537536121
+      },
+      "text": "Reply with exactly OK",
+      "type": "user"
+    },
+    {
+      "id": "msg_20e608481001QaB1TYoHBUFLEw",
+      "time": {
+        "created": 1795537536142,
+        "firstToken": 1795537537542,
+        "streamed": 1795537537549,
+        "completed": 1795537537557
+      },
+      "type": "assistant",
+      "agent": "coordinator",
+      "model": {
+        "id": "deepseek/deepseek-v4.1-flash",
+        "providerID": "commandcode",
+        "variant": "low"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "OK"
+        }
+      ],
+      "snapshot": {
+        "start": "98a67a1dd53c9e4333571d9d9ead10229adb597a",
+        "end": "98a67a1dd53c9e4333571d9d9ead10229adb597a",
+        "files": []
+      },
+      "finish": "stop",
+      "rawFinish": "stop",
+      "cost": 0.000661362,
+      "tokens": {
+        "input": 4227,
+        "output": 2,
+        "reasoning": 0,
+        "cache": {
+          "read": 8704,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_20e608a1b001yqBrWToaQPYR8H",
+      "time": {
+        "created": 1795537537563
+      },
+      "type": "idle",
+      "outcome": "succeeded"
+    }
+  ]
+}
