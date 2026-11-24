@@ -2,19 +2,18 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` for A1r3 with the implementer's
-receipt, then start the A1 implementer once A1 is the active row.
+Start the A1 implementer (`phase_subagent` with phase id A1). On its receipt, spawn a fresh
+`phase-advancer` in `REVIEW AND ADVANCE` for A1.
 
 ## Current state
 
-A1r3's implementer returned a documentation-only receipt at `3e1c8ab` (workspace-root
-round commit; the plan-a worktree has no product commit and no product code moved) after
-the user stopped its shell-check loop with a narrow follow-up; its reviewer pass was
-skipped for that reason, so the advancer's own re-read and compression are the check.
-A1r3 fixed four slips in the phase text only. A1 is planned behind A1r3 with its detail
-current at `e180476`; its header still says `Status: active / Depends on: A1r` while the
-table is authoritative. All three shared designs are settled and their pairs closed.
-Autonomous mode covers routine loop choices only; every product decision goes to the user.
+A1r3 is done and compressed; A1 is the sole active row with its existing detail at
+`e180476`, header now depending on A1r3, and the advancer's spec audit fixed two items: the
+"no comment mentions a plan" gate now scopes to comments A1 writes (the `Vec3::cross`
+comment belongs to the geometry plan's branch), and the metal acceptance wording says
+blurred reflection and no large black patches. All three shared designs are settled and
+their pairs closed; no coordinator hold is active. Autonomous mode covers routine loop
+choices only; every product decision goes to the user.
 
 ## Learned rules
 
