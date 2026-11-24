@@ -208,8 +208,8 @@ No legacy or defensive code is added or deleted.
    modules call `cross`, so the allow is no longer needed and the comment names a plan. Change
    nothing else in the file.
 
-7. `src/plane.rs` and `src/triangle.rs`, tests - add exactly the three test functions named under
-   `Tests`, each in its own module's `#[cfg(test)] mod tests`, in the style of `src/sphere.rs`.
+7. `src/plane.rs` and `src/triangle.rs`, tests - add exactly the two test functions named under
+   `Tests`, one in each module's `#[cfg(test)] mod tests`, in the style of `src/sphere.rs`.
 
 8. `docs/` - no page changes. `docs/requirements.md` items 8 and 9 already state planes, triangles
    and their texture coordinates, and no page states that the scene holds only spheres. `README.md`
@@ -237,7 +237,7 @@ No legacy or defensive code is added or deleted.
 **Touched files:**
 <!-- touched-files:start -->
 - `src/plane.rs` - created: `Plane` with a point and a unit normal, its `Hittable` hit, in-plane (u, v) modulo 1, and one test
-- `src/triangle.rs` - created: `Triangle` with three vertices, Möller-Trumbore hit, barycentric (u, v), and two tests
+- `src/triangle.rs` - created: `Triangle` with three vertices, Möller-Trumbore hit, barycentric (u, v), and one test
 - `src/main.rs` - changed: declares the plane and triangle modules, imports `Triangle`, adds the scene triangle, drops the plan comment above `mod rng`
 - `src/vec3.rs` - changed: `cross` loses its `#[allow(dead_code)]` and its plan comment
 - `AGENT-INSTRUCTIONS/LOCAL/project.md` - changed: the repository map lists `plane.rs` and `triangle.rs`
