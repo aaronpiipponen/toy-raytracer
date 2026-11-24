@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 664" role="img"
+     aria-labelledby="t d" font-family="system-ui, sans-serif">
+  <title id="t">Ray to pixel pipeline</title>
+  <desc id="d">A camera ray for one sample is tested against the scene list, then scatters through a material for up to 50 bounces or takes the sky gradient. Both results reach the sample average, gamma 2 and the image bytes.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#a3a4b8"/>
+    </marker>
+  </defs>
+  <rect width="960" height="664" rx="12" fill="#232434"/>
+
+  <rect x="64" y="48" width="360" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="244" y="74" text-anchor="middle" font-size="16" fill="#ececf2">Camera ray</text>
+  <text x="244" y="96" text-anchor="middle" font-size="14" fill="#a3a4b8">one sample</text>
+
+  <rect x="64" y="152" width="360" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="244" y="178" text-anchor="middle" font-size="16" fill="#ececf2">Scene list test</text>
+  <text x="244" y="200" text-anchor="middle" font-size="14" fill="#a3a4b8">nearest hit</text>
+
+  <rect x="64" y="256" width="360" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="244" y="282" text-anchor="middle" font-size="16" fill="#ececf2">Material scatter</text>
+  <text x="244" y="304" text-anchor="middle" font-size="14" fill="#a3a4b8">scatters or absorbs, up to 50 bounces</text>
+
+  <rect x="616" y="256" width="280" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="756" y="282" text-anchor="middle" font-size="16" fill="#ececf2">Sky gradient</text>
+  <text x="756" y="304" text-anchor="middle" font-size="14" fill="#a3a4b8">white to light blue</text>
+
+  <rect x="64" y="360" width="360" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="244" y="386" text-anchor="middle" font-size="16" fill="#ececf2">Sample average</text>
+  <text x="244" y="408" text-anchor="middle" font-size="14" fill="#a3a4b8">samples per pixel</text>
+
+  <rect x="64" y="464" width="360" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="244" y="490" text-anchor="middle" font-size="16" fill="#ececf2">Gamma 2</text>
+  <text x="244" y="512" text-anchor="middle" font-size="14" fill="#a3a4b8">channel to byte</text>
+
+  <rect x="64" y="568" width="360" height="64" rx="8"
+        fill="#2e3045" stroke="#4a4c6b" stroke-width="1.5"/>
+  <text x="244" y="594" text-anchor="middle" font-size="16" fill="#ececf2">Image bytes</text>
+  <text x="244" y="616" text-anchor="middle" font-size="14" fill="#a3a4b8">PNG or PPM</text>
+
+  <path d="M244 112 L244 152" fill="none" stroke="#a3a4b8" stroke-width="1.5"
+        marker-end="url(#arrow)"/>
+  <path d="M244 216 L244 256" fill="none" stroke="#a3a4b8" stroke-width="1.5"
+        marker-end="url(#arrow)"/>
+  <path d="M364 216 L364 236 L756 236 L756 256" fill="none" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M244 320 L244 360" fill="none" stroke="#a3a4b8" stroke-width="1.5"
+        marker-end="url(#arrow)"/>
+  <path d="M756 320 L756 340 L324 340 L324 360" fill="none" stroke="#a3a4b8"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M244 424 L244 464" fill="none" stroke="#a3a4b8" stroke-width="1.5"
+        marker-end="url(#arrow)"/>
+  <path d="M244 528 L244 568" fill="none" stroke="#a3a4b8" stroke-width="1.5"
+        marker-end="url(#arrow)"/>
+
+  <text x="254" y="240" font-size="14" fill="#a3a4b8">hit</text>
+  <text x="380" y="226" font-size="14" fill="#a3a4b8">miss</text>
+</svg>
