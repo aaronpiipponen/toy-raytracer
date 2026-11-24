@@ -106,7 +106,9 @@ or duplicate scatter path is added.
      `scatter`), `use rng::Rng;`, and `use std::rc::Rc;`.
    - constants: keep `WIDTH`/`HEIGHT`; add `const SEED: u64 = 7;` and
      `const MAX_BOUNCES: usize = 50;`.
-   - `ray_colour` becomes
+   - `ray_colour`'s doc comment `/// The colour seen along a ray: the surface normal where it hits, the sky gradient otherwise.`
+     becomes `/// The colour a ray sees: its scattered path attenuated by each material, the sky gradient when it misses.`
+     Then `ray_colour` becomes
      `fn ray_colour(ray: &Ray, world: &dyn Hittable, rng: &mut Rng) -> Colour`: start
      `let mut ray = *ray; let mut colour = Vec3::new(1.0, 1.0, 1.0);`, then `for _ in 0..MAX_BOUNCES`:
      on a hit (`world.hit(&ray, 0.001, f64::INFINITY)`), `match hit.material.scatter(&ray, &hit, rng)` -
