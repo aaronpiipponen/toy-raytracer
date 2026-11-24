@@ -68,6 +68,8 @@ fn writes_a_png_whose_pixels_match_the_ppm_render() {
         "4",
         "--samples",
         "1",
+        "--format",
+        "ppm",
         "--output",
         ppm_name,
     ]);
