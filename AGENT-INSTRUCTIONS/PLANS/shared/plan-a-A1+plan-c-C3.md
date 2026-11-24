@@ -16,12 +16,11 @@ fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
     let mut pixels = Vec::with_capacity(width * height);
     for row in (0..height).rev() {
         for column in 0..width {
-            let u = column as f64 / (width - 1) as f64; // A3 jitters these later
-            let v = row as f64 / (height - 1) as f64;
-            let ray = camera.ray(u, v);
             let mut colour = Colour::new(0.0, 0.0, 0.0);
             for _ in 0..samples {
-                colour = colour + ray_colour(&ray, &world, &mut rng);
+                let u = column as f64 / (width - 1) as f64; // A3 draws the jitter here
+                let v = row as f64 / (height - 1) as f64;
+                colour = colour + ray_colour(&camera.ray(u, v), &world, &mut rng);
             }
             pixels.push(colour / samples as f64);
         }
