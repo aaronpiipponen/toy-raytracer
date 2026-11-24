@@ -21,7 +21,7 @@
 | A2 | Glass | done | standard | A1 | done/A2-glass.md | a glass sphere refracts | gates green, rendered image shows a glass sphere |
 | A3 | Samples per pixel | done | standard | A1 + A1r2 | done/A3-samples-per-pixel.md | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
 | Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3, R1 | phases/Z1-closing-survey.md | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
-| R1 | Closing survey fixes | active | minimal | the accepted closing survey | phases/R1-closing-survey-fixes.md | the two accepted survey defects are fixed and their gates pass | fast gate and the named test pass, survey note records the fix |
+| R1 | Closing survey fixes | done | minimal | the accepted closing survey | done/R1-closing-survey-fixes.md | the two accepted survey defects are fixed and their gates pass | fast gate and the named test pass, survey note records the fix |
 
 ## How to implement this plan
 
