@@ -18,8 +18,8 @@
 | B1 | Face side and texture coordinates | not applicable | standard | - | - | scope absorbed by B1r | - |
 | B2r | Shared scene settlement | done | minimal | - | `done/B2r-shared-scene-settlement.md` | the shared scene design is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
 | B2 | Planes and triangles | done | standard | B1r + B2r | `done/B2-planes-and-triangles.md` | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
-| B3 | Bounding boxes | active | standard | B2 | `phases/B3-bounding-boxes.md` | the scene list skips objects whose box the ray misses | gates green, same image as before |
-| Z1 | Closing survey and user acceptance | planned | minimal | B1r + B2 + B3 | - | the user accepts the result | the user accepts |
+| B3 | Bounding boxes | done | standard | B2 | `done/B3-bounding-boxes.md` | the scene list skips objects whose box the ray misses | gates green, same image as before |
+| Z1 | Closing survey and user acceptance | active | minimal | B1r + B2 + B3 | `phases/Z1-closing-survey-and-user-acceptance.md` | the user accepts the result | the user accepts |
 
 ## How to implement this plan
 
@@ -75,6 +75,9 @@ The binding closing survey of everything the plan added or changed: one read-onl
 area in parallel, then one independent `ops-scout` cross-checking every finding against the code, and
 the orchestrator writes the dated note in `benchmarks/`. Findings go to the user; none are fixed in
 this phase. Also render the scene, compare it with the requirements, and ask the user to accept.
+
+The orchestrator executes this phase: it dispatches the scouts, writes the note and runs the
+acceptance render. `phases/Z1-closing-survey-and-user-acceptance.md` names the areas.
 
 ## Carry-overs
 
