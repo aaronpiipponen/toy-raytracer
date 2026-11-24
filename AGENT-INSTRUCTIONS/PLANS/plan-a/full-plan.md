@@ -62,7 +62,7 @@ The face-side shape shared with the geometry plan is settled in `PLANS/shared/pl
 
 ### A3 - Samples per pixel
 
-**Status:** active.
+**Status:** done. The frozen contract is `done/A3-samples-per-pixel.md`.
 
 `render` takes a sample count; each pixel averages that many rays jittered inside the pixel, sharing
 one seeded generator. The default is 16. This is the seam the output plan's command line uses for
@@ -70,7 +70,7 @@ one seeded generator. The default is 16. This is the seam the output plan's comm
 
 ### Z1 - Closing survey and user acceptance
 
-**Status:** planned.
+**Status:** active. The detailed phase is `phases/Z1-closing-survey.md`.
 **Depends on:** A1, A2, A3.
 **Scope:** a read-only survey of everything this plan added or changed, then the user's acceptance of
 the rendered image.
