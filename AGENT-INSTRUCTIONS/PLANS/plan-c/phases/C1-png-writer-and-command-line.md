@@ -134,8 +134,8 @@ format or extension is one clear error on standard error plus a non-zero exit. T
    - `--width` and `--height` parse as `usize` and must be at least 2. The render loop maps pixel
      centres with `width - 1` and `height - 1`, so smaller values are bad values. `--samples`
      parses as `usize` and must be at least 1; a pixel averages `samples` rays.
-   - `--output` takes any non-empty argument as a `PathBuf`. Nothing is validated about the path
-     here; an unwritable path fails loudly in `run`.
+   - `--output` takes the next argument as a `PathBuf`, including an empty string. Nothing is
+     validated about the path here; an unwritable path fails loudly in `run`.
    - `--format` accepts exactly `png` or `ppm`. Anything else is `Err`.
    - A repeated option replaces the earlier value; the last value wins.
    - After the loop, resolve the format with the fallback rule and return the `Settings`.
@@ -192,17 +192,22 @@ format or extension is one clear error on standard error plus a non-zero exit. T
 12. `AGENT-INSTRUCTIONS/LOCAL/gates.md` - this is a workspace source under a held edit. Load the
     `agent-instructions` skill before editing it, keep the change content-only (no shared rule, no
     new gate row), and make no other edit in that file. Replace line 39, the stale fallback
-    sentence, with the PPM form of the same check:
+    sentence, with this paragraph:
+
     ```text
     The same scene written as PPM, with the extension selecting the format:
+    ```
+
+    followed by this command block:
 
     ```bash
     cargo run --release -- --width 80 --height 40 --samples 4 --output /tmp/opencode/render.ppm
     ```
-    ```
     Report in the verification receipt that `AGENT-INSTRUCTIONS/LOCAL/gates.md` changed, so the
     orchestrator asks the user whether to run `/workflow-reload` in the session that made the edit.
-    Do not run the reload unasked.
+    Do not run the reload unasked. `AGENT-INSTRUCTIONS/` is the shared workspace link and is not part
+    of this worktree's repository: edit the file through the link and never stage or commit it with
+    Git from the worktree.
 
 13. `docs/requirements.md` - unchanged. Items 11 and 12 already describe this behaviour, and the
     precedence rule makes no stated requirement false.
@@ -276,8 +281,10 @@ format or extension is one clear error on standard error plus a non-zero exit. T
   `0` and has `3 * width` colour bytes. This decoder supports exactly this writer's output and is a
   test helper, not product code.
 - New: `tests/cli.rs` - `rejects_an_unknown_option_and_an_unparsable_value_with_a_non_zero_exit`:
-  run `--nonsense`, `--width wide` and `--samples 0` with an `--output` path in a scratch directory.
-  Each run exits non-zero, writes something to standard error, and creates no output file.
+  run the binary three times, each with `--output <dir>/rejected.png`: once as
+  `--nonsense --output <dir>/rejected.png`, once as `--width wide --output <dir>/rejected.png`, and
+  once as `--samples 0 --output <dir>/rejected.png`. Each run exits non-zero, writes something to
+  standard error, and creates no `rejected.png`.
 - New: `tests/cli.rs` - `selects_the_format_from_the_output_extension_and_lets_an_explicit_format_win`:
   `--output a.png` writes bytes starting with the PNG signature; `--output a.ppm` writes text
   starting with `P3`; `--format ppm --output b.png` writes text starting with `P3`; `--output a.jpg`
@@ -318,8 +325,8 @@ format or extension is one clear error on standard error plus a non-zero exit. T
       requested size, and `--format ppm` and a `.ppm` output still write P3 text.
 - [ ] `--width`, `--height`, `--samples`, `--output` and `--format` all take effect, and an explicit
       `--format` wins over the extension.
-- [ ] An unknown option, an unparsable or out-of-range value, an unrecognised format and a
-      recognised-output-extensionless path each print the usage line and exit non-zero.
+- [ ] An unknown option, an unparsable or out-of-range value, an unrecognised format and a path
+      whose extension is neither `png` nor `ppm` each print the usage line and exit non-zero.
 - [ ] `render` averages `samples` identical rays with no jitter, and `Cargo.toml` still has no
       dependency.
 - [ ] Named tests pass, including the three in `tests/cli.rs` and the two adapted tests in
