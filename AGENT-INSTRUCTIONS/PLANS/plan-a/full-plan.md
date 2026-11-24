@@ -14,8 +14,8 @@
 
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
-| A1r | Shared hit record settlement | active | minimal | - | phases/A1r-shared-hit-record-settlement.md | the shared hit record design is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
-| A1 | Diffuse and metal materials | planned | standard | A1r | phases/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
+| A1r | Shared hit record settlement | done | minimal | - | done/A1r-shared-hit-record-settlement.md | the shared hit record design is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
+| A1 | Diffuse and metal materials | active | standard | A1r | phases/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
 | A2 | Glass | planned | standard | A1 | - | a glass sphere refracts | gates green, rendered image shows a glass sphere |
 | A3 | Samples per pixel | planned | standard | A1 | - | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
 | Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
@@ -131,7 +131,9 @@ the rendered image.
 - The release merge resolves the two plans' hit records into the shared shape in
   `PLANS/shared/plan-a-A1+plan-b-B1.md`: one `HitRecord::new` construction path, a normal that faces
   the ray, `front_face`, `u`, `v` and `material`, deriving `Clone` only. A2's local face-side
-  derivation becomes `hit.front_face`, and A1's material-test records go through the constructor.
+  derivation becomes `hit.front_face`, A1's material-test records go through the constructor, and the
+  record's doc comment then names the normal facing the ray rather than A1's branch wording "outward
+  normal".
 - At that merge the geometry plan's ground plane and triangle are both matte: the ground takes the
   mid-grey the current ground sphere uses, and the triangle a distinct dull green. That is the user's
   settled choice; no other scene change.

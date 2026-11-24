@@ -1,7 +1,8 @@
 ## Phase A1 - Diffuse and metal materials
 
 **Status:** active.
-**Depends on:** none (starting tree at `e180476`).
+**Depends on:** A1r (the shared hit record settlement; it changes no code) and the starting tree at
+`e180476`.
 **Scope:** add `src/material.rs` with the `Material` trait, `Lambertian` and `Metal`; carry the hit
 object's material on `HitRecord`; give `Sphere` a material and put it on its records; make the render
 loop in `src/main.rs` follow scattered rays up to 50 bounces and apply gamma 2 when writing bytes; give
