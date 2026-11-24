@@ -47,7 +47,8 @@ outward normal. `Sphere` fills (u, v) from latitude and longitude. The normal-co
 
 `src/plane.rs` (a point and a normal; (u, v) from the hit position along two in-plane axes, modulo
 1) and `src/triangle.rs` (three vertices, Möller-Trumbore; (u, v) barycentric). The scene adds a
-triangle.
+triangle. Both new shapes are matte after the materials merge: the ground plane takes the mid-grey
+the current ground sphere uses and the triangle a distinct dull green.
 
 ### B3 - Bounding boxes
 

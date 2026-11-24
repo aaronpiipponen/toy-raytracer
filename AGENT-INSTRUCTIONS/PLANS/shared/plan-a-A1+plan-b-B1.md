@@ -95,6 +95,5 @@ Requirement 1 says every object has a material, but plan-b's branch has no mater
 B3 add planes and triangles. The release gives each new shape a material field and passes
 `Rc::clone(&self.material)` as the constructor's last argument, and names a scene material for it.
 
-Pending user decision: which material and colour the ground plane and the triangle get. Settled
-before B2 is detailed; it does not block B1's resolution and changes nothing in A1's or B1's
-resolution scope.
+At the merge the ground plane and the triangle are both matte: the ground takes the mid-grey the
+current ground sphere uses, and the triangle a distinct dull green so it reads clearly.

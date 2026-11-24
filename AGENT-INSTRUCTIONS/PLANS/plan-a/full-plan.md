@@ -32,9 +32,11 @@ Commit whenever useful. Run the fast gate in `AGENT-INSTRUCTIONS/LOCAL/gates.md`
 - The hit record carries the material of the object that was hit, so the render loop can scatter
   without knowing the object.
 - All randomness uses `src/rng.rs` with a fixed seed.
-- Glass tells entering from leaving from the outward normal already on the hit record and the ray's
-  direction; it adds no face flag of its own. The shared shape with the geometry plan's face-side
-  change is settled through the coordinator before A2 is detailed.
+- Glass decides entering from leaving from `front_face` on the merged hit record and works with the
+  normal that faces the ray. Until the release merge, plan-a's branch derives the face side locally
+  from the outward normal and the ray direction by the same rule, and the merge replaces that with
+  `front_face`. Glass adds no face flag and no second face contract. The shared shape is
+  `PLANS/shared/plan-a-A1+plan-b-B1.md`.
 
 ## Starting state
 
@@ -55,10 +57,10 @@ diffuse material, the ground a diffuse material, and adds a metal sphere.
 ### A2 - Glass
 
 A `Dielectric` material with a refractive index: Snell's law, total internal reflection, Schlick's
-approximation. It tells entering from leaving from the outward normal on the hit record and the
-ray's direction, and works with the normal in the glass's frame. The scene gains a glass sphere.
-The face-side shape shared with the geometry plan is settled with that plan through the coordinator
-before this phase is detailed.
+approximation. Entering from leaving comes from the face side: on this branch it derives
+`front_face = ray_in.direction.dot(hit.normal) < 0.0` from the outward normal on the hit record and
+uses the normal flipped to face the ray; the release merge replaces that with `front_face` on the
+merged record. The scene gains a glass sphere.
 
 ### A3 - Samples per pixel
 
@@ -116,6 +118,10 @@ the rendered image.
 
 ## Carry-overs
 
-- A2 reads the outward normal the hit record carries today. The geometry plan's face-side change
-  replaces that normal with one that always faces the ray; the shape both plans share is settled
-  through the coordinator before A2 is detailed, and A2 must keep working under it.
+- The release merge resolves the two plans' hit records into the shared shape in
+  `PLANS/shared/plan-a-A1+plan-b-B1.md`: one `HitRecord::new` construction path, a normal that faces
+  the ray, `front_face`, `u`, `v` and `material`, deriving `Clone` only. A2's local face-side
+  derivation becomes `hit.front_face`, and A1's material-test records go through the constructor.
+- At that merge the geometry plan's ground plane and triangle are both matte: the ground takes the
+  mid-grey the current ground sphere uses, and the triangle a distinct dull green. That is the user's
+  settled choice; no other scene change.

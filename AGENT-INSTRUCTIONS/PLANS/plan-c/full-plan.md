@@ -36,8 +36,8 @@ the same change that makes `render.png` the default.
    gate whenever the render loop or the output format changes.
 6. Fail loudly: a bad option, a bad value or an unwritable output path reports and exits non-zero;
    no silent fallback format or path.
-7. Update the README and `gates.md` in the phase that makes their usage lines wrong. A genuine
-   deferral to the release goes in `docs-pass.md`.
+7. Update the README in the phase that makes its usage line wrong. A genuine deferral to the release
+   goes in `docs-pass.md`.
 
 ## Binding design rules
 
@@ -61,8 +61,10 @@ the same change that makes `render.png` the default.
    no environment-dependent output.
 7. Single-threaded, no `unsafe`, one concept per module, shared types in the module that defines the
    concept. Every module starts with a `//!` line.
-8. Docs follow the change: the README run example and the rendered-image fallback line in
-   `AGENT-INSTRUCTIONS/LOCAL/gates.md` are updated by the phase that makes them wrong.
+8. Docs follow the change: the README run example is updated by the phase that makes it wrong. The
+   rendered-image fallback sentence in `AGENT-INSTRUCTIONS/LOCAL/gates.md` stays until the release,
+   because that file is shared by every worktree and the sentence is still true where this plan's
+   command line has not landed; its removal is recorded in `docs-pass.md`.
 
 ## Starting state
 
