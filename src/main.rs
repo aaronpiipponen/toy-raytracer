@@ -76,17 +76,23 @@ fn scene() -> HittableList {
     world
 }
 
-/// Every pixel's colour, row by row from the top.
-fn render(width: usize, height: usize) -> Vec<Colour> {
+/// Return every pixel's colour, row by row from the top, averaging `samples` jittered rays per
+/// pixel. One seeded generator supplies the jitter and every bounce, so a fixed size and sample
+/// count give the same image.
+fn render(width: usize, height: usize, samples: usize) -> Vec<Colour> {
     let world = scene();
     let camera = Camera::new(width as f64 / height as f64);
     let mut rng = Rng::new(SEED);
     let mut pixels = Vec::with_capacity(width * height);
     for row in (0..height).rev() {
         for column in 0..width {
-            let u = column as f64 / (width - 1) as f64;
-            let v = row as f64 / (height - 1) as f64;
-            pixels.push(ray_colour(&camera.ray(u, v), &world, &mut rng));
+            let mut colour = Colour::new(0.0, 0.0, 0.0);
+            for _ in 0..samples {
+                let u = (column as f64 + rng.next_f64() - 0.5) / (width - 1) as f64;
+                let v = (row as f64 + rng.next_f64() - 0.5) / (height - 1) as f64;
+                colour = colour + ray_colour(&camera.ray(u, v), &world, &mut rng);
+            }
+            pixels.push(colour / samples as f64);
         }
     }
     pixels
@@ -117,7 +123,7 @@ fn write_ppm(
 }
 
 fn main() -> io::Result<()> {
-    let pixels = render(WIDTH, HEIGHT);
+    let pixels = render(WIDTH, HEIGHT, 16);
     write_ppm(&mut io::stdout().lock(), WIDTH, HEIGHT, &pixels)
 }
 
@@ -127,7 +133,17 @@ mod tests {
 
     #[test]
     fn the_top_row_is_sky() {
-        let pixels = render(WIDTH, HEIGHT);
+        let pixels = render(WIDTH, HEIGHT, 16);
         assert!(pixels[0].z > pixels[0].x, "the sky is bluer than it is red");
+    }
+
+    #[test]
+    fn the_same_settings_render_the_same_pixels() {
+        assert_eq!(render(40, 20, 4), render(40, 20, 4));
+    }
+
+    #[test]
+    fn the_sample_count_changes_the_pixel_colours() {
+        assert_ne!(render(40, 20, 1), render(40, 20, 4));
     }
 }
