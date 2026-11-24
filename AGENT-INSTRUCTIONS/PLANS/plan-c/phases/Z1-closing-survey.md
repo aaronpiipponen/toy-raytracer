@@ -1,6 +1,6 @@
 ## Phase Z1 - Closing survey and user acceptance
 
-**Status:** active.
+**Status:** planned.
 **Depends on:** C1 and C3, whose frozen contracts are in `done/C1-png-writer-and-command-line.md`
 and `done/C3-progress-line.md`.
 **Scope:** the binding closing survey of every area this plan added or changed, a dated note in the

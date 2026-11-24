@@ -91,33 +91,45 @@ being patched here.
    the progress pair placement, the single sentence, the absence of the three constants and the
    presence of `DEFAULT_SAMPLES` and the `parse_args` rejection. Record the result. Make no edit:
    the branch holds the unjittered loop and the sentence without "jittered" until the merge.
-6. Run the acceptance render once on the current head and record the evidence:
+6. Build the release binary and run the acceptance render once on the current head, then record the
+   evidence:
 
    ```bash
+   ~/.cargo/bin/cargo build --release
    target/release/toy-raytracer --width 400 --height 200 --samples 16 \
      --output /tmp/opencode/resolution.png \
      > /tmp/opencode/resolution.stdout 2> /tmp/opencode/resolution.stderr
    ```
 
-   The command was checked at `a0c585b` while this phase was detailed, so opening the existing
+   The build produces the binary this step runs and is not the fast gate, which stays unrun. The
+   command was checked at `a0c585b` while this phase was detailed, so opening the existing
    `/tmp/opencode/resolution.png` and rereading the two captures is enough at the same revision.
    Expected result: exit status 0, the PNG is 400 by 200, 8-bit RGB, non-interlaced, and opens
    showing the sphere over the blue-to-white sky and the green ground plane. Standard output is
    0 bytes. Standard error is 783 bytes of percentages separated by `\r`, ending `100%` plus one
    newline. If the file or captures are absent, run the command once.
-7. Documentation-only gate: reread this phase file and run `git diff --check`. Do not run the fast
-   gate. No code changes, so the passing evidence at `a0c585b` stands and is not reproduced.
+7. Documentation-only gate: reread this phase file and the `full-plan.md` edits, and run
+   `git diff --check` at the workspace root `/home/opc/projects/toy-raytracer-runs/run004`, where
+   the plan files are tracked and the worktree's own `AGENT-INSTRUCTIONS/` link is not a separate
+   tree. A created file is untracked until the workflow plugin commits the round, so the reread is
+   its check, and the command must print nothing for the tracked edits. Do not run the fast gate.
+   No code changes, so the passing evidence at `a0c585b` stands and is not reproduced.
 8. On passing evidence, compress this file into `done/Z1r-shared-render-seam.md` as the frozen
    resolution contract: the design path, the facts plan-c's branch holds, the release merge split,
    the merged test module, the no-constant rule and the acceptance-render evidence. Then set the
-   status table exactly: the Z1r row becomes `done` with `done/Z1r-shared-render-seam.md` as its
-   phase file, and the Z1 row becomes `active` with `phases/Z1-closing-survey.md` as its phase
-   file. Leave the C1, C2 and C3 rows unchanged. The closing survey note
-   `benchmarks/closing-survey-2026-11-24.md` and the user's acceptance of it are recorded evidence
-   and are not reopened. With Z1 back to `active`, its survey and acceptance evidence is complete,
-   so the advancer re-details Z1 fresh from `phases/Z1-closing-survey.md` before any further
-   implementer and compresses it on that evidence. The plan is not closed or archived here, because
-   closure needs explicit user authorization.
+   status bookkeeping exactly:
+   - In the status table, the Z1r row becomes `done` with `done/Z1r-shared-render-seam.md` as its
+     phase file, and the Z1 row becomes `active` with `phases/Z1-closing-survey.md` as its phase
+     file. The C1, C2 and C3 rows do not change.
+   - In the scoped phases section of `full-plan.md`, the Z1r section's `**Status:**` line becomes
+     `done` and the Z1 section's line becomes `active`.
+   - In `phases/Z1-closing-survey.md`, the `**Status:**` line becomes `active`, matching its
+     returned row and phase file.
+   The closing survey note `benchmarks/closing-survey-2026-11-24.md` is unchanged, and the user's
+   acceptance of it is given. This phase restates neither and records no new acceptance claim. With
+   Z1 back to `active`, the advancer re-details Z1 fresh from `phases/Z1-closing-survey.md` before
+   any further implementer, on the settled acceptance. The plan is not closed or archived here,
+   because closure needs explicit user authorization.
 
 **Callers / wiring to update:**
 - None. The phase changes no code, test, configuration, README or `docs/` file.
@@ -136,6 +148,8 @@ being patched here.
   phase, and the frozen contract source when compressed.
 - `AGENT-INSTRUCTIONS/PLANS/plan-c/full-plan.md` - changed: the Z1r and Z1 status rows and the two
   scoped phase status lines.
+- `AGENT-INSTRUCTIONS/PLANS/plan-c/phases/Z1-closing-survey.md` - changed: the `**Status:**` line,
+  `planned` while Z1 is held and `active` when the row returns to it.
 - `AGENT-INSTRUCTIONS/PLANS/plan-c/done/Z1r-shared-render-seam.md` - created on passing evidence:
   the frozen resolution contract.
 - Adds: nothing. `/tmp/opencode/resolution.png`, `/tmp/opencode/resolution.stdout` and
@@ -171,9 +185,9 @@ being patched here.
 
 **User test (acceptance):**
 - **Executor:** not required.
-- Not required - the user has accepted the closing survey note and its rendered result, and this
-  phase records the settlement plus an agent-run render with no user-owned judgment. The acceptance
-  render is observed directly in step 6.
+- Not required - the user's acceptance of the closing survey note and its rendered result is given,
+  and this phase records the settlement plus an agent-run render with no user-owned judgment. The
+  acceptance render is observed directly in step 6, and no new acceptance claim is recorded.
 
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a (minimal) are satisfied.
@@ -189,10 +203,17 @@ being patched here.
 - [ ] No product code, test, configuration, README, `docs/` file or file outside
   `AGENT-INSTRUCTIONS/PLANS/plan-c/` changed.
 - [ ] Test budget respected (REPO-RULES §3a); the record states 0 added, 0 deleted and 0 changed.
-- [ ] The closing survey note and the user's acceptance are untouched.
-- [ ] On passing evidence: compress this file into `done/Z1r-shared-render-seam.md`, set the Z1r row
-  to `done` with that path, and set the Z1 row to `active` with
-  `phases/Z1-closing-survey.md`. C1, C2 and C3 stay as they are.
+- [ ] Revision-bound evidence is recorded: the head is `a0c585b` and no code or test moved, so the
+  fast-gate evidence at that revision stands, and the documentation gate plus the acceptance-render
+  observation are this phase's evidence. No test receipt is produced for a phase with no code or
+  test change.
+- [ ] The closing survey note and the user's acceptance are untouched, and no new acceptance claim
+  is recorded.
+- [ ] On passing evidence: compress this file into `done/Z1r-shared-render-seam.md`, set the Z1r
+  status table row to `done` with that path, set the Z1 row to `active` with
+  `phases/Z1-closing-survey.md`, set the Z1r scoped status line to `done`, set the Z1 scoped status
+  line to `active`, and set the `**Status:**` line in `phases/Z1-closing-survey.md` to `active`.
+  C1, C2 and C3 stay as they are.
 - [ ] The plan is not closed or archived.
 
 **Exit:** the shared design is recorded as plan-c's resolution contract, plan-c's landed `render`
