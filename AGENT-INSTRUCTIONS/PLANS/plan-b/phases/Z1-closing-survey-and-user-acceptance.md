@@ -167,8 +167,10 @@ after this phase, and archive follows the user's explicit authorization.
 6. Report the note and the render to the user with the note's findings, the rejected claims and the
    user-review list, pointing at `/tmp/opencode/plan-b-acceptance.png`. Fix nothing in this phase.
    Clear defects and drift from the design rules go to a remediation round after the survey, and the
-   plan is neither closed nor archived here. Remove the scratch files under `/tmp/opencode/` once the
-   user answers.
+   plan is neither closed nor archived here. When the survey confirms a clear defect, Z1 stays active
+   and the advancer opens the remediation phase that fixes it, then Z1 runs again for the user's
+   acceptance. Remove `/tmp/opencode/plan-b-acceptance.ppm`, `/tmp/opencode/plan-b-acceptance.png`
+   and `/tmp/opencode/ppm2png.py` once the user answers.
 
 **Callers / wiring to update:**
 - None. The phase changes no code, test, configuration or published document.
@@ -177,16 +179,20 @@ after this phase, and archive follows the user's explicit authorization.
 - No configuration key, schema or migration.
 - Retained record and its consumer: the dated survey note in
   `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/` is the record this phase exists to produce. Its
-  consumers are the user's acceptance decision, the release and any later remediation round. It is
-  the only copy and lives in the plan folder. The acceptance PNG and PPM are transient evidence under
+  consumers are the user's acceptance decision, the release and any later remediation round. The
+  unchanged area returns in `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/returns/` are the scout output
+  the note draws on, kept beside it for those same consumers. The note is the only copy of the
+  findings and lives in the plan folder. The acceptance PNG and PPM are transient evidence under
   `/tmp/opencode/` and are removed once the user answers the acceptance step.
 
 **Touched files:**
 <!-- touched-files:start -->
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/closing-survey-<date>.md` - created: the dated
   closing survey note, named with the day the survey runs.
-- `AGENT-INSTRUCTIONS/PLANS/plan-b/phases/Z1-closing-survey-and-user-acceptance.md` - changed: this
-  phase file, only when compressing it after acceptance.
+- `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/returns/area-<number>-<subject>.md` - created: the
+  unchanged return of each area scout, one file per area.
+- `AGENT-INSTRUCTIONS/PLANS/plan-b/phases/Z1-closing-survey-and-user-acceptance.md` - deleted on
+  acceptance: compressed into `done/Z1-closing-survey-and-user-acceptance.md`.
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/done/Z1-closing-survey-and-user-acceptance.md` - created on
   acceptance: the frozen survey outcome and the user's acceptance, with the note path.
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/full-plan.md` - changed: the Z1 status row and its phase file
@@ -216,7 +222,9 @@ after this phase, and archive follows the user's explicit authorization.
   bloat in the note, but it changes nothing.
 - Fast gate: not applicable. No code or test changes, so the B3 receipt's passing evidence at
   `f85a183` stands and is not rerun.
-- Documentation-only gate for the note: reread the note and run `git diff --check`.
+- Documentation-only gate for the note: reread the changed note and the saved returns. The plan folder
+  sits in the shared `AGENT-INSTRUCTIONS/` tree outside the worktree repository, so `git diff --check`
+  does not cover them.
 - Conditional gates: rendered image, required by step 4 as survey evidence and for the user's
   acceptance. Agent generation: not affected.
 - Slow gate (>2 minutes): none. The 200 by 100 render finishes well under a minute.
@@ -228,9 +236,7 @@ after this phase, and archive follows the user's explicit authorization.
   confirmed findings, the rejected claims, the out-of-scope observations and the user-review list.
 - 2. Open `/tmp/opencode/plan-b-acceptance.png` from step 4. It shows the sphere with shaded normal
   colours, the flat light-blue triangle on the right in the sky, and the green ground at 200 by 100.
-- 3. Run `cargo run --release > /tmp/opencode/plan-b-acceptance.ppm` in the worktree and confirm the
-  render completes and the converted image matches the one in step 2.
-- 4. Answer with acceptance of the note and the render, or with the findings and observations that
+- 3. Answer with acceptance of the note and the render, or with the findings and observations that
   must be handled before acceptance.
 - Expected result: the user accepts the survey note and the rendered image, or names the items that
   block acceptance.
@@ -248,16 +254,17 @@ after this phase, and archive follows the user's explicit authorization.
       scene: the triangle in the sky, the sphere with shaded normal colours and the green ground.
 - [ ] `docs/requirements.md` items 7 to 10, `README.md` and the repository map in
       `AGENT-INSTRUCTIONS/LOCAL/project.md` still describe the behaviour.
-- [ ] Test budget respected (REPO-RULES §3a); the receipt reports 0 added, 0 deleted and 0 changed.
-- [ ] No product code, test, configuration or permanent document changed in this phase, and
-      `git diff --check` is clean.
+- [ ] Test budget respected (REPO-RULES §3a); the phase adds, deletes and changes no test function.
+- [ ] No product code, test, configuration or permanent document changed in this phase:
+      `git status --porcelain` in the worktree lists no path under `src/`, `Cargo.toml`, `README.md`
+      or `docs/`. The plan-folder note and returns are outside the worktree repository.
 - [ ] The note and the render were reported to the user, and the user's answer is recorded on
       acceptance.
 - [ ] The plan is not closed or archived in this phase.
-- [ ] On the user's acceptance: compress this file into
+- [ ] On the user's acceptance and with no confirmed clear defect open: compress this file into
       `done/Z1-closing-survey-and-user-acceptance.md` (the survey outcome, the note path and the
       user's acceptance) and flip the `full-plan.md` status row to `done`.
 
 **Exit:** the dated survey note exists with every finding backed by evidence, the acceptance render
-was inspected, and the user accepted the survey and the rendered result. The plan is then ready for
-the release.
+was inspected, and the user accepted the survey and the rendered result. After any confirmed clear
+defect is fixed in a remediation round, the plan is ready for the release.
