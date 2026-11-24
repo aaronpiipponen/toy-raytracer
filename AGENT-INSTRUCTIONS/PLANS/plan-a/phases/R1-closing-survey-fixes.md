@@ -10,9 +10,9 @@ its top row, and correct the one line of `AGENT-INSTRUCTIONS/PLANS/shared/plan-a
 that freezes the old call. Nothing else changes.
 **Gate level:** minimal. One doc comment, one code comment and one test's size and assertions. No
 renderer behavior changes, and the rendered bytes must be identical before and after, which the
-phase proves directly. The `minimal` requirements plus the phase-specific byte comparison of the
-whole rendered image are the verification. The test-scope edit keeps the equal-behavior guarantee
-of the fast gate.
+phase proves directly. This unit runs the fast phase gate, which is the `standard` verification
+strength, and a byte comparison of the whole rendered image, so the evidence exceeds the `minimal`
+bar. The test-scope edit keeps the equal-behavior guarantee of the fast gate.
 **Simplicity statement:** the phase corrects wording and one test's size, nothing more. It does not
 touch `Vec3::cross` or its comment in `src/vec3.rs` (the geometry plan's plane phase and the
 release merge resolve it), does not action any rejected survey claim (the `refract` `.abs()`
@@ -35,8 +35,8 @@ case and creates no second code path.
 - `src/main.rs:134-138` - `#[test] fn the_top_row_is_sky()` calls `render(WIDTH, HEIGHT, 16)` with
   `WIDTH = 200` and `HEIGHT = 100` (`src/main.rs:22-23`) and asserts only
   `pixels[0].z > pixels[0].x`. It renders 320,000 samples and proves one pixel.
-- `src/main.rs:140-148` - the two neighbouring tests render `render(40, 20, 4)`,
-  `render(40, 20, 4)` and `render(40, 20, 1)`.
+- `src/main.rs:140-148` - the two neighbouring tests render `render(40, 20, 4)` twice,
+  `render(40, 20, 1)` and `render(40, 20, 4)`, four calls in all.
 - `src/main.rs:87-98` - `render` pushes pixels row-major starting at `row = height - 1`, so the top
   row is `pixels[0..width]`. Every top-row ray misses the scene (`src/main.rs:54-77`) and returns
   `sky_colour`, which is a blend of `(1, 1, 1)` and `(0.5, 0.7, 1.0)` with weight
@@ -69,16 +69,21 @@ case and creates no second code path.
 **Build plan:**
 1. `src/hittable.rs`, the `HitRecord` doc comment - replace the two lines with a comment that
    states what `t` is and what the other fields are, for example:
-   `/// Where a ray hit a surface: the point `origin + direction * t`, the outward normal and the`
-   `/// material of the object. `t` is the ray parameter, which is the distance along the ray when`
-   `/// the direction has unit length.`
-   Keep the field order covered by the words in the same order the struct lists them if that reads
-   better, keep it to three comment lines or fewer, and make no other change to the struct. Fix any
-   wording in the finished comment that the style guide's self-check rejects.
-2. `src/main.rs`, `ray_colour` line 33 - add one comment line directly above the `world.hit` call
-   that states the `0.001` lower bound in ray-parameter units and the effect it has, for example:
-   `// The lower bound of 0.001 in ray-parameter units keeps a scattered ray from re-hitting the`
-   `// surface it left.`
+   ```rust
+   /// Where a ray hit a surface: the point `origin + direction * t`, the outward normal and the
+   /// material of the object. `t` is the ray parameter, which is the distance along the ray when
+   /// the direction has unit length.
+   ```
+   Keep it to three comment lines or fewer, cover the fields the struct lists, and make no other
+   change to the struct. Fix any wording in the finished comment that the style guide's self-check
+   rejects.
+2. `src/main.rs`, `ray_colour` line 33 - add a comment directly above the `world.hit` call that
+   states the `0.001` lower bound in ray-parameter units and the effect it has, wrapped to the
+   formatter's line width. Two `//` lines are expected, for example:
+   ```rust
+   // The 0.001 lower bound is in ray-parameter units. It keeps a scattered ray from
+   // hitting the surface it left.
+   ```
    Do not change the expression, the call or any other line in `ray_colour`.
 3. `src/main.rs`, `the_top_row_is_sky` - `render(40, 20, 4)` replaces `render(WIDTH, HEIGHT, 16)`,
    and the single `pixels[0]` assertion becomes an assertion over a few top-row pixels with
@@ -97,9 +102,10 @@ case and creates no second code path.
    `the_top_row_is_sky`, keep the assertion message's meaning, add no helper and no second test,
    and leave the two neighbouring tests unchanged.
 4. `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-c-C3.md`, line 93 only - replace the bullet
-   with a line stating the corrected test scope, for example:
-   `- `the_top_row_is_sky` renders a small image, `render(40, 20, 4)`, and asserts a few pixels of`
-   `  its top row.`
+   with one line stating the corrected test scope, for example:
+   ```markdown
+   - `the_top_row_is_sky` renders a small image, `render(40, 20, 4)`, and asserts a few pixels of its top row.
+   ```
    Edit no other line in the file, and do not reopen the pair or change the `A3` and plan-c
    sections.
 5. No `docs/` page, `README.md` or `AGENT-INSTRUCTIONS/LOCAL/project.md` change: the renderer's
@@ -123,8 +129,9 @@ case and creates no second code path.
 - `src/main.rs` - changed: one comment on the `0.001` lower bound; `the_top_row_is_sky` renders `render(40, 20, 4)` and asserts a few top-row pixels.
 - `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-c-C3.md` - changed: one line in "Tests at the merge" records the corrected test scope.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/phases/R1-closing-survey-fixes.md` - created: this phase document.
-- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - changed: the `R1` row is added and `Z1` depends on it.
-- Adds: nothing.
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - changed: the `R1` status row flips to `done` when this phase completes.
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/done/R1-closing-survey-fixes.md` - created on completion: the frozen contract, including the corrected `the_top_row_is_sky` call.
+- Adds: nothing (no migration, generated file or configuration key).
 <!-- touched-files:end -->
 
 **Rules / MUST NOT:**
@@ -199,6 +206,8 @@ case and creates no second code path.
   contract only, including the corrected `the_top_row_is_sky` call) and flip the `full-plan.md`
   status row to `done`, which leaves `Z1` as the next phase.
 
-**Exit:** the two accepted survey defects are fixed, the shared render note records the corrected
-sky-test call, and the fast gate plus the byte comparison pass.
-**Move-on gate:** the fast gate and the named test pass, and the survey note records the fix.
+**Exit:** the two accepted survey defects are fixed, the shared render note carries the corrected
+sky-test call, the fast gate and the byte comparison pass, and `done/R1-closing-survey-fixes.md`
+records the fix.
+**Move-on gate:** the fast gate and the named test pass, and the completed unit's frozen contract
+records the fix.
