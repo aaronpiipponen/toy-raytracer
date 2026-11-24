@@ -27,6 +27,7 @@
 - `docs/requirements.md` items 5 and 6 - the per-pixel sample average, default 16, gamma 2, and the seeded generator.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/done/A1-diffuse-and-metal-materials.md` - the frozen render and generator contract.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/done/A2-glass.md` - the frozen material and scene contract, including the glass sphere the rendered image must still show.
+- `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-b-Z1.md` - the geometry union's release contract recorded below; read-only context, because A3 changes no file for the union.
 
 **Build plan:**
 1. `src/main.rs:23` - add `const SAMPLES: usize = 16;` directly below `const HEIGHT: usize = 100;`. On branch `plan-a` the constant is this branch's local default, and its only use is the `main` call `render(WIDTH, HEIGHT, SAMPLES)`. The merged code has no `SAMPLES`, and the release takes plan-c's `DEFAULT_SAMPLES = 16`.
@@ -52,6 +53,17 @@
 - The merged `render` is the shared design's function: plan-a's scene, camera, generator, `ray_colour` and jitter with plan-c's progress write and doc sentence. The merged code has no `SAMPLES`, `WIDTH` or `HEIGHT` constant. `DEFAULT_SAMPLES = 16` is the single default, `run` passes `settings.samples`, and `parse_args` rejects a count below 1.
 - The merged test module holds `the_top_row_is_sky`, `two_renders_with_the_same_options_give_the_same_pixels` and `the_sample_count_changes_the_pixels`. Plan-c's `the_center_pixel_shows_the_sphere_facing_the_camera` does not survive, because A1 replaced normal colouring with materials.
 - Neither branch adds a second `render` path, a second sample default, a second generator or a second progress write.
+
+**Release merge dependency - the geometry union (plan-b; `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-b-Z1.md`):**
+A3 implements no part of this union: it records the agreed contract so the release merge has one target. A3's own sampling scope, build steps, tests and gates are unchanged, and A3 changes no product code for the union.
+
+- `src/hittable.rs` - the merged `HitRecord` is not `Copy` and holds `t`, `point`, the ray-facing `normal`, `front_face`, `u`, `v` and `material: Rc<dyn Material>`. `point` carries no `#[allow(dead_code)]`; `u` and `v` keep it. The merged `HitRecord::new(ray: &Ray, t: f64, point: Vec3, outward_normal: Vec3, u: f64, v: f64, material: Rc<dyn Material>) -> Self` is the only constructor, the seven-argument form.
+- `Hittable` declares `hit(...)` plus the default `fn bounding_box(&self) -> Option<Aabb> { None }`. `Sphere` and `Triangle` override it; `Plane` and `HittableList` take the default.
+- The merged `HittableList::hit` combines plan-a's borrowed nearest record with plan-b's box skip between the limit and the object test: `let limit = nearest.as_ref().map_or(t_max, |hit| hit.t);`, then skip with `continue` when `object.bounding_box()` is `Some(bounds)` and `!bounds.hit(ray, t_min, limit)`, then test `object.hit(ray, t_min, limit)` and keep the record. One loop, one limit, no second culling path.
+- `Sphere { center, radius, material }` keeps plan-a's material and gains plan-b's `bounding_box` (center minus radius to center plus radius) and its exact `(u, v)` formula. `Plane` and `Triangle` gain a `material` field and pass it to the seven-argument constructor. `src/aabb.rs` stays plan-b's landed file, unchanged.
+- `src/main.rs` takes plan-a's material render and scene plus plan-b's one triangle at the exact landed vertices `(0.6, 0.15, -1.0)`, `(1.95, 0.15, -1.0)` and `(1.275, 0.92, -1.0)`. The placement is not moved or "improved" at the merge.
+- Test reconciliation, one test per behaviour: drop plan-b's `the_center_pixel_shows_the_sphere_facing_the_camera`, whose normal-colour premise disappears when material scattering replaces normal colouring; no replacement test is added, and the release's own rendered-image gate proves the fixed scene still shows the sphere. Drop plan-b's `the_near_surface_has_texture_coordinates_from_latitude_and_longitude`, which duplicates the `(u, v)` assertions plan-a's `a_ray_through_the_center_hits_the_near_surface` already makes. `the_top_row_is_sky` stays, and plan-b's shape and box tests pass a material after the merge.
+- Open user-owned decision: the scene triangle's material changes the finished image, so the release asks the user (recommendation: a Lambertian in the scene spheres' family). A3 records it and does not decide it.
 
 **Callers / wiring to update:**
 - `src/main.rs:119` (`main`) - pass `SAMPLES` as the third argument on branch `plan-a`.
