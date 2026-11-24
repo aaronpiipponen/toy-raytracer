@@ -185,10 +185,12 @@ reseed or per-sample gamma. The phase adds no adaptive sampling, no sample-count
      inside that worktree, convert and open it the same way, then `git worktree remove
      /tmp/opencode/a2-image`. The A2 image has hard stair steps along the sphere edges. The A3
      image shows intermediate tones along those edges.
-  6. Small render with few samples: after the safety commit, change only the `main` call to
-     `render(80, 40, 4)`, run `cargo run --release > /tmp/opencode/render-a3-small.ppm`, convert
-     and open it, confirm it shows the same scene with the same smoother edges, then restore the
-     line with `git checkout -- src/main.rs` and confirm `git status --short` is empty.
+  6. Small render with few samples, after the safety commit: temporarily set
+     `const WIDTH: usize = 80;` and `const HEIGHT: usize = 40;` and change the `main` call to
+     `render(WIDTH, HEIGHT, 4)`. `write_ppm` already receives `WIDTH` and `HEIGHT`, so the PPM
+     header matches the buffer. Run `cargo run --release > /tmp/opencode/render-a3-small.ppm`,
+     convert and open it, confirm it shows the same scene with the same smoother edges, then
+     restore the file with `git checkout -- src/main.rs` and confirm `git status --short` is empty.
   7. Remove the scratch files in `/tmp/opencode` this gate created and confirm the `/tmp/opencode`
      PPM and PNG paths above are gone.
 - Slow gate: none. The release renders are small and finish well under two minutes.
