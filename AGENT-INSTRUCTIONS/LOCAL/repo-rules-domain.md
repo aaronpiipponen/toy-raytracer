@@ -1,8 +1,9 @@
 ## 1. What this repo is
 
 A small raytracer in Rust 2021 with no dependencies beyond the standard library. It renders one
-fixed scene to an image file. `src/main.rs` holds the scene, the render loop, the output and the
-command line; each other module in `src/` holds one concept. There is no experiment directory.
+fixed scene to an image file. `src/main.rs` holds the scene, the render loop, the command line and
+the choice between output formats, and `src/png.rs` writes the PNG image; each other module in
+`src/` holds one concept. There is no experiment directory.
 
 ---
 

@@ -36,8 +36,6 @@ Rendered-image gate: render a small image and check it opens and looks right.
 cargo run --release -- --width 80 --height 40 --samples 4 --output /tmp/opencode/render.png
 ```
 
-Until the command-line phase lands, `cargo run --release > /tmp/opencode/render.ppm` instead.
-
 Agent-generation gate:
 
 ```bash
