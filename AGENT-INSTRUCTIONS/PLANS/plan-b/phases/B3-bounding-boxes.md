@@ -31,8 +31,8 @@ or test is deleted.
 - `src/main.rs:28-34` - `ray_colour` reads `hit.normal` and needs no edit.
 - `src/main.rs:36-49` - `scene()` adds the centre sphere, the ground plane and the triangle; this phase does not change it.
 - `src/main.rs` has no unit test that builds a `HittableList` by hand; the two render tests at
-  `src/main.rs:95-112` pin the centre pixel and the top row.
-- `docs/requirements.md:27-29` - item 10 states the box behavior; nothing becomes wrong when this
+  `src/main.rs:94-109` pin the centre pixel and the top row.
+- `docs/requirements.md:29-30` - item 10 states the box behavior; nothing becomes wrong when this
   phase makes it true.
 - `Cargo.toml` has no dependency. Cargo and its tools are not on `PATH`; call `~/.cargo/bin/cargo`.
 
@@ -74,7 +74,7 @@ or test is deleted.
            }
        }
 
-       /// Whether the ray meets the box with a `t` in `t_min..t_max`.
+       /// Report whether the ray meets the box with a `t` in `t_min..t_max`.
        pub fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> bool {
            let mut t_min = t_min;
            let mut t_max = t_max;
@@ -111,7 +111,7 @@ or test is deleted.
 2. `src/hittable.rs`, `Hittable` trait - add a second required method after `hit`:
 
    ```rust
-   /// The axis-aligned box that holds every point of the object, or `None` when it has none.
+   /// Return the axis-aligned box that holds every point of the object, or `None` when it has none.
    fn bounding_box(&self) -> Option<Aabb>;
    ```
 
@@ -139,20 +139,20 @@ or test is deleted.
        nearest
    }
 
-   /// A scene list has no box of its own. Each object reports its own.
+   /// Return none. The scene list is always tested as a whole, and each object reports its own box.
    fn bounding_box(&self) -> Option<Aabb> {
        None
    }
    ```
 
    The box is tested over the full `t_min..t_max` and the object is still tested with the running
-   `limit`, so skipping a box the ray misses cannot change the chosen record. A list reports no box
-   because it can hold an unbounded plane and nothing nests a list as an object.
+   `limit`, so skipping a box the ray misses cannot change the chosen record. The scene list reports
+   no box because it can hold an unbounded plane and nothing nests a list as an object.
 
 4. `src/sphere.rs` - add `use crate::aabb::Aabb;` and, inside `impl Hittable for Sphere`, after `hit`:
 
    ```rust
-   /// The box that holds the whole sphere.
+   /// Return the box that holds the whole sphere.
    fn bounding_box(&self) -> Option<Aabb> {
        let radius = Vec3::new(self.radius, self.radius, self.radius);
        Some(Aabb::new(self.center - radius, self.center + radius))
@@ -162,7 +162,7 @@ or test is deleted.
 5. `src/plane.rs` - add `use crate::aabb::Aabb;` and, inside `impl Hittable for Plane`, after `hit`:
 
    ```rust
-   /// A plane has no box, so it is always tested.
+   /// Return none: an infinite plane has no bounding box.
    fn bounding_box(&self) -> Option<Aabb> {
        None
    }
@@ -171,7 +171,7 @@ or test is deleted.
 6. `src/triangle.rs` - add `use crate::aabb::Aabb;` and, inside `impl Hittable for Triangle`, after `hit`:
 
    ```rust
-   /// The box that holds the three vertices.
+   /// Return the box that holds the three vertices.
    fn bounding_box(&self) -> Option<Aabb> {
        let min = Vec3::new(
            self.a.x.min(self.b.x).min(self.c.x),

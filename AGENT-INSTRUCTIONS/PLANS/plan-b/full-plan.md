@@ -17,8 +17,8 @@
 | B1r | Shared hit record shape | done | standard | - | `done/B1r-shared-hit-record-shape.md` | the branch matches the shared hit record design | gates green |
 | B1 | Face side and texture coordinates | not applicable | standard | - | - | scope absorbed by B1r | - |
 | B2r | Shared scene settlement | done | minimal | - | `done/B2r-shared-scene-settlement.md` | the shared scene design is recorded for this branch and the merge | plan documents re-read, `git diff --check` clean, no product code moved |
-| B2 | Planes and triangles | active | standard | B1r + B2r | `phases/B2-planes-and-triangles.md` | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
-| B3 | Bounding boxes | planned | standard | B2 | - | the scene list skips objects whose box the ray misses | gates green, same image as before |
+| B2 | Planes and triangles | done | standard | B1r + B2r | `done/B2-planes-and-triangles.md` | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
+| B3 | Bounding boxes | active | standard | B2 | `phases/B3-bounding-boxes.md` | the scene list skips objects whose box the ray misses | gates green, same image as before |
 | Z1 | Closing survey and user acceptance | planned | minimal | B1r + B2 + B3 | - | the user accepts the result | the user accepts |
 
 ## How to implement this plan
