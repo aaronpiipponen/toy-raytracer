@@ -5,19 +5,17 @@
   unnecessary once the output plan's command line is merged into the integration branch; delete it
   then. If the gate is to show both formats, keep a real PPM line beside the PNG line, for example
   `cargo run --release -- --format ppm --output /tmp/opencode/render.ppm`; the fallback sentence is
-  not such a line. Deferred 2026-11-24: the file is shared by every worktree, and the sentence is
-  still true in worktrees whose binary has no command line yet.
+  not such a line. The integration tree takes the command line now, so the sentence is false there.
   Owner: plan-a's release.
 - `AGENT-INSTRUCTIONS/LOCAL/project.md` (repository map) - the `src/` map does not list `src/png.rs`
   and describes `main.rs` as holding the output. Once the output plan is merged, add `png.rs` (the
   PNG writer) and describe `main.rs` as the scene, render loop, command line and output selection.
-  Deferred 2026-11-24: the file is shared by every worktree, and `src/png.rs` does not exist there
-  until the merge.
+  The PNG writer is in the integration tree now.
   Owner: plan-a's release.
 - `AGENT-INSTRUCTIONS/LOCAL/project.md` (repository map) - the map lists `src/material.rs`, which
   exists only on this branch. Once this branch merges, check that the line names the material module
-  the integration tree holds. Handed over by plan-b's release merge, which could not make the line
-  true from its own worktree.
+  the integration tree holds. Handed over by plan-b's closure, which could not make the line true
+  from its own worktree.
   Owner: plan-a's release.
 - `AGENT-INSTRUCTIONS/LOCAL/repo-rules-domain.md` (What this repo is) - it says `src/main.rs` holds
   "the output" and each other module one concept. Once the output plan is merged, name the PNG
@@ -28,9 +26,8 @@
 ## Release-merge carry-over (not documentation)
 
 - `src/main.rs` (the scene triangle's material) - the merged product gives the triangle a material.
-  Handed over by plan-b's release merge, which holds no material on its branch. The user's answer: a
+  Handed over by plan-b's closure, which holds no material on its branch. The user's answer: a
   `Lambertian` with albedo `(0.7, 0.3, 0.3)`, the front sphere's red, so the triangle reads as part of
   the scene. Apply it at the triangle's exact vertices `(0.6, 0.15, -1.0)`, `(1.95, 0.15, -1.0)` and
   `(1.275, 0.92, -1.0)`, with no placement change.
   Owner: plan-a's release.
-
