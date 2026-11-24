@@ -132,18 +132,18 @@ Steps:
    - a user decision section, empty until the user accepts.
    Write no finding that lacks evidence, no history rundown and no plan-close-out claim.
 6. Render the final scene once at the default settings and show the image to the user:
-   `~/.cargo/bin/cargo run --release > /tmp/opencode/z1-accept.ppm`. Create
-   `/tmp/opencode/z1_ppm_to_png.py`, a scratch standard-library Python script outside the repository
-   that reads the P3 file named by its first argument and writes an 8-bit RGB PNG to its second, then
-   run `python3 /tmp/opencode/z1_ppm_to_png.py /tmp/opencode/z1-accept.ppm
-   /tmp/opencode/z1-accept.png`. Open `/tmp/opencode/z1-accept.png` with the image reader and check
-   it against requirements 1 to 6 before showing it. Record the command, exit status, image
-   dimensions and what the image shows in the note's acceptance section. Do not run the render twice
-   and do not redo A3's byte comparison: A3's receipt holds two byte-identical release PPMs at
-   `46a5c02`.
-7. Report the note and `/tmp/opencode/z1-accept.png` to the user, present each finding, and ask for
-   acceptance of the survey findings and the image. Fix nothing. On acceptance, record the date and
-   the accepted findings in the note's user decision section, then compress this phase into
+   `~/.cargo/bin/cargo run --release > /tmp/opencode/plan-a-z1-accept.ppm`. Create
+   `/tmp/opencode/plan-a-z1_ppm_to_png.py`, a scratch standard-library Python script outside the
+   repository that reads the P3 file named by its first argument and writes an 8-bit RGB PNG to its
+   second, then run `python3 /tmp/opencode/plan-a-z1_ppm_to_png.py
+   /tmp/opencode/plan-a-z1-accept.ppm /tmp/opencode/plan-a-z1-accept.png`. Open
+   `/tmp/opencode/plan-a-z1-accept.png` with the image reader and check it against requirements 1 to
+   6 before showing it. Record the command, exit status, image dimensions and what the image shows in
+   the note's acceptance section. Do not run the render twice and do not redo A3's byte comparison:
+   A3's receipt holds two byte-identical release PPMs at `46a5c02`.
+7. Report the note and `/tmp/opencode/plan-a-z1-accept.png` to the user, present each finding, and ask
+   for acceptance of the survey findings and the image. Fix nothing. On acceptance, record the date
+   and the accepted findings in the note's user decision section, then compress this phase into
    `done/Z1-closing-survey-and-user-acceptance.md` and flip the `full-plan.md` row to `done`. Do not
    archive the plan and do not open remediation work; the release owns closure.
 
@@ -196,10 +196,10 @@ Steps:
   judgment no automated check replaces.
 - 1. Open `benchmarks/closing-survey-<date>.md` and read every confirmed finding, the cross-check
   outcome, the remediation candidates and the user-review list.
-- 2. Open `/tmp/opencode/z1-accept.png` at 200 by 100 pixels. Confirm requirements 1 to 6:
-  the red-brown matte centre sphere and the light matte ground, the grey metal sphere with its
-  blurred reflection, the glass sphere showing a refracted image of the scene, and edges smoothed by
-  the 16 jittered samples.
+- 2. Open `/tmp/opencode/plan-a-z1-accept.png` at 200 by 100 pixels. Confirm requirements 1 to 6: a
+  matte centre sphere and matte ground, a metal sphere with a blurred reflection, a glass sphere
+  through which the scene refracts, colours produced by scattering rather than by a surface normal,
+  and pixel edges smoothed by the 16 jittered samples.
 - 3. Accept the survey findings and the image, or name each finding and each image defect to record.
   The plan is not closed here.
 
@@ -215,9 +215,9 @@ Steps:
   per-area checker, implementer or other child wrote the note.
 - [ ] Every changed file and requirements 1 to 6 sit in at least one area, as the cross-check
   confirms.
-- [ ] Every finding is tagged with its category and each of unnecessary complexity, duplication,
-  dead code, redundant checks or records, test bloat against REPO-RULES §3a, stale docs and drift
-  from the user's decisions is either named or recorded as `none`.
+- [ ] Every finding has its category in the Categories section, and each of unnecessary complexity,
+  duplication, dead code, redundant checks or records, test bloat against REPO-RULES §3a, stale docs
+  and drift from the user's decisions is either named there or recorded as `none`.
 - [ ] The final scene was rendered once at the default settings, the image was opened and inspected
   against requirements 1 to 6, and it was shown to the user.
 - [ ] No product code, test, `docs/` page, `README.md`, `Cargo.toml` or configuration changed.
