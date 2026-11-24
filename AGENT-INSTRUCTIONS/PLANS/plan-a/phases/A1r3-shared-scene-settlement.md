@@ -9,7 +9,8 @@ the release merge's obligations on plan-a's side. Documentation only.
 **Gate level:** minimal - the phase records one settlement in plan documents. It changes no product
 code, test, `docs/` page, configuration or dependency.
 **Simplicity statement:** this phase records one scene composition and the merge points it touches.
-It does not reopen the hit-record settlement of A1r and B1r or the render settlement of A1r2 and C3r,
+It does not reopen the hit-record settlement of A1r and B1r or the render settlement of A1r2 and
+plan-c's C3r,
 does not add a shape, material, test or `docs/` page, and does not implement the geometry plan's
 branch work. It names only the composition points the merge changes: the ground object, the
 material argument on the two new shapes, the four scene materials and the scene list's record
@@ -29,6 +30,8 @@ handling and box test.
   `HitRecord` shape, the one constructor, the material field and the test-record obligation.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/done/A1r2-shared-render-settlement.md` - the merged render
   signature, the single generator, the nesting, gamma and the progress ownership.
+- `AGENT-INSTRUCTIONS/PLANS/plan-c/done/C3r-shared-render-settlement.md` - the output plan's half of
+  the same render settlement, so this phase can point at the contract it must not reopen.
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/full-plan.md` and
   `AGENT-INSTRUCTIONS/PLANS/plan-b/phases/B2-planes-and-triangles.md` - B2's branch shape: `Plane`
   and `Triangle` with no material, the six-argument `HitRecord::new`, the ground plane at `y = -0.5`
@@ -50,6 +53,8 @@ handling and box test.
   material field the merge relies on.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/done/A1r2-shared-render-settlement.md` - the render shape the
   merge relies on.
+- `AGENT-INSTRUCTIONS/PLANS/plan-c/done/C3r-shared-render-settlement.md` - the output plan's half of
+  the same render settlement.
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/phases/B2-planes-and-triangles.md` - the exact plane and triangle
   constructors, the plane's `(u, v)` mapping, the triangle's vertices and B2's tests.
 - `AGENT-INSTRUCTIONS/PLANS/plan-b/full-plan.md` - B2's scoped entry and B3's `Aabb` and box-test
@@ -92,7 +97,8 @@ handling and box test.
   configuration.
 - Do not change `phases/A1-diffuse-and-metal-materials.md`; its detail stays byte-identical. Do not
   re-detail A1, A2 or A3 here.
-- Do not reopen the hit-record settlement of A1r and B1r or the render settlement of A1r2 and C3r.
+- Do not reopen the hit-record settlement of A1r and B1r or the render settlement of A1r2 and
+  plan-c's C3r.
   Reference them; do not restate a competing contract.
 - Do not implement, describe as implemented, or claim a product behaviour change for the merged
   scene on this branch. The scene composition below is the release merge's contract.
@@ -129,9 +135,10 @@ The release merge combines this branch with the geometry plan's branch. On plan-
   object's `hit`. The chosen hit does not change.
 - A1's deletion of `the_center_pixel_shows_the_sphere_facing_the_camera` stands. The top row stays
   sky, so `the_top_row_is_sky` is unchanged.
-- The render settlement of A1r2 and C3r still applies: the merge lands A1's material loop inside the
-  output plan's `render(width, height, samples)`, keeps the single `Rng`, the linear averaging, the
-  single gamma in `to_byte` and the progress calls. This settlement adds no render change.
+- The render settlement of A1r2 and plan-c's C3r still applies: the merge lands A1's material loop
+  inside the output plan's `render(width, height, samples)`, keeps the single `Rng`, the linear
+  averaging, the single gamma in `to_byte` and the progress calls. This settlement adds no render
+  change.
 
 ## Tests at the merge
 

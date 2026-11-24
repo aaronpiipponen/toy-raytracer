@@ -60,8 +60,8 @@ branch work. It names only the composition points the merge changes: the materia
    `## Release merge obligations`, and the test and documentation state in
    `## Tests at the merge` and `## Documentation state`.
 2. No other file in plan-b's folder. Plan-b's orchestrator owns `full-plan.md`, `scope.md`, `done/`
-   and the status rows; this phase writes only this file. Do not edit
-   `phases/B2-planes-and-triangles.md`; B2's detail is byte-identical after this phase.
+   and the status rows, and performs the completion compression; this phase writes only this file.
+   Do not edit `phases/B2-planes-and-triangles.md`; B2's detail is byte-identical after this phase.
 
 **Callers / wiring to update:**
 - None: no product symbol, test, configuration key or `docs/` page changes. The settlement is
@@ -174,10 +174,10 @@ The release merge combines this branch with the materials plan's branch. On plan
       is claimed for this branch.
 - [ ] The plan document is re-read for accuracy and `git diff --check` is clean.
 - [ ] No verification receipt or code safety commit is invented; the plan document is the change.
-- [ ] On passing evidence: compress this file into `done/B2r-shared-scene-settlement.md` (frozen
-      contract only). Plan-b's orchestrator adds the B2r status row and scoped entry, sets B2 to
-      `planned` behind B2r, later flips the B2r row to `done`, and then promotes B2. This phase
-      writes no status row itself.
+- [ ] On passing evidence: plan-b's orchestrator compresses this file into
+      `done/B2r-shared-scene-settlement.md` (frozen contract only), adds the B2r status row and
+      scoped entry, sets B2 to `planned` behind B2r, later flips the B2r row to `done`, and then
+      promotes B2. This phase writes no status row itself.
 
 **Exit:** the shared scene design is recorded for this branch and the merge, B2's detail is
 unchanged, and B2 resumes with its existing detail.
