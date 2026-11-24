@@ -2,10 +2,15 @@
 
 ## Next action
 
-Wait for the user's answer on Z1 acceptance. On acceptance, start a fresh advancer with
-`REVIEW AND ADVANCE: Review and advance phase Z1 of plan-b`, passing the survey note path, the
-render evidence and the user's acceptance wording; then stop - release and closure are not this
-session's work. On a named blocker, open the remediation unit the user asks for.
+Coordinator pair `plan-a-A3+plan-b-Z1` is armed and plan-a leads. The Z1 `phase_subagent` call is
+made to record this plan's stop (Z1 has no implementer by design; the call is expected to be refused
+with `COORDINATOR HOLD`). On refusal: start nothing else, tell the user in one line, end the turn, and
+answer the leader's `CHANNEL` proposal when it arrives.
+
+The user's Z1 acceptance is still outstanding and the survey already passed with no defect; on
+`RESOLVED` plus the user's yes, start a fresh advancer with `REVIEW AND ADVANCE: Review and advance
+phase Z1 of plan-b`, passing the survey note path, the render evidence and the acceptance wording.
+Then stop - release and closure are not this session's work.
 
 ## Current state
 

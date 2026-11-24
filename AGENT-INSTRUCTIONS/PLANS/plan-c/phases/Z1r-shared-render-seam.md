@@ -191,6 +191,59 @@ being patched here.
   and this phase records the settlement plus an agent-run render with no user-owned judgment. The
   acceptance render is observed directly in step 6, and no new acceptance claim is recorded.
 
+**Resolution record:**
+The shared design is `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md`. It is the one copy
+of the settlement and this record cites it rather than reproducing it.
+
+Plan-c's branch holds and the release merge takes from it:
+
+- `fn render(width: usize, height: usize, samples: usize) -> Vec<Colour>` in `src/main.rs:62`,
+  byte for byte, including the parameter names `width`, `height` and `samples`.
+- The one-sentence `render` doc comment in `src/main.rs:60-61`: "Every pixel's colour, row by row
+  from the top, each pixel averaging `samples` rays, with the share of finished rows reported on
+  standard error." The branch has no "jittered". The merged sentence adds that word before
+  "rays", because the merged loop jitters, and that clause is the only line A3 writes among
+  plan-c's landed lines.
+- The progress write: `let done = height - row;` and `eprint!("\r{}%", done * 100 / height);` as
+  the last statements of the row loop, after the column loop, at `src/main.rs:77-78`, and the
+  single `eprintln!()` at `src/main.rs:80`.
+- The module header in `src/main.rs:1`, `mod png;` at `src/main.rs:5`, `Format`, `Settings`,
+  `USAGE`, `DEFAULT_WIDTH`, `DEFAULT_HEIGHT`, `DEFAULT_SAMPLES`, `DEFAULT_OUTPUT` (lines 23-28),
+  `parse_args`, `parse_dimension`, `resolve_format`, `run`, `main` and the progress write.
+- `to_byte` with `pub(crate)` at `src/main.rs:84`, so `png::write_png` shares it.
+- `README.md`, `docs/requirements.md` and `tests/cli.rs` as plan-c's own text and test file. The
+  merge leaves `tests/cli.rs` unchanged, because PNG-versus-PPM pixel equality does not depend on
+  the materials.
+
+The release merge takes from plan-a: `scene`, `ray_colour`, `Rng`, `SEED`, `MAX_BOUNCES`, the
+`to_byte` gamma body, the jitter mapping `(column as f64 + rng.next_f64()) / width as f64` and
+`(row as f64 + rng.next_f64()) / height as f64` drawn `u` first then `v` inside the sample loop
+before that sample's scattering draws, one `Rng::new(SEED)` before both loops, and the `samples`
+averaging. The merged code has no `SAMPLES`, `WIDTH` or `HEIGHT` constant. `DEFAULT_SAMPLES = 16`
+is the single default, `main` to `run` passes `settings.samples`, and `render` carries no
+sample-count validation because `parse_args` rejects a count below 1.
+
+The merged test module holds `the_top_row_is_sky` adapted to the literal call
+`render(200, 100, 16)` with its assertion unchanged, `two_renders_with_the_same_options_give_the_same_pixels` and
+`the_sample_count_changes_the_pixels`, both with literal calls only.
+`the_center_pixel_shows_the_sphere_facing_the_camera` does not survive the merge, because
+materials replace normal colouring.
+
+Check against branch `plan-c` at head `a0c585b`: the signature, the doc sentence without
+"jittered", the progress pair and its placement, `DEFAULT_SAMPLES = 16` and the other two
+defaults, the `--samples` rejection below 1 and the `run` sample argument all match the design.
+A search of `src/` finds no `SAMPLES`, `WIDTH` or `HEIGHT` constant. One deviation is expected
+and recorded above: the branch keeps the unjittered `column / (width - 1)` and
+`row / (height - 1)` mapping until the merge supplies jitter. No unexplained drift.
+
+**Acceptance render evidence (head `a0c585b`):**
+- `target/release/toy-raytracer --width 400 --height 200 --samples 16 --output
+  /tmp/opencode/resolution.png` exited with status 0.
+- The file is a PNG of 400 by 200, 8-bit RGB, non-interlaced, and opens showing the sphere over
+  the blue-to-white sky and the green ground plane.
+- Standard output is 0 bytes.
+- Standard error is 783 bytes of percentages separated by `\r`, ending `100%` plus one newline.
+
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a (minimal) are satisfied.
 - [ ] The resolution record cites the shared design and states the `render` signature, the single
