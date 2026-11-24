@@ -10,7 +10,7 @@
 - `src/main.rs:22-25` - `const WIDTH: usize = 200`, `const HEIGHT: usize = 100`, `const SEED: u64 = 7`, `const MAX_BOUNCES: usize = 50`.
 - `src/main.rs:79-93` - the one-sentence doc comment `/// Every pixel's colour, row by row from the top.` and `fn render(width: usize, height: usize) -> Vec<Colour>`, which creates `let mut rng = Rng::new(SEED)`, loops `for row in (0..height).rev()` then `for column in 0..width`, maps `u = column as f64 / (width - 1) as f64` and `v = row as f64 / (height - 1) as f64`, and pushes one `ray_colour(&camera.ray(u, v), &world, &mut rng)` per pixel.
 - `src/main.rs:118-121` - `main` calls `render(WIDTH, HEIGHT)` and `write_ppm(&mut io::stdout().lock(), WIDTH, HEIGHT, &pixels)`.
-- `src/main.rs:123-131` - the test module and `the_top_row_is_sky`, which calls `render(WIDTH, HEIGHT)` and asserts the first pixel is bluer than it is red.
+- `src/main.rs:123-132` - the test module and `the_top_row_is_sky`, which calls `render(WIDTH, HEIGHT)` and asserts the first pixel is bluer than it is red.
 - `src/main.rs:95-97` - `to_byte` applies gamma 2 with `channel.clamp(0.0, 1.0).sqrt()`; output gamma is already in place and stays unchanged.
 - `src/main.rs:54-77` - `scene()` holds four spheres: diffuse red-brown centre, diffuse grey ground, metal at `(0.85, -0.25, -1.3)` and the glass sphere at `(-1.1, 0.0, -1.5)`. The scene stays unchanged.
 - `src/rng.rs:8-9` and `src/rng.rs:20-22` - `Rng::new(seed: u64)` and `next_f64(&mut self) -> f64`, which returns a value in `0..1`.
@@ -42,9 +42,9 @@
    /// Every pixel's colour, row by row from the top, each pixel averaging `samples` jittered rays, with
    /// the share of finished rows reported on standard error.
    ```
-   This sentence describes the merged product. Branch `plan-a` has no progress line, and the sentence is not changed again at the merge.
+   This sentence describes the merged product. Branch `plan-a` adds no progress line: the release merge takes plan-c's progress write from `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md` and keeps this sentence unchanged, so the sentence is edited only here.
 6. `src/main.rs:129` - change the test call to the literal `let pixels = render(200, 100, 16);`, the same line plan-c landed, and keep the assertion unchanged.
-7. `src/main.rs:131` - after `the_top_row_is_sky`, add the two tests named under Tests, using small dimensions so the suite stays fast.
+7. Add the two tests named under Tests at the end of the test module, after the closing brace of `the_top_row_is_sky` (line 132), using small dimensions so the suite stays fast.
 
 **Release merge contract (from the shared design's "Release merge" section):**
 - From plan-a's branch: `scene`, `ray_colour`, `Rng` usage, `SEED`, `MAX_BOUNCES`, the `to_byte` gamma body, the one `Rng::new(SEED)` before both loops, the jitter mapping and the `samples` averaging, and the three test functions below.
@@ -123,7 +123,7 @@
 **Completion checklist (gate):**
 - [ ] Gate level `standard` requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied.
 - [ ] `render` takes `samples`, averages that many jittered rays per pixel with the one seeded generator, and `main` passes `SAMPLES` equal to 16.
-- [ ] `render` carries no sample-count guard, and its doc comment is the agreed sentence.
+- [ ] `render` carries no sample-count guard, and its doc comment is the agreed sentence, which describes the merged render and is not edited at the merge.
 - [ ] `the_top_row_is_sky`, `two_renders_with_the_same_options_give_the_same_pixels` and `the_sample_count_changes_the_pixels` pass.
 - [ ] Test budget respected (REPO-RULES §3a); receipt reports functions added/deleted. Two new functions and one adapted test, no deletions.
 - [ ] Fast phase gate passes, and the rendered-image conditional gate was run once and the image inspected, with the glass, diffuse and metal spheres all present.
