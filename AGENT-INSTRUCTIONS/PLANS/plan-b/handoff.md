@@ -2,20 +2,21 @@
 
 ## Next action
 
-B1's implementer is running (`phase_subagent`, phase id B1). When it returns, check the review loop
-finished and the receipt, then start `REVIEW AND ADVANCE` for B1 with a fresh advancer.
+B1's `REVIEW AND ADVANCE` advancer is running. When it returns, read the next-phase handoff and run
+the acceptance check on B2's detail before its implementer.
 
 ## Current state
 
-The plan is scoped (`full-plan.md`). B1 (`phases/B1-face-side-and-texture-coordinates.md`) is
-detailed, audited, and passed the orchestrator acceptance check on 2026-11-24: it matches
-`docs/requirements.md` items 7 and 8, the (u, v) formula and both test expectations were verified by
-hand against `src/sphere.rs`, test budget is 2 added + 1 changed, and the rendered-image
-byte-comparison gate is kept as behavior-preservation proof. No code implemented yet; base commit
-`e180476` on branch `plan-b`.
+B1 (`phases/B1-face-side-and-texture-coordinates.md`) is implemented on branch `plan-b` at tested head
+`4edcdba` (base `e180476`): `HitRecord` carries `front_face`, `u`, `v`, built only through
+`HitRecord::new`, and `Sphere::hit` fills (u, v) from latitude and longitude. Receipt: build, test (7
+passed), clippy `-D warnings`, fmt, `git diff --check` all green; rendered PPM byte-identical to the
+base render; 2 tests added, 0 deleted, 1 changed; review loop finished (1 real finding fixed, second
+pass clean). No user test required. Plan status table still shows B1 `active` until the advancer
+flips it; `done/B1` compression also belongs to the advancer.
 
-Affected documentation: none expected in B1; `docs/requirements.md` items 7 and 8 already describe
-the target behaviour.
+Intentional deviation reported by the implementer: the `HitRecord::new` doc comment opens with
+"Build a hit record ..." to satisfy the documentation style guide's imperative rule. Accepted.
 
 ## Learned rules
 
