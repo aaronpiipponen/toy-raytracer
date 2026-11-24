@@ -2,13 +2,11 @@
 
 ## Next action
 
-Wait for the user's Z1 acceptance. The pair `plan-a-A3+plan-b-Z1` is RESOLVED and the Z1 resolution
-record is in the phase file; the survey is complete and the survey verdict is "no confirmed clear
-defect". On the user's yes: start a fresh advancer with `REVIEW AND ADVANCE: Review and advance phase
-Z1 of plan-b`, passing the survey note path (`benchmarks/closing-survey-2026-11-24.md`), the render
-evidence (md5 `13b3bc0a3cf5c41df684e179c1d3e93d`) and the user's acceptance wording; then remove
-`/tmp/opencode/plan-b-acceptance.ppm`, `plan-b-acceptance.png` and `ppm2png.py` and stop - release and
-closure are not this session's work. On a named blocker, open the remediation unit the user asks for.
+Z1's `REVIEW AND ADVANCE` advancer is running with the user's acceptance, to compress Z1 into
+`done/Z1-closing-survey-and-user-acceptance.md` and flip the status row. When it returns, confirm the
+status table shows all four phases done and report the outcome to the user; remove
+`/tmp/opencode/plan-b-acceptance.ppm`, `plan-b-acceptance.png` and `ppm2png.py`; then stop - release
+and closure are not this session's work.
 
 ## Current state
 
