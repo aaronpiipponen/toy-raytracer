@@ -46,9 +46,16 @@
 6. `src/main.rs:129` - change the test call to the literal `let pixels = render(200, 100, 16);`, the same line plan-c landed, and keep the assertion unchanged.
 7. `src/main.rs:131` - after `the_top_row_is_sky`, add the two tests named under Tests, using small dimensions so the suite stays fast.
 
+**Release merge contract (from the shared design's "Release merge" section):**
+- From plan-a's branch: `scene`, `ray_colour`, `Rng` usage, `SEED`, `MAX_BOUNCES`, the `to_byte` gamma body, the one `Rng::new(SEED)` before both loops, the jitter mapping and the `samples` averaging, and the three test functions below.
+- From plan-c's branch: the module header, `mod png;`, `Format`, `Settings`, `USAGE`, `DEFAULT_WIDTH`, `DEFAULT_HEIGHT`, `DEFAULT_SAMPLES`, `DEFAULT_OUTPUT`, `parse_args`, `parse_dimension`, `resolve_format`, `run`, `main`, the progress write, the `pub(crate)` visibility on `to_byte`, `README.md`, `docs/requirements.md` and `tests/cli.rs`.
+- The merged `render` is the shared design's function: plan-a's scene, camera, generator, `ray_colour` and jitter with plan-c's progress write and doc sentence. The merged code has no `SAMPLES`, `WIDTH` or `HEIGHT` constant. `DEFAULT_SAMPLES = 16` is the single default, `run` passes `settings.samples`, and `parse_args` rejects a count below 1.
+- The merged test module holds `the_top_row_is_sky`, `two_renders_with_the_same_options_give_the_same_pixels` and `the_sample_count_changes_the_pixels`. Plan-c's `the_center_pixel_shows_the_sphere_facing_the_camera` does not survive, because A1 replaced normal colouring with materials.
+- Neither branch adds a second `render` path, a second sample default, a second generator or a second progress write.
+
 **Callers / wiring to update:**
-- `src/main.rs:119` (`main`) - pass `SAMPLES` as the third argument.
-- `src/main.rs:129` (`the_top_row_is_sky`) - pass `SAMPLES` as the third argument.
+- `src/main.rs:119` (`main`) - pass `SAMPLES` as the third argument on branch `plan-a`.
+- `src/main.rs:129` (`the_top_row_is_sky`) - pass the literal `16` in `render(200, 100, 16)`.
 - No other caller: `render` is called only at `src/main.rs:119` and `src/main.rs:129`.
 - No command-line, configuration or output wiring changes; the output plan owns `--samples`.
 
@@ -68,12 +75,13 @@
 - Keep rendering single-threaded and keep `unsafe` absent.
 - Do not add or parse `--samples`, and do not read environment or configuration; the command line belongs to the output plan.
 - Do not change `to_byte`, gamma 2, the 200 by 100 size, the PPM writer, the four scene spheres, the materials, `MAX_BOUNCES` or `SEED`.
-- Do not clamp, round or otherwise adjust the sample count beyond the one assertion; zero samples must fail loudly rather than render a blank or `NaN` image.
+- `render` does not validate the sample count, and the merged command line is the single validation path. Do not clamp, round or otherwise adjust the sample count elsewhere.
+- Do not add a progress write, change the module header or the `mod` list, or touch the writers, `to_byte`, the scene or the materials.
 - Do not add a second code path for one sample, and do not keep the old no-jitter mapping alongside the new one.
 - Do not add version or history words, plan names or phase ids to code comments.
 
 **Tests:**
-- Changed: `src/main.rs` - `the_top_row_is_sky`: calls `render(WIDTH, HEIGHT, SAMPLES)` and keeps the assertion that the first pixel is bluer than it is red.
+- Changed: `src/main.rs` - `the_top_row_is_sky`: calls the literal `let pixels = render(200, 100, 16);` and keeps the assertion that the first pixel is bluer than it is red.
 - New: `src/main.rs` - `two_renders_with_the_same_options_give_the_same_pixels`: calls `render(20, 10, 2)` twice and asserts the two `Vec<Colour>` values are equal, proving the shared seeded generator gives identical bytes for identical options.
 - New: `src/main.rs` - `the_sample_count_changes_the_pixels`: calls `render(20, 10, 1)` and `render(20, 10, 4)` and asserts the results differ, proving the sample count reaches the jittered sampling loop.
 - Deleted: none. Two new test functions plus one adapted test are within the REPO-RULES §3a maximum of three new functions; no existing test is removed.
@@ -115,6 +123,7 @@
 **Completion checklist (gate):**
 - [ ] Gate level `standard` requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied.
 - [ ] `render` takes `samples`, averages that many jittered rays per pixel with the one seeded generator, and `main` passes `SAMPLES` equal to 16.
+- [ ] `render` carries no sample-count guard, and its doc comment is the agreed sentence.
 - [ ] `the_top_row_is_sky`, `two_renders_with_the_same_options_give_the_same_pixels` and `the_sample_count_changes_the_pixels` pass.
 - [ ] Test budget respected (REPO-RULES §3a); receipt reports functions added/deleted. Two new functions and one adapted test, no deletions.
 - [ ] Fast phase gate passes, and the rendered-image conditional gate was run once and the image inspected, with the glass, diffuse and metal spheres all present.
