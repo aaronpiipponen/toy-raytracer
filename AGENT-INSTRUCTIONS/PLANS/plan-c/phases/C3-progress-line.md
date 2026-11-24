@@ -110,13 +110,15 @@ fallback path.
 - **Executor:** agent.
 - Not a separate manual test: the rendered-image gate and the stderr observation below are the
   acceptance evidence.
-1. Run `~/.cargo/bin/cargo run --release -- --width 80 --height 40 --samples 4 --output
-   /tmp/opencode/c3-accept.png 2>/tmp/opencode/c3-progress.err`.
-2. Expect exit status 0, an empty standard output (`2>` above sends progress away from the terminal),
-   and `/tmp/opencode/c3-accept.png` identical to the baseline from the rendered-image gate.
-3. Read `/tmp/opencode/c3-progress.err` and expect a row-share line that ends with a newline: the
-   capture contains the visible "80 of 40 rows" style updates separated by carriage returns and ends
-   with a final newline, not a file that is empty or one glued onto a later line.
+1. Run `~/.cargo/bin/cargo build --release`, then `./target/release/toy-raytracer --width 80 --height
+   40 --samples 4 --output /tmp/opencode/c3-accept.png 2>/tmp/opencode/c3-progress.err` from the
+   worktree root.
+2. Expect exit status 0, an empty standard output, and `/tmp/opencode/c3-accept.png` identical to the
+   baseline from the rendered-image gate (`cmp /tmp/opencode/c3-before.png
+   /tmp/opencode/c3-accept.png`).
+3. Read `/tmp/opencode/c3-progress.err` and expect the progress updates `1 of 40 rows` through
+   `40 of 40 rows`, separated by carriage returns, and a final newline. The capture is not empty and
+   its last line is terminated.
 
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a (standard) are satisfied.
