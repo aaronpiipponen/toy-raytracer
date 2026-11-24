@@ -2,24 +2,24 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` mode for Z1 (no implementer ran: Z1 is the
-orchestrator-run closing survey). Evidence to pass: the note
-`benchmarks/closing-survey-2026-11-24.md` (surveyed at `0ad0f2b`, its six findings fixed by C1's
-remediation, the intentionally-unfixed list standing), the user's recorded acceptance "accept all",
-the acceptance render at `a0c585b` (400x200 PNG opens, stdout empty, progress ends `100%` plus one
-newline), and the closed pair plan-a-A3+plan-c-Z1 with `Z1r` done. Ask it to record the acceptance,
-compress Z1 into `done/Z1-closing-survey.md`, flip the Z1 row to `done`, and leave the plan ready
-for the release without closing or archiving it.
+None for this plan: every phase is `done` (C2 `not applicable`) and the user accepted the closing
+survey. The release owns the next step and closes the plan; this orchestrator does not close or
+archive it.
 
 ## Current state
 
-All implementation and the pair resolution are done. C1 (with survey remediation), C2 not
-applicable, C3, Z1r done; Z1 `active` with the survey complete and accepted by the user. Product
-head `a0c585b`, clean; fast gate green; acceptance render inspected. The shared design is
-`AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md`; both resolution files (ours and plan-a's
-A3r) were written by this leader per the user's instruction, and plan-a owns running A3r and then
-implementing A3. `docs-pass.md` holds the three release items (`gates.md` fallback sentence,
-`project.md` and `repo-rules-domain.md` maps). No unresolved user decision.
+- Product head `a0c585b` on branch `plan-c`, clean; fast gate green there; the acceptance render
+  opens correctly, standard output is empty and the progress line ends `100%` plus one newline.
+- Status table: C1 done, C2 not applicable, C3 done, Z1r done, Z1 done; no active row.
+- Closing survey note `benchmarks/closing-survey-2026-11-24.md` (surveyed `0ad0f2b`, six small
+  findings fixed by C1's remediation, intentionally-unfixed list accepted); user answered
+  "accept all"; `done/Z1-closing-survey.md` records it.
+- Pair plan-a-A3+plan-c-Z1 is resolved: shared design
+  `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md`; both resolution files were written by
+  this leader per the user's instruction; plan-a owns running `A3r` and implementing A3.
+- `docs-pass.md` holds the release items: the `gates.md` fallback sentence (with the real PPM
+  command noted), and the `project.md` and `repo-rules-domain.md` map updates for `src/png.rs`.
+- No machine beyond this one with `~/.cargo/bin/cargo` is needed.
 
 ## Learned rules
 
