@@ -140,11 +140,27 @@ the two files byte-identical; `file` reports PNG 400 by 200, 8-bit RGB, non-inte
 bytes; the image opens showing the sphere over the blue sky and green ground, in the placeholder
 normal shading this plan's scope leaves in place.
 
+## Accepted gaps
+
+The user reviewed this survey on 2026-11-24 and accepted the following as sufficient coverage for a
+hobby project. No follow-up work is planned for them and none of them is a release item.
+
+- The test decoder's checksum helpers share the writer's algorithms with no known-answer vector
+  (`tests/cli.rs:280-303`): the real decoder that opens the acceptance render establishes the bytes
+  are a valid PNG.
+- The zlib header is compared to its literal value rather than validated as a header
+  (`tests/cli.rs:208`): the literal is a valid header.
+- The decoder does not assert the end marker is last or that the header precedes the data
+  (`tests/cli.rs:198-205`): the writer emits neither defect and the real decoder would reject either.
+- Three of thirty-two pixels are compared between the two formats (`tests/cli.rs:82`): both writers
+  share one channel conversion, and the acceptance render covers the whole image.
+- `--width` with no following value has no test (the missing-value branch at `src/main.rs:130-132`):
+  the branch is one line, the other rejected inputs exercise the same reporting path, and the test
+  budget would have to grow for it.
+
 ## For the user
 
 - Nothing must be fixed before the release.
-- Decisions: whether the four test-strength items are worth a follow-up at all, and whether the
-  uncovered missing-value case (claim 3) should get its own small unit after the release, given the
-  test budget.
-- The three plan-history comments and the bare `cargo` line are older than this plan; say whether the
-  release should clean them or leave them to the materials and geometry work.
+- Accepted on 2026-11-24: the gaps above, with the reasons given.
+- Accepted on 2026-11-24: the release removes the three plan-naming comments and the bare `cargo`
+  line; they are on the plan's documentation-pass list.

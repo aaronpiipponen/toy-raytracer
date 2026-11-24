@@ -59,9 +59,11 @@ branch work. It names only the composition points the merge changes: the materia
    plan-b's settlement: the branch half in `## Branch shape`, the merge obligations in
    `## Release merge obligations`, and the test and documentation state in
    `## Tests at the merge` and `## Documentation state`.
-2. No other file in plan-b's folder. Plan-b's orchestrator owns `full-plan.md`, `scope.md`, `done/`
-   and the status rows, and performs the completion compression; this phase writes only this file.
-   Do not edit `phases/B2-planes-and-triangles.md`; B2's detail is byte-identical after this phase.
+2. No other file in plan-b's folder. Plan-b's plan state - the status rows, `scope.md`, `done/` and
+   the completion compression - belongs to plan-b's `phase-advancer`, which performs it when this
+   phase is reviewed and advanced; this phase writes only this file. Do not edit `full-plan.md`,
+   `scope.md`, `done/` or the status rows, and do not edit `phases/B2-planes-and-triangles.md`;
+   B2's detail is byte-identical after this phase.
 
 **Callers / wiring to update:**
 - None: no product symbol, test, configuration key or `docs/` page changes. The settlement is
@@ -83,8 +85,8 @@ branch work. It names only the composition points the merge changes: the materia
   configuration.
 - Do not change `phases/B2-planes-and-triangles.md`; its detail stays byte-identical. Do not
   re-detail B2 or B3 here.
-- Do not edit plan-b's `full-plan.md`, `scope.md`, `done/` or status rows; plan-b's orchestrator owns
-  its plan state.
+- Do not edit plan-b's `full-plan.md`, `scope.md`, `done/` or status rows; plan-b's
+  `phase-advancer` owns its plan state, including the completion compression.
 - Do not reopen the hit-record settlement of A1r and B1r or the render settlement of A1r2 and C3r.
   Reference them; do not restate a competing contract.
 - Do not implement, describe as implemented, or claim a product behaviour change for the merged
@@ -166,7 +168,8 @@ The release merge combines this branch with the materials plan's branch. On plan
 
 **Completion checklist (gate):**
 - [ ] Gate level `minimal` requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied.
-- [ ] The shared scene design in `PLAN-A1+plan-b-B2` is recorded for plan-b's branch half and for
+- [ ] The shared scene design in `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md` is recorded
+      for plan-b's branch half and for
       the release merge's obligations on plan-b's side.
 - [ ] B2's detail file is byte-identical, and plan-b's `full-plan.md`, `scope.md`, `done/` and
       status rows are untouched.

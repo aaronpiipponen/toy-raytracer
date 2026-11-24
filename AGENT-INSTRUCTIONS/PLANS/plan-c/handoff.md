@@ -2,24 +2,23 @@
 
 ## Next action
 
-Phase Z1's document is being re-detailed to the binding survey method (orchestrator-dispatched
-`ops-scout` per area, one independent cross-check `ops-scout`, orchestrator writes the note, no
-implementer). When it returns, acceptance-check it, then execute Z1 myself: four scouts in parallel,
-one cross-check scout, write `benchmarks/`, run the acceptance render, present to the user.
+The Z1 completion advancer is running to compress Z1 and flip its status row now that the user has
+accepted the survey. When it returns, verify the status table shows every phase done and report the
+plan complete to the user; the plan then waits for the release, which closes it.
 
 ## Current state
 
-- C1 and C3 are done (`done/C1-png-writer-and-command-line.md` at `910a9c5`,
-  `done/C3-progress-line.md` at `e194181`). C3's progress line is verified: stderr rows, image bytes
-  unchanged, 0 new tests, 1 adapted test.
-- Z1 (closing survey and user acceptance) is active and temporarily mis-detailed: it gave the survey
-  to a phase-implementer with a reviewer cross-check, which contradicts the binding survey method.
-  A fresh advancer is correcting it.
-- The plan's product work is complete apart from the closing survey and the user's acceptance; the
-  plan is then ready for the release, which closes it.
-- `docs-pass.md` holds the release item for the `gates.md` fallback sentence.
-- Shared settlement with plan-a is closed (`PLANS/shared/plan-a-A1+plan-c-C3.md`).
-- Autonomous mode is on for the routine loop only; the closing acceptance is the user's.
+- C1 and C3 are done (`910a9c5`, `e194181`). Z1's survey is complete and accepted by the user on
+  2026-11-24: note at `benchmarks/2026-11-24-closing-survey.md`, raw returns at
+  `survey-returns-2026-11-24.md`.
+- The user accepted the five coverage gaps as sufficient for a hobby project (recorded in the note as
+  accepted gaps) and asked the release to clean the three plan-naming comments plus the README's bare
+  `cargo` line. Those are on `docs-pass.md`, each comment item saying its removal waits until the
+  dead-code allowance beside it is gone.
+- `docs-pass.md` also holds the `gates.md` fallback/PPM command item and the `project.md` `png.rs`
+  item.
+- No product code changed during the survey; the worktree is clean at `e194181`.
+- Autonomous mode is on for the routine loop only. No coordinator hold is active.
 
 ## Learned rules
 
@@ -34,6 +33,8 @@ one cross-check scout, write `benchmarks/`, run the acceptance render, present t
 - The closing survey is orchestrator work: one independent `ops-scout` per area in parallel, one
   independent `ops-scout` cross-checking all findings, and the orchestrator writes the note. Never a
   phase-implementer, never a per-area checker.
+- Test findings that would assert wording or a choice the requirements do not state are not defects;
+  say so rather than adding tests.
 - Autonomous mode never covers behaviour a user can see, deployment, security boundaries, spending
   or plan closure.
 - Check a receipt for its explicit `REVIEW:` line before treating the review loop as finished.
