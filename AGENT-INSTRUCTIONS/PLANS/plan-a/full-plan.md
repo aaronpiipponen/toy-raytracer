@@ -61,9 +61,9 @@ their existing detail.
 
 Records the render design settled with the output plan in
 `PLANS/shared/plan-a-A1+plan-c-C3.md`: A1's branch shape, the merged `render(width, height, samples)`
-taken from the output plan's C1, the nesting and the single generator, the progress and gamma
-ownership, the sample-count guarantees, A3's jitter draw order, and the release merge's obligations
-on plan-a's side. No product code changes on this branch. A1 keeps its existing detail, and A3 is
+taken from the output plan's C1, the nesting and the single generator, the progress ownership, A1's
+gamma in `to_byte`, the sample-count guarantees, A3's jitter draw order, and the release merge's
+obligations on plan-a's side. No product code changes on this branch. A1 keeps its existing detail, and A3 is
 detailed after this settlement.
 
 ### A1 - Diffuse and metal materials
