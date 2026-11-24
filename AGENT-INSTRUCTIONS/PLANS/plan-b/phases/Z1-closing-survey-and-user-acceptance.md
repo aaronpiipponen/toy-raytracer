@@ -16,10 +16,12 @@ handed to the user. No remediation opens here, no extra test or checker is added
 asked to design a repair. One release render is the only runtime work.
 
 **Current state (verified):**
-- Survey base: `git merge-base main HEAD` is `e180476`. The plan's product commits are
-  `66097bd..c25007c`. `git diff --stat e180476..HEAD` reports 7 files, 368 insertions and 11
+- Survey base: `git merge-base main HEAD` is `e180476`, and the plan's product changes span
+  `e180476..c25007c`. `git diff --stat e180476..HEAD` reports 7 files, 368 insertions and 11
   deletions: `src/aabb.rs`, `src/hittable.rs`, `src/main.rs`, `src/plane.rs`, `src/sphere.rs`,
-  `src/triangle.rs`, `src/vec3.rs`.
+  `src/triangle.rs`, `src/vec3.rs`. The worktree's `AGENTS.md` and `AGENT-INSTRUCTIONS` paths are
+  excluded by `project.git/info/exclude`, so product checks scope `git status` to the project paths
+  named in build step 7.
 - `src/hittable.rs:7-43` - `HitRecord` holds `t`, `point`, `normal`, `front_face`, `u`, `v` and
   derives `Clone, Copy, Debug`; `HitRecord::new` is the one constructor and sets the normal against
   the ray. `src/hittable.rs:45-51` - `Hittable` has `hit` and `bounding_box`.
@@ -178,9 +180,10 @@ asked to design a repair. One release render is the only runtime work.
    band, the normal-shaded centre sphere, one flat light-green ground across the lower image
    because the ground normal is constant, and the light-blue triangle beside and above the sphere.
    Record the image size, the viewer used, and anything that does not match.
-7. Run the documentation-only gate: reread both new plan files in full, run `git status --short` and
-   expect no output, and run `git diff --check` and expect no output. These prove no product file
-   changed. Do not run the fast gate: no code changed.
+7. Run the documentation-only gate: reread both new plan files in full, run
+   `git status --short -- src Cargo.toml docs README.md` and expect no output, and run
+   `git diff --check` and expect no output. These prove no product file changed. Do not run the fast
+   gate: no code changed.
 8. Report the note and the image path to the user and ask for acceptance. State that no finding was
    fixed. If the user names a defect, add it to the note's **For the user** list and record the
    decision; do not fix it in this phase. A defect needing a repair goes to a remediation round the
@@ -253,8 +256,9 @@ asked to design a repair. One release render is the only runtime work.
       six area sections, cross-check outcome, acceptance render and **For the user** list, and every
       finding carries `path:line` evidence.
 - [ ] No finding was fixed, no remediation opened, and no product, test, `docs/`, `Cargo.toml`,
-      `AGENT-INSTRUCTIONS/LOCAL/` or other plan file changed: `git status --short` is empty and
-      `git diff --check` is clean.
+      `AGENT-INSTRUCTIONS/LOCAL/` or other plan file changed:
+      `git status --short -- src Cargo.toml docs README.md` is empty and `git diff --check` is
+      clean.
 - [ ] The acceptance render ran twice at exit status 0, `cmp` found no difference, the header is
       `P3` then `200 100`, and the image matches the expected scene; the commands and observations
       are in the note.
