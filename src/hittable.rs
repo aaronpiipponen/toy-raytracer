@@ -3,14 +3,41 @@
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
-/// Where a ray hit a surface: the distance along the ray, the point and the outward normal.
+/// Where a ray hit a surface: the distance along the ray, the point, the normal that always faces
+/// against the ray, the face side and the texture coordinates.
 #[derive(Clone, Copy, Debug)]
 pub struct HitRecord {
     pub t: f64,
-    // The origin of the bounce rays the materials plan adds.
+    // The origin of the bounce rays.
     #[allow(dead_code)]
     pub point: Vec3,
     pub normal: Vec3,
+    #[allow(dead_code)]
+    pub front_face: bool,
+    #[allow(dead_code)]
+    pub u: f64,
+    #[allow(dead_code)]
+    pub v: f64,
+}
+
+impl HitRecord {
+    /// A hit record whose normal faces against the ray, with the face side recorded.
+    pub fn new(ray: &Ray, t: f64, point: Vec3, outward_normal: Vec3, u: f64, v: f64) -> Self {
+        let front_face = ray.direction.dot(outward_normal) < 0.0;
+        let normal = if front_face {
+            outward_normal
+        } else {
+            -outward_normal
+        };
+        HitRecord {
+            t,
+            point,
+            normal,
+            front_face,
+            u,
+            v,
+        }
+    }
 }
 
 pub trait Hittable {
