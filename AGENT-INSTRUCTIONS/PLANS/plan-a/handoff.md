@@ -2,19 +2,19 @@
 
 ## Next action
 
-Start R1's implementer with `phase_subagent` (`R1`). When it returns, take its receipt into REVIEW AND
-ADVANCE for R1; then compress Z1 with the user's recorded acceptance and report the plan's outcome.
+Run `phase-advancer` in REVIEW AND ADVANCE for R1 (base `566b11c`, tested head `b22d647`). In the same
+round, complete Z1: its survey note and returns exist and the user accepted the survey and image, so
+compress Z1 to `done/` with that acceptance and the note path, flip its row to `done`. After that the
+plan's phases are all done and the plan is ready for the release; report the outcome to the user.
 
 ## Current state
 
-A1 done (`de1cf31`), A2 done (`a1d640a`), A3 done (`566b11c`); A3r done. Z1's closing survey is written
-(`benchmarks/closing-survey-2026-11-24.md` + five returns) and the user ACCEPTED the survey and image at
-`566b11c`, choosing: fix the small cleanups and stale records now, accept the test-coverage gaps (no
-extra tests). R1 is detailed at `phases/R1-survey-cleanups.md`, passed the orchestrator acceptance check,
-and awaits implementation; its render-byte-identical hash is
-`5457ef7a788539f5f5b0145e7c20fd178a77f0d184663b83fcd38d299a54665b`. Plan-level fact for the release:
-plan-b's `HittableList.objects` is public there, so the merge keeps plan-a's private field with plan-b's
-box skip. `docs-pass.md` holds four documentation items plus the answered triangle-material carry-over.
+A1 done (`de1cf31`), A2 done (`a1d640a`), A3 done (`566b11c`); A3r done; R1 implemented at head
+`b22d647` (byte-identical render, 12 tests) and awaits review-and-advance. The user ACCEPTED the closing
+survey (`benchmarks/closing-survey-2026-11-24.md`) and the image at `566b11c`, and chose to fix the small
+cleanups (done in R1) and accept the test-coverage gaps. Z1 remains to be compressed with that
+acceptance. `docs-pass.md` holds four documentation items plus the answered triangle-material carry-over
+(`Lambertian` `(0.7, 0.3, 0.3)`), for the release.
 
 ## Learned rules
 
@@ -43,6 +43,7 @@ box skip. `docs-pass.md` holds four documentation items plus the answered triang
   and stop for the user's subjective image/survey acceptance.
 - After the survey, the user's accepted cleanups run as a small remediation phase; the accepted test
   gaps add no test, and the survey acceptance stands because the fixes change no behaviour.
+- Plan-folder edits are committed by the workflow plugin at the workspace root, never from the worktree.
 
 ## Learned rules
 
