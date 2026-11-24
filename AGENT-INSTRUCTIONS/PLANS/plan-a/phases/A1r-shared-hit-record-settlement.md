@@ -28,7 +28,7 @@ only product code this plan will own is A1's and A2's, as already detailed.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md:35-39` - the settled A2 rule: glass derives the face
   side locally on this branch from the outward normal and the ray, and the merge replaces that with
   `hit.front_face`; glass adds no face flag.
-- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md:119-127` - carry-overs already state the merge's job
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md:129-137` - carry-overs already state the merge's job
   and the settled materials for the new shapes.
 - `src/hittable.rs:7-14`, `src/sphere.rs:36-43` at `e180476` - the starting record holds `t`,
   `point`, `normal` and `Sphere::hit` builds it literally with the outward normal; no material,
