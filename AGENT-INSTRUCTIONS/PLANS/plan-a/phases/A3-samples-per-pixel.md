@@ -18,7 +18,7 @@
 - A1 contract: one `Rng` seeded with `SEED` is shared across every pixel, the bounce limit and gamma are in place, and `Cargo.toml` has no dependency.
 
 **Read first (do not invent):**
-- `src/main.rs` - `ray_colour` at lines 29-46, `render` at lines 75-88, `to_byte` at lines 90-92, `main` at lines 113-116 and the test at lines 118-127. This phase edits all of them except `ray_colour`.
+- `src/main.rs` - `render` at lines 75-88, its doc comment, `main` at lines 113-116 and the test at lines 118-127. This phase edits only those items. `ray_colour` at lines 29-46 and `to_byte` at lines 90-92 are read for context and stay unchanged.
 - `src/rng.rs` - `Rng::new(seed: u64)` and `next_f64(&mut self) -> f64`; the generator is the only source of randomness.
 - `src/camera.rs` - `Camera::ray`; sample coordinates are passed unchanged into it.
 - `src/vec3.rs` - `Colour`, `Add` and `Div<f64>`; the accumulation uses them.
