@@ -18,7 +18,7 @@ impl Vec3 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
-    // For the triangle normals the geometry plan adds.
+    // For the triangle normals.
     #[allow(dead_code)]
     pub fn cross(self, other: Vec3) -> Vec3 {
         Vec3::new(
