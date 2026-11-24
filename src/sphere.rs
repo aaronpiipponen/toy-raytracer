@@ -1,19 +1,29 @@
 //! Spheres.
 
+use std::f64::consts::PI;
+use std::rc::Rc;
+
 use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
-use std::f64::consts::PI;
 
+/// A sphere with the given centre and radius.
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f64,
+    pub material: Rc<dyn Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f64) -> Self {
-        Sphere { center, radius }
+    /// Return a sphere with the given centre, radius and material.
+    pub fn new(center: Vec3, radius: f64, material: Rc<dyn Material>) -> Self {
+        Sphere {
+            center,
+            radius,
+            material,
+        }
     }
 }
 
@@ -39,9 +49,15 @@ impl Hittable for Sphere {
         let outward_normal = (point - self.center) / self.radius;
         let theta = (-outward_normal.y).acos();
         let phi = (-outward_normal.z).atan2(outward_normal.x) + PI;
-        let u = phi / (2.0 * PI);
-        let v = theta / PI;
-        Some(HitRecord::new(ray, t, point, outward_normal, u, v))
+        Some(HitRecord::new(
+            ray,
+            t,
+            point,
+            outward_normal,
+            phi / (2.0 * PI),
+            theta / PI,
+            Rc::clone(&self.material),
+        ))
     }
 
     /// Return the box that holds the whole sphere.
@@ -54,10 +70,16 @@ impl Hittable for Sphere {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::material::Lambertian;
+    use crate::vec3::Colour;
+
+    fn grey() -> Rc<dyn Material> {
+        Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8)))
+    }
 
     #[test]
     fn a_ray_through_the_center_hits_the_near_surface() {
-        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5, grey());
         let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         let hit = sphere
             .hit(&ray, 0.001, f64::INFINITY)
@@ -69,7 +91,7 @@ mod tests {
 
     #[test]
     fn a_ray_from_inside_the_sphere_hits_the_back_face() {
-        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5, grey());
         let ray = Ray::new(Vec3::new(0.0, 0.0, -2.0), Vec3::new(0.0, 0.0, 1.0));
         let hit = sphere
             .hit(&ray, 0.001, f64::INFINITY)
@@ -81,7 +103,7 @@ mod tests {
 
     #[test]
     fn the_near_surface_has_texture_coordinates_from_latitude_and_longitude() {
-        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5, grey());
         let ray = Ray::new(Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         let hit = sphere
             .hit(&ray, 0.001, f64::INFINITY)
@@ -92,7 +114,7 @@ mod tests {
 
     #[test]
     fn a_ray_beside_the_sphere_misses() {
-        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5);
+        let sphere = Sphere::new(Vec3::new(0.0, 0.0, -2.0), 0.5, grey());
         let ray = Ray::new(Vec3::new(1.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));
         assert!(sphere.hit(&ray, 0.001, f64::INFINITY).is_none());
     }

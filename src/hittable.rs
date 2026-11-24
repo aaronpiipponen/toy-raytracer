@@ -1,30 +1,40 @@
 //! Anything a ray can hit, and the record of where it hit.
 
+use std::rc::Rc;
+
 use crate::aabb::Aabb;
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
-/// Where a ray hit a surface: the distance along the ray, the point, the normal against the ray, the
-/// face side and the texture coordinates.
-#[derive(Clone, Copy, Debug)]
+/// Where a ray hit a surface: the point `origin + direction * t`, the normal against the ray, the
+/// face side, the texture coordinates and the material of the object. `t` is the ray parameter,
+/// which is the distance along the ray when the direction has unit length.
+#[derive(Clone)]
 pub struct HitRecord {
     pub t: f64,
-    // The origin of the bounce rays.
-    #[allow(dead_code)]
     pub point: Vec3,
     pub normal: Vec3,
-    #[allow(dead_code)]
     pub front_face: bool,
     #[allow(dead_code)]
     pub u: f64,
     #[allow(dead_code)]
     pub v: f64,
+    pub material: Rc<dyn Material>,
 }
 
 impl HitRecord {
-    /// Return a hit record whose normal faces against the ray, with the face side and texture
-    /// coordinates.
-    pub fn new(ray: &Ray, t: f64, point: Vec3, outward_normal: Vec3, u: f64, v: f64) -> Self {
+    /// Return a hit record whose normal faces against the ray, with the face side, texture
+    /// coordinates and material.
+    pub fn new(
+        ray: &Ray,
+        t: f64,
+        point: Vec3,
+        outward_normal: Vec3,
+        u: f64,
+        v: f64,
+        material: Rc<dyn Material>,
+    ) -> Self {
         let front_face = ray.direction.dot(outward_normal) < 0.0;
         let normal = if front_face {
             outward_normal
@@ -38,6 +48,7 @@ impl HitRecord {
             front_face,
             u,
             v,
+            material,
         }
     }
 }
@@ -72,7 +83,7 @@ impl Hittable for HittableList {
             {
                 continue;
             }
-            let limit = nearest.map_or(t_max, |hit| hit.t);
+            let limit = nearest.as_ref().map_or(t_max, |hit| hit.t);
             if let Some(hit) = object.hit(ray, t_min, limit) {
                 nearest = Some(hit);
             }
@@ -89,16 +100,23 @@ impl Hittable for HittableList {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::material::Lambertian;
     use crate::plane::Plane;
     use crate::sphere::Sphere;
+    use crate::vec3::Colour;
 
     #[test]
     fn the_scene_list_still_hits_a_plane_that_has_no_box() {
         let mut world = HittableList::default();
-        world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
+        world.add(Box::new(Sphere::new(
+            Vec3::new(0.0, 0.0, -1.0),
+            0.5,
+            Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8))),
+        )));
         world.add(Box::new(Plane::new(
             Vec3::new(0.0, -0.5, 0.0),
             Vec3::new(0.0, 1.0, 0.0),
+            Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8))),
         )));
         let ray = Ray::new(Vec3::new(5.0, 0.0, 0.0), Vec3::new(0.0, -1.0, 0.0));
         let hit = world

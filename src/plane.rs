@@ -1,22 +1,27 @@
 //! An infinite plane.
 
+use std::rc::Rc;
+
 use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
-/// An infinite plane through `point` with the unit `normal`.
+/// An infinite plane through `point` with the unit `normal` and the given material.
 pub struct Plane {
     pub point: Vec3,
     pub normal: Vec3,
+    pub material: Rc<dyn Material>,
 }
 
 impl Plane {
-    /// Return a plane through `point` with `normal` scaled to unit length.
-    pub fn new(point: Vec3, normal: Vec3) -> Self {
+    /// Return a plane through `point` with `normal` scaled to unit length and the given material.
+    pub fn new(point: Vec3, normal: Vec3, material: Rc<dyn Material>) -> Self {
         Plane {
             point,
             normal: normal.unit(),
+            material,
         }
     }
 }
@@ -48,6 +53,7 @@ impl Hittable for Plane {
             self.normal,
             u.rem_euclid(1.0),
             v.rem_euclid(1.0),
+            Rc::clone(&self.material),
         ))
     }
 
@@ -60,10 +66,16 @@ impl Hittable for Plane {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::material::Lambertian;
+    use crate::vec3::Colour;
 
     #[test]
     fn a_ray_hits_the_plane_and_its_texture_coordinates_wrap() {
-        let plane = Plane::new(Vec3::new(0.0, -0.5, 0.0), Vec3::new(0.0, 1.0, 0.0));
+        let plane = Plane::new(
+            Vec3::new(0.0, -0.5, 0.0),
+            Vec3::new(0.0, 1.0, 0.0),
+            Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8))),
+        );
         let ray = Ray::new(Vec3::new(1.25, 0.0, -0.25), Vec3::new(0.0, -1.0, 0.0));
         let hit = plane.hit(&ray, 0.001, f64::INFINITY).expect("the ray hits");
         assert!((hit.t - 0.5).abs() < 1e-9);
