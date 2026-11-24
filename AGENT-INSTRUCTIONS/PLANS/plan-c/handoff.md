@@ -2,21 +2,23 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `DETAIL ACTIVE` mode with the settled correction: C1 must not edit
-`AGENT-INSTRUCTIONS/LOCAL/gates.md`; that removal moves to the release (`docs-pass.md`). Then run the
-orchestrator acceptance check on `phases/C1-*.md` and start the C1 implementer.
+The C1 implementer is running. When it returns, check that its review loop finished, extract the
+commit SHA, the `VERIFICATION RECEIPT` and its comments, then spawn a fresh `phase-advancer` in
+`REVIEW AND ADVANCE` mode for C1.
 
 ## Current state
 
-- `full-plan.md` is scoped and revised 2026-11-24: C1 (PNG writer and command line) is active;
-  C2 is a `not applicable` row merged into C1; C3 (progress line) and Z1 (closing survey) are planned.
-- `phases/C1-png-writer-and-command-line.md` exists and passed the spec auditor, but still contains
-  the now-rejected `gates.md` edit and must be corrected before implementation.
-- `scope.md` is filled. No implementation has started. `docs-pass.md` holds the one deferred item.
-- User decisions settled and written into the plan: C1 and the former C2 are one phase; `--samples` is
-  accepted and validated in C1 and passed into `render`, which averages that many rays without jitter
-  until the materials plan adds it; `gates.md`'s fallback line stays in place and its removal is
-  deferred to the release; C1's test budget is at most 3 new test functions.
+- `full-plan.md` is scoped and revised 2026-11-24: C1 (PNG writer and command line) is active and
+  detailed at `phases/C1-png-writer-and-command-line.md`; C2 is a `not applicable` row merged into
+  C1; C3 (progress line) and Z1 (closing survey) are planned.
+- C1's phase document passed the spec auditor twice, including the correction that removed the
+  `gates.md` edit. The orchestrator acceptance check passed.
+- `docs-pass.md` holds the one release item: delete the stale rendered-image fallback sentence in
+  `AGENT-INSTRUCTIONS/LOCAL/gates.md` after all three plans merge. C1 must leave that file unchanged.
+- `scope.md` is filled. Implementation has started with the C1 implementer.
+- User decisions settled: C1 and the former C2 are one phase; `--samples` is accepted and validated
+  in C1 and passed into `render`, which averages that many rays without jitter until the materials
+  plan adds it; `gates.md` stays untouched here; C1 adds at most 3 test functions.
 - Autonomous mode is on for the routine loop only; every product decision still goes to the user.
   Settled decisions under it are in `autonomous-decisions.md`.
 - Linked to the coordinator; no hold has been announced.
