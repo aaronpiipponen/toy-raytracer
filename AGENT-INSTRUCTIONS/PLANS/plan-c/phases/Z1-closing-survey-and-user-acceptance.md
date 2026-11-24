@@ -44,7 +44,7 @@ writes, and the acceptance render it runs.
   `writes_a_png_whose_pixels_match_the_ppm_render` (`tests/cli.rs:37-88`),
   `rejects_an_unknown_option_and_an_unparsable_value_with_a_non_zero_exit` (`tests/cli.rs:90-106`)
   and `selects_the_format_from_the_output_extension_and_lets_an_explicit_format_win`
-  (`tests/cli.rs:108-165`). `tests/cli.rs:167-248` - `decode_png`, which re-derives the chunk CRCs,
+  (`tests/cli.rs:108-165`). `tests/cli.rs:168-249` - `decode_png`, which re-derives the chunk CRCs,
   the stored-block framing, the single `IDAT`, the filter bytes and the Adler-32 trailer from the
   written bytes. `src/main.rs:197-212` - the two unit tests that call `render(200, 100, 16)`.
 - `README.md:5-8` - the run example `cargo run --release -- --output image.png` and `cargo test`.
@@ -79,7 +79,7 @@ writes, and the acceptance render it runs.
    has and is not investigated further. No dispatch tells a scout to report only on the diff. The
    four returns are kept as the saved finding set. The areas and their questions:
    - PNG writer: does `src/png.rs` produce what requirement 11 states, and does
-     `tests/cli.rs:167-248` independently check chunk CRCs, the stored-block framing, the single
+     `tests/cli.rs:168-249` independently check chunk CRCs, the stored-block framing, the single
      `IDAT`, the filter bytes and the Adler-32 trailer rather than trusting the writer's own code?
    - Command line and settings: do `parse_args`, `parse_number`, `resolve_format`, `run` and `main`
      honour requirement 12 and C1's frozen contract (all five options, the four defaults, explicit
