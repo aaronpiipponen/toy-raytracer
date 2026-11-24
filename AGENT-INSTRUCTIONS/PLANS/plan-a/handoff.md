@@ -2,17 +2,20 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` for A3 with the implementer's
-receipt. Then the closing survey phase Z1 becomes the next unit.
+Spawn a fresh `phase-advancer` in `DETAIL ACTIVE` for Z1 to write
+`phases/Z1-closing-survey.md` and point the row at it. Then run the survey itself: four
+read-only `ops-scout`s in parallel (one per area), one cross-checking `ops-scout`, and the
+dated note written by this session.
 
 ## Current state
 
-A1, A2 and A3 are implemented; A3 is verified at `46a5c02` (base `80d833c`): `render` takes
-`samples`, the row/column/sample/bounce loop with two centred jitter draws per sample from
-the one seeded generator, 16 passed from `main`, the sky test adapted plus two new tests
-(12 pass), fast gate green, two renders byte-identical, the image smoother than A2's, one
-review round with no finding. Z1 (closing survey and user acceptance) is the last row,
-currently planned. The three shared designs are settled and their pairs closed.
+A1, A2 and A3 are done and frozen; the branch is at `46a5c02` with the full materials
+feature — matte, metal, glass, the 50-bounce loop, one seeded generator, gamma and 16
+centred jittered samples per pixel — all fast gates green, 12 tests passing, renders
+byte-identical, image inspected and smooth. Z1 is the last row, promoted to active, and
+still only has its inline spec in `full-plan.md`. The survey is orchestrator-run: the
+binding method has this session dispatch the scouts and write the note, so no implementer
+is spawned for Z1. The three shared designs are settled and their pairs closed.
 `/workflow-reload` remains optional for the user. Autonomous mode covers routine loop
 choices only; every product decision goes to the user.
 
@@ -35,3 +38,5 @@ choices only; every product decision goes to the user.
   never let a paper phase block the next product phase.
 - Never accept a jitter formula that samples outside its own pixel: the offset is centred
   (`+ next_f64() - 0.5`), so the image keeps the previous revision's geometry.
+- The closing survey is orchestrator-run: no implementer writes the note and Z1 fixes
+  nothing it finds.
