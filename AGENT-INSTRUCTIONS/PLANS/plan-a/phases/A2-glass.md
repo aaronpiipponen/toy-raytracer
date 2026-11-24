@@ -46,11 +46,14 @@
        /// Faces against the incoming ray.
        pub normal: Vec3,
        pub front_face: bool,
+       #[allow(dead_code)]
        pub u: f64,
+       #[allow(dead_code)]
        pub v: f64,
        pub material: Rc<dyn Material>,
    }
    ```
+   `front_face` is read by `Dielectric`. No code on this branch reads `u` or `v`, so both fields carry `#[allow(dead_code)]`, the same handling `Vec3::cross` uses, and `cargo clippy -- -D warnings` stays green.
 2. `src/hittable.rs`, after the struct and before the `Hittable` trait - add the one constructor:
    ```rust
    impl HitRecord {
@@ -200,7 +203,7 @@
 - Do not change `Material::scatter`, `Lambertian` or `Metal` behaviour; only their tests move to the constructor.
 - `HitRecord.normal` always faces against `ray.direction`. Compute `front_face` as `ray.direction.dot(outward_normal) < 0.0` in the one constructor, and never flip a normal anywhere else.
 - Glass derives entering from leaving from `hit.front_face` alone and adds no face flag of its own. It returns unit attenuation `Colour::new(1.0, 1.0, 1.0)` and never `None`.
-- Do not clamp or validate `refractive_index`, and do not clamp a scattered direction. The only numeric guard is the `max(0.0)` inside `refract`.
+- Do not clamp or validate `refractive_index`, and do not clamp a scattered direction. The `min(1.0)` on the cosine and the `max(0.0)` inside `refract` are the only guards the formulas need.
 - Keep the seeded generator as the only randomness, and draw at most one value per glass scatter, only for the Schlick choice. A total-internal-reflection path draws none. Do not reseed.
 - Keep rendering single-threaded, keep `unsafe` absent, and add no dependency.
 - Do not add version or history words, plan names or phase ids to code comments.
@@ -214,7 +217,7 @@
 - Changed: `src/material.rs` - the three existing tests and `record_with` use `HitRecord::new`; the absorbed test now uses `Metal::new(albedo, 1.0)` at a grazing angle. No assertion is weakened except the absorbed test's fuzz, which is required for the branch to be reachable with a ray-facing normal.
 - Deleted: none. Three new test functions, four adapted tests, no deletion, within the REPO-RULES §3a maximum of three new functions.
 - Fast gate: `cargo build`, `cargo test`, `cargo clippy -- -D warnings`, `cargo fmt --check`, `git diff --check`.
-- Conditional gates: rendered image, required because a material, the record and the scene change. Run `cargo run --release > /tmp/opencode/render.ppm`, then convert it with the PNG snippet from `phases/A3-samples-per-pixel.md` and open `/tmp/opencode/render.png`; confirm the left sphere shows the background refracted and inverted through it, the diffuse and metal spheres still render, and no pixel is black or `NaN` grey.
+- Conditional gates: rendered image, required because a material, the record and the scene change. Run `cargo run --release > /tmp/opencode/render.ppm`, then convert it with the PNG snippet from `phases/A3-samples-per-pixel.md` and open `/tmp/opencode/render.png`; confirm the left sphere shows the background refracted and inverted through it, and the diffuse and metal spheres still render. An isolated black pixel is the A1 metal-fuzz absorption at one sample per pixel, so require no flat `NaN` grey instead of no black pixel.
 - Slow gate (>2 minutes): none.
 
 **User test (acceptance):**
