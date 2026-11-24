@@ -4,7 +4,7 @@ mod camera;
 mod hittable;
 mod plane;
 mod ray;
-// Seeded randomness for the scattering and sampling the plans add.
+// Seeded randomness for scattering and sampling.
 #[allow(dead_code)]
 mod rng;
 mod sphere;
