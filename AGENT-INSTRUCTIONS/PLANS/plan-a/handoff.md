@@ -2,20 +2,16 @@
 
 ## Next action
 
-Spawn `phase-advancer` DETAIL RESOLUTION for pair `plan-a-A3+plan-b-Z1`: amend plan-a's A3 in place to
-record the geometry-union merge contract from `PLANS/shared/plan-a-A3+plan-b-Z1.md` (A3's sampling work
-unchanged). Then accept plan-a's A3 resolution and plan-b's Z1 resolution file, `channel_close`, and
-implement A3.
+Wait for plan-b's `channel_notify` that its Z1 resolution section is written; then accept both
+resolution files (plan-a A3 already accepted; plan-b's Z1 phase file section), `channel_close`, and
+start A3's implementer with `phase_subagent` (`A3`).
 
 ## Current state
 
-A1 done (`de1cf31`); A2 done (`a1d640a`); A3r done (plan-c render seam recorded); A3 active (samples per
-pixel, amended for the plan-c seam). Pair `plan-a-A3+plan-b-Z1` is settled in
-`PLANS/shared/plan-a-A3+plan-b-Z1.md` (the union: non-`Copy` record
-with material + front_face/u/v, seven-argument constructor, borrow-plus-box-skip list loop, Sphere with
-material and bounding box, Plane/Triangle with material, exact triangle vertices, open user-owned
-triangle material). A3's resolution records that contract; plan-b's Z1 records it and runs its own
-read-only survey. Z1 (plan-a closing survey) follows. `docs-pass.md` holds one item for the release.
+A1 done (`de1cf31`); A2 done (`a1d640a`); A3r done. Pair `plan-a-A3+plan-b-Z1` is settled in
+`PLANS/shared/plan-a-A3+plan-b-Z1.md`; plan-a's A3 resolution records the union and passed acceptance.
+plan-b is adding its Z1 resolution section. A3 is active (samples per pixel) and awaiting
+implementation. Then plan-a's Z1 (closing survey). `docs-pass.md` holds one item for the release.
 
 ## Learned rules
 
@@ -28,6 +24,8 @@ read-only survey. Z1 (plan-a closing survey) follows. `docs-pass.md` holds one i
   (such as the scene triangle's material) is the user's and goes in the shared design as an open
   decision, not a settled one. As partner, answer channel messages from known plan facts and start
   nothing until `RESOLVED`.
+- The leader may ask the partner to write its own resolution record via `channel_send` and wait for a
+  `channel_notify`; it need not write the partner's file.
 - Keep exactly one `active` row. When a resolution makes an earlier phase active, move the previously
   active queued phase to `next`.
 - When the user directs one advancer to write both plans' resolution files, it may write plan-b's
