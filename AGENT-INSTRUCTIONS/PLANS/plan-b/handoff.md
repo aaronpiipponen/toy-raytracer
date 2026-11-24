@@ -2,26 +2,25 @@
 
 ## Next action
 
-B3's implementer is running (`phase_subagent`, phase id B3). When it returns, check that its review
-loop finished, then start `REVIEW AND ADVANCE` for B3 with a fresh advancer.
+B3's `REVIEW AND ADVANCE` advancer is running. It should detail Z1, the closing survey and user
+acceptance phase. When it returns, read Z1's handoff and run my acceptance check on the Z1 detail.
 
 ## Current state
 
-B1 and B2 are done (`done/B1-face-side-and-texture-coordinates.md`,
-`done/B2-planes-and-triangles.md`); B2 landed at `f3a3d2a` with the plane, the triangle, the scene
-triangle and the repository-map update. B3
-(`phases/B3-bounding-boxes.md`) is detailed, audited (two header self-contradictions fixed by the
-advancer), and passed the orchestrator acceptance check on 2026-11-24: it matches requirement item
-10; the slab predicate, the list-dispatch stub test and the triangle box numbers were verified by
-hand; the byte-identical render claim is sound because every object's box contains it; 3 tests added
-(the §3a cap) and no caching, receipts or defensive branches.
+B1, B2 and B3 are implemented on branch `plan-b`; B3 landed at tested head `f85a183` (base
+`f3a3d2a`). Receipt: build, 12 tests, clippy `-D warnings`, fmt, `git diff --check` green;
+before/after renders byte-identical (md5 `13b3bc0a3cf5c41df684e179c1d3e93d`); 3 tests added;
+review pass clean. B3's `done/` compression and status flip belong to the advancer.
 
-Open items:
-- The release must ask the user which material the scene triangle gets (recorded in
-  `PLANS/shared/plan-a-A2+plan-b-B2.md`).
-- The `/workflow-reload` note for the shared `project.md` edit is unresolved; mention it to the
-  user, never run it unasked.
-- The shared repository map is edited by both plans; watch for a concurrent edit.
+After B3 the only remaining phase is Z1: the binding closing survey (one read-only `ops-scout` per
+area in parallel, then one independent cross-checking scout, then the orchestrator writes the dated
+note in `benchmarks/`), plus rendering the scene and asking the user to accept. Plan closure and the
+release are not this session's work.
+
+Open items to carry:
+- Release must ask the user which material the scene triangle gets
+  (`PLANS/shared/plan-a-A2+plan-b-B2.md`).
+- `/workflow-reload` for the shared `project.md` edit is still a question for the user.
 
 ## Learned rules
 
