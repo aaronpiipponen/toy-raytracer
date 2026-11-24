@@ -268,3 +268,45 @@ after this phase, and archive follows the user's explicit authorization.
 **Exit:** the dated survey note exists with every finding backed by evidence, the acceptance render
 was inspected, and the user accepted the survey and the rendered result. After any confirmed clear
 defect is fixed in a remediation round, the plan is ready for the release.
+
+## Resolution record - pair plan-a-A3+plan-b-Z1
+
+The union design in `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-b-Z1.md` is the release-merge
+target for `src/hittable.rs`, `src/sphere.rs`, `src/main.rs`, `src/plane.rs` and `src/triangle.rs`.
+That file holds the code blocks and the exact signatures, and they are not repeated here. The merge
+must not lose these points:
+
+- One `HitRecord` without `Copy`, carrying `material`, `front_face`, `u`, `v` and `point`, with the
+  dead-code allow removed from `point`.
+- The seven-argument `HitRecord::new`.
+- Plan-a's borrowing `HittableList::hit`, carrying plan-b's bounding-box skip with the shared
+  nearest-hit limit.
+- `Sphere` with both a material and a `bounding_box`.
+- `Plane` and `Triangle` with a material, keeping the B2 shapes: `Triangle` keeps its box, and
+  `Plane` takes the default `None`.
+
+This branch's B1, B2 and B3 work is the geometry side the release adapts. The scene triangle keeps
+the exact vertices `(0.6, 0.15, -1.0)`, `(1.95, 0.15, -1.0)` and `(1.275, 0.92, -1.0)`. Its measured
+margins, 2.06 px to the front sphere and 2.5 px to the right edge, are valid, and the merge does not
+move or "improve" the placement.
+
+The render and progress seam belongs to the second shared design,
+`AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md`, not to this pair. The release takes its
+`render`, sample defaults and progress writes from that file.
+
+Test reconciliation for the merge:
+
+- `the_center_pixel_shows_the_sphere_facing_the_camera` is dropped, because material scattering
+  replaces normal colouring. The release's rendered-image gate is the recorded proof that the fixed
+  scene shows the sphere, and no replacement test is added.
+- `the_top_row_is_sky` survives the merge.
+- The shape, list and `aabb` tests pass a material after the merge.
+
+The scene triangle's material is an open user-owned decision. The release asks the user and records
+the answer. The recommendation is a diffuse material in the scene spheres' family, so the triangle
+reads as part of the scene. Neither this branch nor the merge picks it silently.
+
+Z1's read-only closing survey is complete. The note is
+`AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/closing-survey-2026-11-24.md` and the scout returns are
+in `AGENT-INSTRUCTIONS/PLANS/plan-b/benchmarks/returns/`. The survey fixes nothing. The user's
+acceptance of the survey and the branch render remains this phase's gate.
