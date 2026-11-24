@@ -8,4 +8,4 @@
 
 - Domain rules: `AGENT-INSTRUCTIONS/LOCAL/repo-rules-domain.md`.
 - Gates: `AGENT-INSTRUCTIONS/LOCAL/gates.md`.
-- Documentation: none beyond `README.md` and `docs/requirements.md`.
+- Documentation: `README.md` for the overview and run steps, `docs/requirements.md` for what the program does, and `docs/rendering.md`, `docs/geometry.md`, `docs/materials.md`, `docs/image-output.md`, `docs/running.md` and `docs/architecture.md` for its behaviour, use and structure.
