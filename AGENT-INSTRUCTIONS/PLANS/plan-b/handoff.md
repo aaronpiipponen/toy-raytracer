@@ -2,12 +2,9 @@
 
 ## Next action
 
-The pair `plan-a-A3+plan-b-Z1` is settling: a fresh advancer is writing the documentation-only Z1
-resolution record (`DETAIL RESOLUTION`) in
-`phases/Z1-closing-survey-and-user-acceptance.md`. When it returns `DETAIL READY`, run my acceptance
-check on that section, then tell the plan-a orchestrator with `channel_notify` that the file is ready
-(path: `AGENT-INSTRUCTIONS/PLANS/plan-b/phases/Z1-closing-survey-and-user-acceptance.md`). Wait for
-`RESOLVED`, then continue with the user's Z1 acceptance.
+The Z1 resolution record is written and accepted on this side; the plan-a orchestrator was notified
+with `channel_notify` and will accept both files and close the pair. Wait for `RESOLVED`, then
+continue with the user's Z1 acceptance.
 
 The user's Z1 acceptance is still outstanding and the survey already passed with no defect; on
 `RESOLVED` plus the user's yes, start a fresh advancer with `REVIEW AND ADVANCE: Review and advance

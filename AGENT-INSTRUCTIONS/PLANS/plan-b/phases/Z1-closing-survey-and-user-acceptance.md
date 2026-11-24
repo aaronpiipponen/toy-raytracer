@@ -300,6 +300,9 @@ Test reconciliation for the merge:
   replaces normal colouring. The release's rendered-image gate is the recorded proof that the fixed
   scene shows the sphere, and no replacement test is added.
 - `the_top_row_is_sky` survives the merge.
+- `the_near_surface_has_texture_coordinates_from_latitude_and_longitude` is dropped as well: the
+  same ray hits the same sphere in `a_ray_through_the_center_hits_the_near_surface`, which asserts the
+  same `(u, v)` after the union, so keeping both would be one behaviour tested twice.
 - The shape, list and `aabb` tests pass a material after the merge.
 
 The scene triangle's material is an open user-owned decision. The release asks the user and records
