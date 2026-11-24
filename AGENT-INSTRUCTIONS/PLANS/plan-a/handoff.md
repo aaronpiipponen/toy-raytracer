@@ -2,18 +2,17 @@
 
 ## Next action
 
-Start A3r's implementer with `phase_subagent` (`A3r`): documentation-only amendment of
-`phases/A3-samples-per-pixel.md` to the shared design, record the release merge contract, `git
-diff --check`, block and compress. Then REVIEW AND ADVANCE A3r (promoting A3 to active) and implement
-A3.
+REVIEW AND ADVANCE A3r (receipt: product code unchanged `a1d640a`, plan records `2ae4f45..9c0624a`),
+which promotes A3 to active. Then make the `phase_subagent` (`A3`) call to reach the armed
+`plan-a-A3+plan-b-Z1` hold; I lead that settlement once the channel opens.
 
 ## Current state
 
-A1 done (`de1cf31`); A2 done and compressed at head `a1d640a`. Pair `plan-a-A3+plan-c-Z1` is RESOLVED;
-shared design at `PLANS/shared/plan-a-A3+plan-c-Z1.md`. A3r is active (documentation-only) and the A3
-phase document still needs its in-place amendment (it still carries the old assert, doc sentence and
-`WIDTH`/`SAMPLES` test calls). A3 is `planned`, to implement after A3r. Then Z1 (closing survey).
-`docs-pass.md` holds one item for the release.
+A1 done (`de1cf31`); A2 done at `a1d640a`. A3r done (documentation-only; A3 amended to the shared
+`plan-a-A3+plan-c-Z1` design, merge contract recorded). A3 is `planned` and now also held by pair
+`plan-a-A3+plan-b-Z1` (plan-a leads; the merge must combine the non-`Copy` material record with plan-b
+B3's bounding-box skip and the triangle scene, whose material is the open user-owned decision). Z1
+(closing survey) follows. `docs-pass.md` holds one item for the release.
 
 ## Learned rules
 
