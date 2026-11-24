@@ -191,18 +191,17 @@ No legacy or defensive code is added or deleted.
 
    ```rust
    world.add(Box::new(Triangle::new(
-       Vec3::new(0.9, -0.4, -1.0),
-       Vec3::new(1.9, -0.4, -1.0),
-       Vec3::new(1.4, 0.6, -1.0),
+       Vec3::new(0.6, 0.15, -1.0),
+       Vec3::new(1.95, 0.15, -1.0),
+       Vec3::new(1.275, 0.92, -1.0),
    )));
    ```
 
-   The triangle lies in the viewport plane at `z = -1`, to the right of the sphere and below the top
-   row. It covers pixels around columns 144 to 194 and rows 20 to 69, all of them above the ground
-   sphere's silhouette, which starts around row 74 at these columns, so no part of it is occluded.
-   It faces the camera with normal `(0, 0, 1)`, so `ray_colour` paints it the flat colour
-   `(0.5, 0.5, 1.0)` against the sky gradient. The centre pixel and the top-left pixel stay on the
-   sphere and the sky.
+   The triangle lies in the viewport plane at `z = -1`, to the right of the sphere. It covers
+   pixels around columns 130 to 196 and rows 5 to 42, every one of them against sky: no part of it
+   overlaps the ground sphere's silhouette or leaves the image. It faces the camera with normal
+   `(0, 0, 1)`, so `ray_colour` paints it the flat colour `(0.5, 0.5, 1.0)`. The centre pixel and
+   the top-left pixel stay on the sphere and the sky.
 
 6. `src/vec3.rs`, `cross` (`src/vec3.rs:21-29`) - delete the comment `// For the triangle normals the
    geometry plan adds.` and the `#[allow(dead_code)]` attribute above `pub fn cross`. The two new

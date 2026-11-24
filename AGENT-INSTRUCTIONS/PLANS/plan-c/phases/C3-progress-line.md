@@ -110,9 +110,12 @@ test of the text or its cadence. Nothing is deleted.
   produce the baseline `~/.cargo/bin/cargo run --release -- --width 80 --height 40 --samples 4
   --output /tmp/opencode/before.png`; after the change, run the same command with `--output
   /tmp/opencode/after.png` and confirm `cmp /tmp/opencode/before.png /tmp/opencode/after.png`
-  reports no difference. Then capture the streams separately:
+  reports no difference. Then capture the streams separately. Build first and run the built binary
+  directly, because `cargo run` writes its own "Finished" and "Running" lines to standard error, so
+  capturing `cargo run` would mix cargo's lines into the progress file:
   ```bash
-  ~/.cargo/bin/cargo run --release -- --width 80 --height 40 --samples 4 --output /tmp/opencode/progress.png > /tmp/opencode/progress.stdout 2> /tmp/opencode/progress.stderr
+  ~/.cargo/bin/cargo build --release
+  target/release/toy-raytracer --width 80 --height 40 --samples 4 --output /tmp/opencode/progress.png > /tmp/opencode/progress.stdout 2> /tmp/opencode/progress.stderr
   ```
   Confirm the standard output capture is empty with `test ! -s /tmp/opencode/progress.stdout`.
   Confirm the progress bytes with `od -An -c /tmp/opencode/progress.stderr`: the percentages are
