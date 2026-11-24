@@ -239,6 +239,9 @@ phase deletes the `#[allow(dead_code)]` on `Vec3::cross`, which the triangle mak
 - Do not touch `docs/`, `README.md`, `Cargo.toml`, `AGENT-INSTRUCTIONS/LOCAL/` or another plan's files.
 
 **Tests:**
+- Each test sits in its module's own `#[cfg(test)] mod tests { use super::*; ... }` block, the form
+  `src/sphere.rs:47-49` uses, so the module's imports supply `Vec3`, `Ray`, `Plane`, `Triangle` and
+  `HitRecord` through `super`.
 - New (3 functions, the phase maximum):
   - `src/plane.rs` - `a_ray_hits_the_plane_and_its_texture_coordinates_wrap`:
 
