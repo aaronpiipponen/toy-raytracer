@@ -2,23 +2,20 @@
 
 ## Next action
 
-The user accepted the closing survey and the final render on 2026-11-24 ("accept all", including the
-recorded not-fixed items; no extra work authorized). The plan is under a coordinator hold: phase Z1
-overlaps plan-a's A3 in `src/main.rs` `render` (sample loop, progress write, doc comment and tests),
-and plan-c leads the settlement because C3 is already landed. Wait for the coordinator's CHANNEL OPEN
-message, then settle the shared design with plan-a's orchestrator, write
-`AGENT-INSTRUCTIONS/PLANS/shared/<pair>.md`, and run plan-c's resolution phase before closing Z1. Do
-not start Z1 or any implementer while held.
+Start Z1r's implementer with `phase_subagent` and phase id `Z1r`. Z1r is the pair resolution
+(detail-only, documentation plus one acceptance render, no product code); its phase document passed
+the orchestrator acceptance check, and the settlement channel is closed with both resolution files
+written.
 
 ## Current state
 
-All implementation is done: C1 (with the survey remediation), C3 and the closing survey. Final head
-`a0c585b`; fast gate green; final acceptance render produced and inspected at 400x200 with empty
-standard output and progress ending `100%` plus one newline. The user accepted the survey note
-`benchmarks/closing-survey-2026-11-24.md` and the render. Z1 is still `active`; the plan is not
-closed or archived. `docs-pass.md` holds three release items (`gates.md` fallback sentence,
-`project.md` and `repo-rules-domain.md` maps). Coordinator hold active on Z1; no shared resource.
-
+The pair plan-a-A3+plan-c-Z1 is resolved; the shared design is
+`AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md`. Plan-c's `Z1r` is `active`; C1, C2 and C3
+are done. plan-a's `A3r` resolution file was also written by this leader per the user's instruction
+and plan-a owns running it and then implementing A3. The user accepted the closing survey and the
+final render ("accept all"); Z1 is `planned` and returns `active` when Z1r completes. Final code
+head `a0c585b`; fast gate green; acceptance render inspected. `docs-pass.md` holds three release
+items. No unresolved user decision.
 
 ## Learned rules
 
@@ -27,3 +24,5 @@ closed or archived. `docs-pass.md` holds three release items (`gates.md` fallbac
 - Cargo's own "Finished"/"Running" lines share standard error with the program: capture program
   streams from the built binary under `target/release/`, not from `cargo run`.
 - A plan survey's findings go to the user; only small, checked fixes are remediated before asking.
+- When the leader is told to write both resolution files, it does so; each plan still changes only
+  its own branch.
