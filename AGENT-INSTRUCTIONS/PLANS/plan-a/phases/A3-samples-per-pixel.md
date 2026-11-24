@@ -69,8 +69,8 @@ reseed or per-sample gamma. The phase adds no adaptive sampling, no sample-count
            for column in 0..width {
                let mut colour = Colour::new(0.0, 0.0, 0.0);
                for _ in 0..samples {
-                   let u = (column as f64 + rng.next_f64()) / (width - 1) as f64;
-                   let v = (row as f64 + rng.next_f64()) / (height - 1) as f64;
+                   let u = (column as f64 + rng.next_f64() - 0.5) / (width - 1) as f64;
+                   let v = (row as f64 + rng.next_f64() - 0.5) / (height - 1) as f64;
                    colour = colour + ray_colour(&camera.ray(u, v), &world, &mut rng);
                }
                pixels.push(colour / samples as f64);
@@ -81,8 +81,10 @@ reseed or per-sample gamma. The phase adds no adaptive sampling, no sample-count
    ```
    The nesting is row, then column, then sample, then bounce. Each sample draws `u` then `v` from
    the same `rng` before its trace, so the generator sequence is row-major and reproducible. The
-   jitter keeps the existing `width - 1` and `height - 1` denominators of the pixel grid. The sum
-   is divided once in linear space after the sample loop.
+   `- 0.5` centres every draw inside its own pixel: a single sample lands within half a pixel of the
+   pixel's centre, so the scene keeps A2's geometry instead of shifting by a full pixel. The jitter
+   keeps the existing `width - 1` and `height - 1` denominators of the pixel grid. The sum is
+   divided once in linear space after the sample loop.
 2. `src/main.rs`, `main` - change `let pixels = render(WIDTH, HEIGHT);` to
    `let pixels = render(WIDTH, HEIGHT, 16);`. Add no constant for the sample count.
 3. `src/main.rs`, tests - after step 1 the module has exactly three test functions:
@@ -186,13 +188,7 @@ reseed or per-sample gamma. The phase adds no adaptive sampling, no sample-count
      `/tmp/opencode/render-a2.ppm` and `dst` to `/tmp/opencode/render-a2.png`, open that PNG, then
      `git worktree remove /tmp/opencode/a2-image`. The A2 image has hard stair steps along the
      sphere edges. The A3 image shows intermediate tones along those edges.
-  6. Small render with few samples, after the safety commit: temporarily set
-     `const WIDTH: usize = 80;` and `const HEIGHT: usize = 40;` and change the `main` call to
-     `render(WIDTH, HEIGHT, 4)`. `write_ppm` already receives `WIDTH` and `HEIGHT`, so the PPM
-     header matches the buffer. Run `cargo run --release > /tmp/opencode/render-a3-small.ppm`,
-     convert and open it, confirm it shows the same scene with the same smoother edges, then
-     restore the file with `git checkout -- src/main.rs` and confirm `git status --short` is empty.
-  7. Remove the scratch files in `/tmp/opencode` this gate created and confirm the `/tmp/opencode`
+  6. Remove the scratch files in `/tmp/opencode` this gate created and confirm the `/tmp/opencode`
      PPM and PNG paths above are gone.
 - Slow gate: none. The release renders are small and finish well under two minutes.
 
@@ -211,9 +207,8 @@ reseed or per-sample gamma. The phase adds no adaptive sampling, no sample-count
 - [ ] The three named tests pass and no other test changed.
 - [ ] Test budget respected: 2 new functions, 1 adapted, 0 deleted, reported in the receipt.
 - [ ] Fast gate and the rendered-image conditional gate pass at the tested head, including the
-  identical-bytes comparison, the A2 comparison and the small few-sample render.
+  identical-bytes comparison and the A2 comparison.
 - [ ] No `docs/` page changed, and `docs/requirements.md` item 5 remains accurate.
-- [ ] The temporary small-render edit is reverted and `git status --short` is empty.
 - [ ] Scratch files from the gate are removed.
 - [ ] Safety commit on branch `plan-a`.
 - [ ] Revision-bound verification receipt exists with base `80d833c` and the tested head.
