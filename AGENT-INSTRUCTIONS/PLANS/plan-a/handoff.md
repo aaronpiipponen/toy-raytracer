@@ -2,19 +2,20 @@
 
 ## Next action
 
-Make the `phase_subagent` (`A3`) call to reach the armed `plan-a-A3+plan-b-Z1` hold; it should refuse
-with `COORDINATOR HOLD` and record the stop. I lead that settlement; when the channel opens, write
-`PLANS/shared/plan-a-A3+plan-b-Z1.md` (union of the non-`Copy` material record with plan-b B3's box
-skip, a `Sphere` with material and bounding box, the borrowing `HittableList::hit` plus box skip, and
-the triangle scene whose material is the open user-owned decision), then close and implement A3.
+Spawn `phase-advancer` DETAIL RESOLUTION for pair `plan-a-A3+plan-b-Z1`: amend plan-a's A3 in place to
+record the geometry-union merge contract from `PLANS/shared/plan-a-A3+plan-b-Z1.md` (A3's sampling work
+unchanged). Then accept plan-a's A3 resolution and plan-b's Z1 resolution file, `channel_close`, and
+implement A3.
 
 ## Current state
 
-A1 done (`de1cf31`); A2 done at `a1d640a`; A3r done (documentation). A3 (samples per pixel) is active,
-amended to the shared `plan-a-A3+plan-c-Z1` design, and held by pair `plan-a-A3+plan-b-Z1` (plan-a
-leads; merge must combine the material record with plan-b B3's bounding boxes and the triangle scene,
-whose material remains the open user-owned decision). Z1 (closing survey) follows. `docs-pass.md`
-holds one item for the release.
+A1 done (`de1cf31`); A2 done (`a1d640a`); A3r done (plan-c render seam recorded); A3 active (samples per
+pixel, amended for the plan-c seam). Pair `plan-a-A3+plan-b-Z1` is settled in
+`PLANS/shared/plan-a-A3+plan-b-Z1.md` (the union: non-`Copy` record
+with material + front_face/u/v, seven-argument constructor, borrow-plus-box-skip list loop, Sphere with
+material and bounding box, Plane/Triangle with material, exact triangle vertices, open user-owned
+triangle material). A3's resolution records that contract; plan-b's Z1 records it and runs its own
+read-only survey. Z1 (plan-a closing survey) follows. `docs-pass.md` holds one item for the release.
 
 ## Learned rules
 
