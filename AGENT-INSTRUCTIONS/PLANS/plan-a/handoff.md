@@ -2,16 +2,16 @@
 
 ## Next action
 
-WAITING ON PARTNER. When plan-b signals its B2 resolution phase file is ready, run the acceptance
-check on BOTH resolution files (`plan-a/phases/A2-glass.md` and plan-b's B2 resolution file), call
-`channel_close` naming the partner's file, then start A2's implementer with `phase_subagent` (`A2`).
+Spawn one fresh `phase-advancer` with DETAIL RESOLUTION for both plans (write plan-a's A2 resolution
+and plan-b's B2 resolution from the shared design). Then accept both files, `channel_close` naming
+plan-b's B2 file, and start A2's implementer with `phase_subagent` (`A2`).
 
 ## Current state
 
-A1 done (head `de1cf31`). A2/B2 settled in `PLANS/shared/plan-a-A2+plan-b-B2.md`; A2's resolution
-phase `phases/A2-glass.md` passed the orchestrator acceptance check (math and fixtures hand-verified;
-3 new tests, at the cap). A3 is `next` (detailed and accepted, queued behind A2). plan-b's B2
-resolution file is not yet written. `docs-pass.md` holds one item for the release.
+A1 done (head `de1cf31`). Pair `plan-a-A2+plan-b-B2` settled in
+`PLANS/shared/plan-a-A2+plan-b-B2.md`; plan-a's A2 resolution `phases/A2-glass.md` exists and passed
+an earlier acceptance check. Per the user, one advancer now writes both plans' resolution files.
+A3 is `next` (detailed and accepted, queued behind A2). `docs-pass.md` holds one item for the release.
 
 ## Learned rules
 
@@ -23,5 +23,7 @@ resolution file is not yet written. `docs-pass.md` holds one item for the releas
   decision, not a settled one.
 - Keep exactly one `active` row. When a resolution makes an earlier phase active, move the previously
   active queued phase to `next`.
+- When the user directs one advancer to write both plans' resolution files, it may write plan-b's
+  phase document (not its code) per the shared design.
 
 ## Learned rules
