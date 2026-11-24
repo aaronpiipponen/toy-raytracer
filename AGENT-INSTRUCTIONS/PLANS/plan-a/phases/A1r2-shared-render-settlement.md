@@ -147,9 +147,9 @@ guard, test, config key or permanent documentation.
    merge keeps one `to_byte` body with the `sqrt` for both writers.
 
 **Callers / wiring to update:**
-- `full-plan.md:17` status table - insert the A1r2 row and change A1's status to `planned` with
-  dependency `A1r2` and A3's dependency to `A1 + A1r2`.
-- `full-plan.md:75` `### A3 - Samples per pixel` - update the scoped entry to name the shared file,
+- `full-plan.md`, `## Phase status` table - insert the A1r2 row and change A1's status to `planned`
+  with dependency `A1r2` and A3's dependency to `A1 + A1r2`.
+- `full-plan.md`, `### A3 - Samples per pixel` - update the scoped entry to name the shared file,
   the branch-created sample loop and the jitter order.
 - No source, test, documentation or configuration caller exists for this phase.
 
