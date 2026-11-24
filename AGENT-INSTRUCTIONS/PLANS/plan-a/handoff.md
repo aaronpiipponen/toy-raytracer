@@ -2,20 +2,19 @@
 
 ## Next action
 
-Run plan-a's A1r3 unit: submit A1r3 to a fresh `phase-implementer`, then a fresh
-`phase-advancer` in `REVIEW AND ADVANCE`. A1 resumes after A1r3 is done.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` for A1r3 with the implementer's
+receipt, then start the A1 implementer once A1 is the active row.
 
 ## Current state
 
-The A1+B2 pair is resolved (plan-a led) and the channel is closed. `PLANS/shared/`
-holds all three settled designs: the hit record, the render shape and the scene
-composition. Plan-a's `A1r3` is the sole active row, gate `minimal`, documentation-only,
-recording plan-a's half of the scene settlement; `A1` is planned behind it with its
-existing detail current at `e180476`; `A3` depends on `A1 + A1r2`. Plan-b's `B2r` was
-written by this session and accepted by plan-b, which owns its row and compression. The
-`docs-pass.md` file was removed because plan-b's B2 deletes the stale `Vec3::cross`
-comment. Autonomous mode covers routine loop choices only; every product decision goes to
-the user.
+A1r3's implementer returned a documentation-only receipt at `3e1c8ab` (workspace-root
+round commit; the plan-a worktree has no product commit and no product code moved) after
+the user stopped its shell-check loop with a narrow follow-up; its reviewer pass was
+skipped for that reason, so the advancer's own re-read and compression are the check.
+A1r3 fixed four slips in the phase text only. A1 is planned behind A1r3 with its detail
+current at `e180476`; its header still says `Status: active / Depends on: A1r` while the
+table is authoritative. All three shared designs are settled and their pairs closed.
+Autonomous mode covers routine loop choices only; every product decision goes to the user.
 
 ## Learned rules
 

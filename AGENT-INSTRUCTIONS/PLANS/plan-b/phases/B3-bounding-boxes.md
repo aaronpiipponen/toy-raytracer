@@ -306,8 +306,7 @@ or test is deleted.
 2. After implementing, run `~/.cargo/bin/cargo run --release > /tmp/opencode/b3-after.ppm` and
    expect exit status 0.
 3. Run `cmp /tmp/opencode/b3-before.ppm /tmp/opencode/b3-after.ppm` and expect no output and exit
-   status 0: the box test leaves the image byte-identical. As a cross-check, the file's
-   `sha256sum` is `36fa51831310f0d4f627f86d20e89215793f8988bb99f74ae2660bfda67488ae`.
+   status 0: the box test leaves the image byte-identical.
 4. If the two files differ, stop and report instead of ticking the checklist.
 
 **Completion checklist (gate):**
