@@ -243,8 +243,8 @@ format or extension is one clear error on standard error plus a non-zero exit. T
 - No history, plan id or phase id in source comments or the README.
 - Do not edit `AGENT-INSTRUCTIONS/LOCAL/gates.md`. Every worktree shares it, and its stale fallback
   sentence is a release item in the plan's `docs-pass.md`.
-- Do not touch `docs/requirements.md`, `Cargo.toml`, `Cargo.lock`, `.gitignore` or any file under
-  `AGENT-INSTRUCTIONS/`.
+- Do not touch `docs/requirements.md`, `Cargo.toml`, `Cargo.lock` or `.gitignore`, and do not edit
+  any `AGENT-INSTRUCTIONS/` file outside `AGENT-INSTRUCTIONS/PLANS/plan-c/`.
 
 **Tests:**
 - Changed: `src/main.rs` - `the_center_pixel_shows_the_sphere_facing_the_camera` and
