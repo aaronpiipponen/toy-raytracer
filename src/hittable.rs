@@ -21,7 +21,7 @@ pub struct HitRecord {
 }
 
 impl HitRecord {
-    /// A hit record whose normal faces against the ray, with the face side recorded.
+    /// Build a hit record whose normal faces against the ray, with the face side recorded.
     pub fn new(ray: &Ray, t: f64, point: Vec3, outward_normal: Vec3, u: f64, v: f64) -> Self {
         let front_face = ray.direction.dot(outward_normal) < 0.0;
         let normal = if front_face {
