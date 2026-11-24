@@ -144,3 +144,136 @@ Caveat for the orchestrator: the frozen A3 contract (`done/A3-samples-per-pixel.
 
 - I did not execute `cargo test` (read-only role), so the "12 passed at `46a5c02`" claim is taken from `A3-samples-per-pixel.md:45`; the count of test functions matches but pass status was not independently run.
 - Whether `the_top_row_is_sky` at WIDTH×HEIGHT is a meaningful runtime cost in seconds was not measured.
+
+## Cross-check
+
+### Answer
+
+The four returns are substantially accurate on facts and line references, but three of their headline findings do not survive checking. The `.abs()` in `refract` and the `> 1e-12` bound in `random_unit_vector` are not speculative drift: A1/A2 never specify the loop or formula body, and both are the standard floating-point-safe forms of the named helpers, so they should stay. The jitter finding is mis-framed: no sample leaves its own pixel; under the frozen `width - 1` grid it is the outermost pixel cells that overhang the viewport. The real, handful of document/test findings are the stale `HitRecord` "distance" doc (a genuine stale doc, though not clearly owned by this plan), the whole-image render in `the_top_row_is_sky` (literal rule violation, contract-frozen, 0.32 s debug), and `Vec3::cross`'s plan-naming comment (real §4 item 13 violation, but owned by plan-b/B2 and already fixed on `main`). All four changed files and requirements 1–6 are covered by at least one area.
+
+### Contested points settled
+
+1. **`refract` `.abs()` (`src/material.rs:102`) — legitimate, keep.** A2 (`done/A2-glass.md:15-19`) names the helper signature and semantics only; it never specifies the body, and `.abs()` is not a helper, clamp, validation or random source, so there is no contract drift. The call site is `:83-89`, and `cannot_refract` is false there, so mathematically `1 - |perp|² ≥ 0`; but `|perp|²` is evaluated through a different rounding path than `ratio*sin_theta`, so at the Snell/TIR boundary it can be a few ulps above 1. `.abs()` then yields 0 (the tangent direction) instead of `sqrt(-ε) = NaN`. It cannot mask wrong output for valid input because the radicand must be ~0. Area 1's "should be removed / fails loudly" conclusion is rejected.
+
+2. **`random_unit_vector` `len_squared > 1e-12` (`src/material.rs:121`) — legitimate, keep.** A1 (`done/A1-diffuse-and-metal-materials.md:17-19`) says "rejection sampling of a point in the unit ball", but does not state the loop test, so "the single `<= 1.0` test" is an inference the scout invented. Excluding a ball of radius 1e-6 around the origin cannot bias the returned direction (normalisation is scale-invariant and the excluded set has measure ~1e-18), and it prevents `p.unit()` dividing by zero. Not a deviation, not a defect.
+
+3. **Whole-vector comparisons (`src/main.rs:142,147`) — literal rule deviation, but benign and contract-frozen.** `repo-rules-domain.md:37` says "a few pixels of a small image, never a whole image"; these compare the entire 40×20 (800-pixel) vector. However 40×20 is a small image (measured 0.01 s per test), and the invariants proved (byte-identical reproducibility, sample-count dependence) are inherently whole-buffer properties that a few pixels could not prove. A3 (`done/A3-samples-per-pixel.md:40-42`) mandates these exact calls. Low severity, not actionable without changing the contract.
+
+4. **Jitter overhang (`src/main.rs:91-92`) — samples do not leave their pixel; the edge pixel cells overhang the viewport.** With `u = (c + rng − 0.5)/(w−1)`, each draw is within ±0.5/(w−1) of `c/(w−1)`, i.e. centred in its own cell — requirement 5's "jittered inside the pixel" holds. Under the `width − 1` mapping the implied pixel centres are at `c/(w−1)`, so column 0's cell is `[−0.5/199, 0.5/199) ≈ [−0.00251, 0.00251)` and column 199's cell is `[198.5/199, 199.5/199) ≈ [0.99749, 1.00251)`: the *cells* overhang `[0,1]`, not the samples leaving their pixel. Area 3's upper bound `1.00754` is also wrong (that divided by 198). This is baseline `width − 1` mapping, explicitly frozen by A3 `:11-14`.
+
+5. **`HitRecord` doc "distance along the ray" (`src/hittable.rs:9-10`) — genuinely stale.** `Ray::at` is `origin + direction*t` (`src/ray.rs:16-18`), the camera direction is non-unit except at the viewport centre (`src/camera.rs:19-21,31-35`), and `Sphere::hit` solves for the parameter `t` with `a = direction·direction` (`src/sphere.rs:29,37-40`). So `t` is a parameter, not a distance — confirmed. Caveat: the sentence was edited by this plan's A1 commit `a1358ff`, and A1r (`done/A1r-shared-hit-record-settlement.md:32-33`) assigns only the normal wording to the merge, not the "distance" word; so this is a genuine stale doc that no phase explicitly owns.
+
+6. **`the_top_row_is_sky` (`src/main.rs:135-138`) — literal violation, contract-frozen, measured 0.32 s.** It renders 200×100×16 = 320,000 samples to assert one pixel (`pixels[0]`), so it is a whole production-size image, contrary to `repo-rules-domain.md:37`. `cargo test` here: 12 passed, suite `finished in 0.32s`; this test alone is `0.32s`, the two 40×20 render tests are `0.01s` each. A3 `:21-22` and A1r2's merge obligation freeze `render(WIDTH, HEIGHT, 16)`, so fixing it needs a contract change, not implementer remediation. In release builds the cost would be far smaller, but I did not measure that.
+
+7. **`Vec3::cross` (`src/vec3.rs:21-29`) — real §4 item 13 violation, owned by plan-b/B2, out of plan-a scope.** The comment and code came from baseline `e1293ef` (`git blame`), `main..HEAD -- src/vec3.rs` is empty, and A1 (`done/A1-diffuse-and-metal-materials.md`) and A1r3 (`done/A1r3-shared-scene-settlement.md:44-45`) both assign removal to the geometry plan/B2. Correction to Area 4: `66097bd` fixed *this exact line* to "For the triangle normals." on `main`/`plan-b`, and `281dda8` fixed a different comment in `src/main.rs`; neither is an ancestor of HEAD. So it "survives" only because plan-a forked at `e180476`, and the release merge already resolves it.
+
+### Claim-by-claim
+
+Status: ✅ confirmed · ❌ rejected · ✏️ corrected.
+
+#### Area 1 — `src/material.rs`
+
+| # | Claim | Status | Evidence |
+|---|---|---|---|
+|1|`:102` is `normal * -(1.0 - perp.dot(perp)).abs().sqrt()`|✅|`src/material.rs:102`|
+|2|`refract` only reached from `:89` when `cannot_refract` false|✅|`src/material.rs:83-89`|
+|3|Radicand is provably non-negative, so `.abs()` only masks bugs|✏️|Math yes, FP no: different rounding of `perp.dot(perp)` vs `ratio*sin_theta`; `.abs()` is the canonical RTIOW form|
+|4|It drifts from A2 `:18` ("No other helper, clamp, validation or random source")|❌|`done/A2-glass.md:15-19` names signature only; `.abs()` is none of those|
+|5|It should be removed / fail loudly|❌|Guard legitimate at the Snell boundary; no realistic wrong output|
+|6|`:121` contains `len_squared > 1e-12 && len_squared <= 1.0`|✅|`src/material.rs:121`|
+|7|A1 `:18` prescribes the single `<= 1.0` test|❌|`done/A1-diffuse-and-metal-materials.md:17-19` states only "rejection sampling of a point in the unit ball"|
+|8|`1e-12` is an unrequested deviation / speculative guard|✏️|Standard divide-by-zero guard, distribution-neutral; not a deviation|
+|9|Scout's "defensible, not a defect" judgement|✅|Same conclusion as #8|
+|10|Req 1: every object has a material; 50-bounce; black at limit|✅|`src/hittable.rs:15`, `src/main.rs:25,32,39,45`|
+|11|Req 2 diffuse: `normal + random_unit_vector`, albedo|✅|`src/material.rs:29-30`|
+|12|Req 3 metal: reflect about unit incoming, fuzz, into-surface absorbed, albedo|✅|`src/material.rs:49-55`; fuzz unclamped but field invariant/scene 0.3 (`src/main.rs:69`)|
+|13|Req 4 glass: Snell, TIR, Schlick, white attenuation|✅|`src/material.rs:73-91`; `refract` 99-104, `reflect` 95-97, `schlick` 107-110 math correct; index 1.5 `src/main.rs:74`|
+|14|Req 6: `scatter` takes `&mut Rng`, one `Rng`/`SEED`|✅|`src/material.rs:12`; `src/main.rs:24,85`|
+|15|Simplicity: one trait, three impls, no duplicate path, all four helpers used|✅|`src/material.rs` entire; no `allow(dead_code)` in it|
+|16|§0b: no records/hashes|✅|No persistence in the module|
+|17|§3a: six tests, 3 A1 + 3 A2, each ≤3; normal-incidence test depends on first draw > 0.04|✅|`src/material.rs:133,153,173,187,207,229`; first draw from seed 7 = 0.8202 > 0.04|
+|18|Docs accurate, index 1.5, std-only, no `unsafe`, single-threaded|✅|`Cargo.toml` empty deps; `grep unsafe` clean|
+|19|`src/main.rs:126` hardcodes 16; req 5 config/CLI is the output plan's|✅|`src/main.rs:126`; `full-plan.md:6-7` out of scope|
+|20|Out-of-scope: `Vec3::cross` dead code kept intentionally|✅|See contested #7|
+|21|A1's doc note: `refract` recomputes `cos_theta` but A2 fixes the signature|✅|`done/A2-glass.md:15-17`; `src/material.rs:81,100`|
+
+#### Area 2 — `src/hittable.rs`, `src/sphere.rs`
+
+| # | Claim | Status | Evidence |
+|---|---|---|---|
+|1|F1: "distance along the ray" is stale; `t` is a parameter|✅|`src/hittable.rs:9-10`; `src/ray.rs:16-18`; `src/camera.rs:31-35`; `src/sphere.rs:29,37-40`|
+|2|Camera direction is not normalised|✅|`src/camera.rs:19-21,31-35` (unit only at `u=v=0.5`)|
+|3|Sphere solves the quadratic in the parameter|✅|`src/sphere.rs:29,37-40`|
+|4|"Only the test at `src/sphere.rs:67` uses a unit direction"|✏️|Both sphere tests use unit directions: `:67` and `:82`|
+|5|Wording "inherited unchanged from baseline `e1293ef`"|✏️|Phrase is baseline (`e1293ef:src/hittable.rs:4`), but the sentence was edited by this plan's `a1358ff` (`git diff e180476..46a5c02 -- src/hittable.rs`)|
+|6|All four `HitRecord` fields are consumed; no unused field|✅|`src/hittable.rs:12-15,39`; `src/material.rs:29-30,50,54,91`; `src/main.rs:34`|
+|7|`HittableList::hit` is one nearest-hit loop with `map_or`|✅|`src/hittable.rs:36-45`|
+|8|One construction path per object; material cloned once per hit|✅|`src/sphere.rs:17-23,45-50,49`|
+|9|Record shape matches A1 branch settlement; no face flag/u/v/derives|✅|`src/hittable.rs:11-16`; `done/A1r-shared-hit-record-settlement.md:19-23`|
+|10|No material logic or randomness in these files; req 1 met via `Sphere`|✅|`src/sphere.rs:13,49`; `src/main.rs:34`|
+|11|No dead code; imports used; `add` called four times; `Default` used|✅|`src/hittable.rs:3-7`; `src/sphere.rs:3-8`; `src/main.rs:55,56,61,66,71`|
+|12|Two sphere tests, distinct purpose; repeated setup is not bloat; material field untested is a coverage gap|✅|`src/sphere.rs:60-84`; no assertion on `hit.material`|
+|13|No records/hashes in the area|✅|Fields are live only|
+|14|No duplicate material path between `Sphere` and `HittableList`|✅|`src/hittable.rs:36-45` forwards only|
+|15|Out-of-scope: `cross` from baseline, geometry plan territory|✅|`git log --oneline -- src/vec3.rs` → only `e1293ef`|
+
+#### Area 3 — `src/main.rs`, `src/rng.rs`
+
+| # | Claim | Status | Evidence |
+|---|---|---|---|
+|1|`main.rs:142,147` compare whole 40×20 render vectors|✅|`src/main.rs:142,147`|
+|2|That drifts from `repo-rules-domain.md:37` "never a whole image"|✅ literal / ✏️ not actionable|`repo-rules-domain.md:37`; 40×20 is small and costs 0.01 s/test; invariant is global|
+|3|A3 contract mandates these exact tests|✅|`done/A3-samples-per-pixel.md:40-42`|
+|4|F2: `u/v` formula and half of edge-pixel samples land outside `[0,1]`|✅ numerically|`src/main.rs:91-92`; values below|
+|5|Column 199 range `[0.99749, 1.00754)`|✏️|Correct is `[198.5/199, 199.5/199) ≈ [0.99749, 1.00251)`|
+|6|"The code's own claim 'centres every draw inside its own pixel' is not literally true"|❌|Draws are centred in their own cell; the *cells* overhang `[0,1]` (see contested #4)|
+|7|Pre-existing `width − 1` mapping, frozen by A3|✅|`done/A3-samples-per-pixel.md:11-14`|
+|8|`rng.rs:9` `seed.max(1)` silent fallback, not triggered; file unchanged from base|✅|`src/rng.rs:9`; `git log --oneline -- src/rng.rs` → only `e1293ef`|
+|9|Bounce loop: `MAX_BOUNCES=50`, attenuation, absorb black, limit black|✅|`src/main.rs:25,32,36,39,45`|
+|10|Gamma 2 once in `to_byte`, only at output|✅|`src/main.rs:102-104,113-120`|
+|11|Sample loop row→column→sample→bounce, linear sum, one divide, default 16|✅|`src/main.rs:87-96,126`|
+|12|Two jitter draws per sample before the trace|✅|`src/main.rs:91-93`|
+|13|One generator per render, `SEED = 7`, threaded `&mut`|✅|`src/main.rs:24,85,93`|
+|14|No other randomness source (crate/API)|✅|Grep of `src/` finds only the passed `Rng`; the literal word "random" appears only in doc prose|
+|15|Scene: red-brown diffuse centre, grey diffuse ground, metal fuzz 0.3, glass 1.5|✅|`src/main.rs:54-77`|
+|16|Determinism from one generator, fixed order, single-threaded|✅|`src/main.rs:85-96`; `the_same_settings_render_the_same_pixels` passes|
+|17|Test budget: 2 new + 1 adapted|✅|`src/main.rs:135,141,146`; `done/A3-samples-per-pixel.md:40`|
+|18|§0b: no records/receipts in the area|✅|None|
+|19|No dead code in `main.rs`/`rng.rs`|✅|All functions reachable from `main`/tests|
+|20|Out-of-scope: `cross` reported with evidence in hand|✅|`src/vec3.rs:21-29`|
+
+#### Area 4 — tests and docs
+
+| # | Claim | Status | Evidence |
+|---|---|---|---|
+|1|`src/vec3.rs:21` names "the geometry plan", above `#[allow(dead_code)] cross`, no caller, from `e1293ef`|✅|`src/vec3.rs:21-29`; `git blame` → `e1293ef`; `grep` no caller|
+|2|REPO-RULES §4 item 13 forbids history/plan ids in permanent files|✅|`AGENT-INSTRUCTIONS/BUILDING/REPO-RULES.md:170`|
+|3|"Other plan references removed in `281dda8` and `66097bd`; this one survives"|✏️|`66097bd` fixed this exact line on `main`/`plan-b`; `281dda8` fixed `src/main.rs`'s `mod rng` comment; neither is an ancestor of HEAD (`git merge-base --is-ancestor` → no)|
+|4|Exactly 12 test functions; no `tests/` dir|✅|`src/main.rs:135,141,146`; `src/rng.rs:30`; `src/sphere.rs:61,76`; `src/material.rs:134,154,174,188,208,230`; `ls tests` absent|
+|5|Coverage maps to hit geometry, material rules, small renders|✅|Same lines; private helpers untested directly|
+|6|Assertions purposeful (full reflected vector, Snell-derived vector, critical-angle reflection)|✅|`src/material.rs:168-170,222-226,244-246`|
+|7|User decisions: 1.5, 16, `- 0.5`, gamma once, single-threaded, std-only, no `unsafe`|✅|`src/main.rs:74,126,91-92,102-104`; `Cargo.toml`; grep clean|
+|8|Requirements 1–6 satisfied|✅ core / ✏️ item 5 user-config|`src/main.rs:25,32,45`; `src/material.rs:27-31,47-56,71-93`; `src/main.rs:82-99,102-104,24,85`; no CLI on this branch (`full-plan.md:6-7`)|
+|9|README accurate; doc/README diff empty|✅|`README.md:1-10`; `git diff --stat e180476..46a5c02 -- docs README.md` empty|
+|10|Items 7–13 absent is consistent with a finished-program spec|✅|`README.md:10`; `docs/requirements.md:21-41`; geometry/output plan scope|
+|11|No plan ids elsewhere in `src/`, `docs/`, `README.md`|✅|Grep for plan/phase/merge/release/branch/future → only `src/vec3.rs:21`|
+|12|White attenuation asserted in all three glass tests though returned unconditionally|✅ fact, minor|`src/material.rs:201,221,243,91`|
+|13|`the_top_row_is_sky` renders 200×100×16 = 320,000 samples to assert one pixel|✅|`src/main.rs:136-137`; measured 0.32 s debug|
+|14|Contract freezes this call|✅|`done/A3-samples-per-pixel.md:21-22`; `done/A1r2-shared-render-settlement.md` merge obligation|
+|15|`cross` is product dead code reported here|✅|`src/vec3.rs:22-29`|
+|16|No remote hosts/workers/runtime config apply|✅|`AGENT-INSTRUCTIONS/LOCAL/ops-scout.md`|
+|17|Unknown: "12 passed at `46a5c02`" not independently run|✅ resolved|I ran `cargo test`: 12 passed, 0 failed|
+|18|Unknown: top-row test runtime not measured|✅ resolved|0.32 s debug (suite total 0.32 s); other render tests 0.01 s each|
+
+### Coverage
+
+`git diff --stat e180476..46a5c02` changes exactly four files: `src/hittable.rs`, `src/main.rs`, `src/material.rs`, `src/sphere.rs`. All are covered: material by Area 1; hittable and sphere by Area 2; main by Area 3 (and its tests by Area 4). `src/rng.rs` is unchanged but covered by Area 3 as required. Requirements 1–6 are each covered by at least one area (1: Areas 1/3/4; 2: 1/4; 3: 1/4; 4: 1/3/4; 5: 3/4; 6: 1/3/4). `src/vec3.rs`, `README.md` and `docs/` are unchanged and are covered by Area 4 as out-of-scope/doc checks.
+
+### Claims the areas missed
+
+- **The top-row test does not test the row its name claims.** It asserts only `pixels[0]` (`src/main.rs:137`), the top-left pixel, not "the top row"; the name overstates a one-pixel assertion, and it does so at production size. Evidence `src/main.rs:135-138`.
+- **Requirement 5's "configurable number of samples" is not user-facing on this branch.** `render` takes `samples` and `main` passes the literal 16 (`src/main.rs:126`); there is no CLI/`--samples` (out of scope per `full-plan.md:6-7`). Area 4's blanket "items 1–6 are all satisfied" should be limited to the render core.
+- **The `t_min = 0.001` self-intersection epsilon (`src/main.rs:33`) is also a ray parameter, not a distance.** With a non-unit camera direction (`src/camera.rs:31-35`), its physical scale varies across the image. This is the same parameter-vs-distance issue as the stale `HitRecord` doc and strengthens Area 2's F1; nobody cited it.
+- **The `HitRecord` doc sentence was touched by this plan, not purely inherited.** A1's commit `a1358ff` rewrote the comment (`git diff e180476..46a5c02 -- src/hittable.rs`) but kept "distance along the ray", so Area 2's "inherited unchanged" understates plan-a's contact with that line.
+- **Lambertian can in principle produce a zero direction when `random_unit_vector ≈ −normal` (`src/material.rs:29`), and `sky_colour` then calls `.unit()` (`src/main.rs:50`), giving NaN → black.** Probability is effectively zero and no realistic input hits it, so this is explicitly *not* a finding under the hobby-simplicity rule; noted only because the areas did not check it.
+- **`the_top_row_is_sky` is the only test whose runtime matters:** it accounts for essentially the whole 0.32 s suite, while the two 40×20 tests are ~0.01 s each. That quantifies Area 4's size concern but also shows the cost is small in absolute terms.
