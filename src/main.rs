@@ -30,6 +30,8 @@ fn ray_colour(ray: &Ray, world: &dyn Hittable, rng: &mut Rng) -> Colour {
     let mut ray = *ray;
     let mut colour = Vec3::new(1.0, 1.0, 1.0);
     for _ in 0..MAX_BOUNCES {
+        // The 0.001 lower bound is in ray-parameter units. It keeps a scattered ray from
+        // hitting the surface it left.
         if let Some(hit) = world.hit(&ray, 0.001, f64::INFINITY) {
             match hit.material.scatter(&ray, &hit, rng) {
                 Some((attenuation, scattered)) => {
@@ -133,8 +135,14 @@ mod tests {
 
     #[test]
     fn the_top_row_is_sky() {
-        let pixels = render(WIDTH, HEIGHT, 16);
-        assert!(pixels[0].z > pixels[0].x, "the sky is bluer than it is red");
+        let pixels = render(40, 20, 4);
+        for column in [0, 20, 39] {
+            let pixel = pixels[column];
+            assert!(
+                pixel.z > pixel.x,
+                "the sky is bluer than it is red at column {column}"
+            );
+        }
     }
 
     #[test]

@@ -6,8 +6,9 @@ use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
-/// Where a ray hit a surface: the distance along the ray, the point, the outward normal and the
-/// material of the object.
+/// Where a ray hit a surface: the point `origin + direction * t`, the outward normal and the
+/// material of the object. `t` is the ray parameter, which is the distance along the ray when the
+/// direction has unit length.
 pub struct HitRecord {
     pub t: f64,
     pub point: Vec3,
