@@ -13,5 +13,10 @@
     "report-writer": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
     "coordinator": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
     "conflict-investigator": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" }
+  },
+  "sessions": {
+    "plan": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "release": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" },
+    "shadow": { "model": "commandcode/deepseek/deepseek-v4.1-flash", "variant": "low" }
   }
 }
