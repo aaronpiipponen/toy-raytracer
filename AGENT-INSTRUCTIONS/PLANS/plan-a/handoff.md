@@ -2,20 +2,20 @@
 
 ## Next action
 
-Start the A2 implementer (`phase_subagent` with phase id A2). On its receipt, spawn a fresh
-`phase-advancer` in `REVIEW AND ADVANCE` for A2.
+Spawn a fresh `phase-advancer` in `REVIEW AND ADVANCE` for A2 with the implementer's
+receipt. Then A3 (samples per pixel) becomes the next unit; the shared render settlement
+already fixes its merge shape.
 
 ## Current state
 
-A1 is done and frozen at `4869d5f`. A2 (glass) is active and detailed at
-`phases/A2-glass.md`: a `Dielectric` material with Snell refraction, TIR and Schlick, the
-face side derived locally from the outward normal in two lines (the release merge replaces
-that), white attenuation, and one glass sphere at (-0.85, -0.1, -1.3) radius 0.4 index 1.5
-in the scene. Three new tests, one per requirement-4 branch, within the §3a cap. A1's
-five small doc-comment gaps were recorded as carry-overs in `done/A1` and folded into A2's
-steps. The three shared designs remain settled and their pairs closed. The user still owes
-the optional `/workflow-reload` after the `project.md` map edit. Autonomous mode covers
-routine loop choices only; every product decision goes to the user.
+A1 is done and frozen at `4869d5f`. A2 (glass) is implemented at `80d833c`: `Dielectric`
+with Snell, TIR and Schlick, face side derived locally, white attenuation, the glass sphere
+in the scene, A1's doc-comment carry-overs, repository map updated. Fast gate green, 10
+tests pass, two renders byte-identical, image inspected with the glass sphere visible, one
+review round with no finding, scratch files cleaned up. The three shared designs are
+settled and their pairs closed. The user still owes the optional `/workflow-reload` after
+the `project.md` map edits. Autonomous mode covers routine loop choices only; every
+product decision goes to the user.
 
 ## Learned rules
 
