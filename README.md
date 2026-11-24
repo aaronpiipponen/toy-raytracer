@@ -1,6 +1,9 @@
-<p align="center"><img src="/docs/brand/logo.svg" alt="toy-raytracer" width="420"></p>
+<h1 align="center">toy-raytracer</h1>
 
-toy-raytracer is a Rust raytracer that renders one fixed scene to a PNG or PPM file using only the standard library.
+<p align="center">
+  A small Rust raytracer that three AI plan orchestrators built in parallel, as the test project of
+  my-workflow.
+</p>
 
 ---
 
@@ -8,113 +11,105 @@ toy-raytracer is a Rust raytracer that renders one fixed scene to a PNG or PPM f
 
 - [Why it exists](#why-it-exists)
 - [What exists in the project](#what-exists-in-the-project)
-- [Features](#features)
-- [Tech stack](#tech-stack)
-- [Architecture](#architecture)
-- [Data and limits](#data-and-limits)
+- [The runs](#the-runs)
+- [Branch layout](#branch-layout)
+- [How a run works](#how-a-run-works)
 - [Run your own copy](#run-your-own-copy)
 
 ## Why it exists
 
-For every pixel, a renderer computes the colour that arrives along the ray leaving the camera through that pixel. The camera sits at the origin and looks down the negative z axis. Each ray follows its scattering path through the scene, bouncing at surfaces until it is absorbed, leaves the scene or reaches the bounce limit.
+[my-workflow](https://github.com/aaronpiipponen/my-workflow) runs several plan orchestrators at
+once, each in its own worktree and branch, with a coordinator that stops two plans when they reach
+the same code and makes them settle the overlap before it becomes a merge conflict.
+The idea needs a real project to test on: small enough that a run finishes in hours, and rich enough
+that three plans meet in the same files.
 
-The scene, the camera and the random seed are constants in the binary. Two runs with the same options produce the same bytes, so the same fixed scene gives the same image every time.
+This repository is that project. It is a raytracer described by the fourteen requirements in
+`docs/requirements.md`, built by three plans that own materials, geometry and output. The plans
+work on a small starting program, and every phase they detail and implement is written by AI
+agents.
 
 ## What exists in the project
 
-- `README.md` gives this product overview.
-- [Requirements](/docs/requirements.md) states what the program does.
-- [Rendering](/docs/rendering.md) covers the camera, samples, the path loop, the sky and reproducibility.
-- [Materials](/docs/materials.md) covers the material contract and the diffuse, metal and glass materials.
-- [Geometry](/docs/geometry.md) covers the hit record, spheres, planes, triangles, bounding boxes and the scene list.
-- [Command line](/docs/command-line.md) covers options, defaults, format selection and exit statuses.
-- [Image output](/docs/image-output.md) covers channel conversion and the PPM and PNG layouts.
-- `src/` holds the binary and its ray-tracing modules.
-- `tests/` holds the command-line integration tests.
+- `src/` holds the raytracer: the camera and ray, the hit record, spheres, planes and triangles,
+  three materials, a seeded generator, a hand-written PNG writer, a PPM writer and the command line.
+- `docs/requirements.md` states what the program does, and the other pages in `docs/` document
+  it as the latest run's documentation hotfix wrote them.
+- `README-RUN.md` is the program's own README, with its logo, as the latest run left it.
+- The runs and the starting state they begin from are branches, listed below.
 
-## Features
+## The runs
 
-The [rendering](/docs/rendering.md), [materials](/docs/materials.md), [geometry](/docs/geometry.md), [command line](/docs/command-line.md) and [image output](/docs/image-output.md) pages describe these features in depth.
+The first run proved the plumbing: linking, the feed, a hold pair, the channel and its resolution
+between two plain chat sessions. The second run ran three real `/plan` orchestrators, the
+coordinator, a hold pair settled by one shared design, and three releases merged into `main`.
 
-### The fixed scene and its three materials
+The third run is the full test: three plan orchestrators, three releases and one hotfix release that
+writes the program's documentation and README, all in autonomous mode. The orchestrators took the
+decisions inside their plans' scope themselves, the user answered only where a decision had to be
+theirs, and every result was accepted as reported. Along the way the coordinator settled three hold
+pairs through the channel, and a shared-resource lock was tested by hand. The documentation hotfix
+ran on the run's recorded end state after the three releases.
 
-Every render builds the same five objects: a diffuse sphere, a large diffuse ground sphere, a metal sphere, a glass sphere and a triangle. Each object carries one material. A diffuse surface scatters in a random direction around the normal and returns its albedo. A metal surface reflects about the normal with a fuzz factor. A glass surface refracts by its refractive index, reflects on total internal reflection and otherwise chooses reflection with Schlick's approximation.
+| Run | Code | The run's README |
+|---|---|---|
+| run001 | [run001/main](https://github.com/aaronpiipponen/toy-raytracer/tree/run001/main) | [README](https://github.com/aaronpiipponen/toy-raytracer/blob/run001/main/README.md) |
+| run002 | [run002/main](https://github.com/aaronpiipponen/toy-raytracer/tree/run002/main) | [README](https://github.com/aaronpiipponen/toy-raytracer/blob/run002/main/README.md) |
+| run003 | [run003/main](https://github.com/aaronpiipponen/toy-raytracer/tree/run003/main) | [README](https://github.com/aaronpiipponen/toy-raytracer/blob/run003/main/README.md) |
+| run004 | [run004/main](https://github.com/aaronpiipponen/toy-raytracer/tree/run004/main) | [README](https://github.com/aaronpiipponen/toy-raytracer/blob/run004/main/README.md) |
 
-![A rendered 800 by 400 image with 64 samples. The red central sphere sits in front of a grey ground, a glass sphere stands on the left, a small metal sphere on the right and a red triangle above.](/docs/images/fixed-scene.png)
+`main` holds the latest of them, with this README and the name of its program README
+(`README-RUN.md`) as the only changes.
 
-### Jittered sampling with gamma 2
+## Branch layout
 
-Each pixel averages 16 jittered samples by default, and `--samples` sets the count from 1 upward. A sample lands at a random point inside its pixel. The pixel colour is the average of its sample colours, and each channel becomes one byte through a gamma 2 correction.
+```text
+main              the latest run's code, this README and README-RUN.md
+run001/*          the first run, branch by branch
+run002/*          the second run, branch by branch
+run003/*          the third run, branch by branch
+seed/*            the starting state every run begins from
+```
 
-### PNG and PPM output
+Each run group holds the run's `main`, `plan-a`, `plan-b`, `plan-c` and `workflow` branches. The
+`workflow` branch is the run's workspace root: the three plans, their scoping, the coordinator's
+state and the shared designs. The root sessions' transcripts, the coordinator's included, are on
+`main` with the project, and each plan worktree's sessions are on that plan's branch. The `seed/*`
+branches hold the same five branches for the start: the project before any plan ran, and the
+workspace with the three plans scoped and each plan's first phase detailed and audited.
 
-The program writes 8-bit RGB images in PNG or PPM. The PNG writer builds the file in memory with one IDAT chunk of stored deflate blocks, so the pixel data is uncompressed. The PPM writer emits the plain-text `P3` form. The output extension selects the format, and `--format` overrides it.
+## How a run works
 
-### The command line and its progress line
+1. A fresh workspace is cloned from `seed/workflow`, and a bare repository is built from
+   `seed/main`, `seed/plan-a`, `seed/plan-b` and `seed/plan-c`, each with its own worktree.
+2. A driver starts three plan orchestrators through `/plan`, each in its own plan's worktree with
+   autonomous mode enabled, and links each to the coordinator. The coordinator watches them,
+   starts a conflict investigator when two plans may touch the same code, and holds both plans
+   before the overlapping phase starts.
+3. Each held pair agrees on one shared design, each plan writes its own resolution phase from it,
+   and both plans continue. Plans take a workspace resource with a lock when their work needs it.
+4. The driver starts each plan's release in turn, in the order plan-c, plan-b, plan-a: the release
+   merges its branch into the run's `main`, resolves conflicts by the shared designs, runs the
+   gates, and the last one archives the plans.
+5. The driver then starts a hotfix release in `main`, which writes the program's documentation and
+   its README with a logo.
+6. The run's branches are recorded as `run<n>/*`, and `main` is rebuilt from the run's `main` with
+   this README and the program README renamed to `README-RUN.md`.
 
-`--width`, `--height`, `--samples`, `--output` and `--format` configure a run, and the defaults are 400 by 200, 16 samples and `render.png`. An invalid option prints an error and the usage line, then exits with status 2 before writing a file. While rendering, one progress line on standard error shows the share of finished rows.
-
-## Tech stack
-
-| Layer | Technology | Role |
-| --- | --- | --- |
-| Language | Rust, 2021 edition | Implements the renderer, the scene and the writers. |
-| Libraries | Rust standard library | Provides the file, I/O, path and ownership types that the renderer uses. |
-| Build | Cargo | Builds the binary and runs the tests. |
-| Image output | In-repo PNG and PPM writers | Encode the pixels into the two file formats. |
-
-## Architecture
-
-`src/main.rs` owns the command line, the fixed scene, the render loop and the choice of output format. Each module owns one part of the ray tracing: vectors, rays, the camera, the hit record and scene list, bounding boxes, the shapes, the materials, the random generator and the PNG writer. A change to an option or to the scene starts in `src/main.rs`, and a change to a shape or a material starts in its module.
-
-### Repository layout
-
-| Path | Contents |
-| --- | --- |
-| [`src/`](/src/) | The binary and its ray-tracing modules. |
-| [`tests/`](/tests/) | The command-line integration tests. |
-| [`docs/`](/docs/) | The requirement and behaviour pages, the render-path diagram, the logo and the rendered scene image. |
-
-## Data and limits
-
-The scene, the camera and the seed are constants in the binary. A run reads no scene file, and the geometry comes from `src/main.rs`.
-
-The renderer holds the whole image in memory as a list of pixel colours, encodes the image in memory and writes the file in one call. Rendering runs on one thread.
-
-Each sample follows at most 50 bounces. A path that scatters on all 50 bounces without a miss or an absorption is black.
-
-The PNG writer stores the scanlines in uncompressed deflate blocks. The file is close to 3 bytes per pixel, and a 400 by 200 image is 240,283 bytes.
+The driver does everything a person would type except answering the orchestrators' questions, which
+the person running the test answers in each session's chat. The model of every role, the
+orchestrators and the coordinator included, comes from the run's
+`AGENT-INSTRUCTIONS/LOCAL/models.json`; every recorded run assigned DeepSeek V4.1 Flash `low` to
+every role. The requirements, the toy harness and the report on the runs live in
+[my-workflow](https://github.com/aaronpiipponen/my-workflow).
 
 ## Run your own copy
 
-The requirements are:
+```bash
+git clone --branch main https://github.com/aaronpiipponen/toy-raytracer
+cd toy-raytracer
+cargo run --release
+```
 
-- A Rust toolchain with `cargo`, using the 2021 edition.
-- The Rust standard library, which the toolchain provides.
-- Write access to the directory that receives the output file.
-
-1. Build the release binary.
-
-   ```bash
-   cargo build --release
-   ```
-
-   The build writes the binary to `target/release/toy-raytracer`.
-
-2. Render the default image.
-
-   ```bash
-   cargo run --release -- --output render.png
-   ```
-
-   The command renders a 400 by 200 image with 16 samples, writes progress updates to standard error and writes `render.png`. Standard output is empty.
-
-3. Run the tests.
-
-   ```bash
-   cargo test
-   ```
-
-   The command runs 17 unit tests and 3 command-line tests and reports each as passing.
-
-The full option set is on [Command line](/docs/command-line.md).
+The default run writes `render.png` beside the program. The command-line options and their defaults
+are in [README-RUN.md](README-RUN.md).
