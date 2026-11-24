@@ -2,25 +2,26 @@
 
 ## Next action
 
-Z1's closing survey is starting: four read-only `ops-scout` area scouts run in parallel. Save each
-return unchanged under `benchmarks/returns/`, then dispatch one cross-check scout, write the dated
-note, render and inspect the acceptance image, and ask the user to accept.
+Wait for the user's answer on Z1 acceptance. On acceptance, start a fresh advancer with
+`REVIEW AND ADVANCE: Review and advance phase Z1 of plan-b`, passing the survey note path, the
+render evidence and the user's acceptance wording; then stop - release and closure are not this
+session's work. On a named blocker, open the remediation unit the user asks for.
 
 ## Current state
 
-B1, B2 and B3 are done and green; B3 landed at tested head `f85a183` (base `f3a3d2a`). Z1
-(`phases/Z1-closing-survey-and-user-acceptance.md`) is detailed, audited, and passed my acceptance
-check on 2026-11-24: it matches the binding survey method (four areas in parallel, one cross-check,
-orchestrator writes the note from saved returns), is read-only, fixes nothing, changes no product
-code, adds no test, and carries a user acceptance gate for the note and the render. Saved returns are
-mandated by my own orchestration rules, not an extra record.
+B1, B2 and B3 are done; head `f85a183`. Z1 is active and its survey is complete: four area returns and
+the cross-check return are saved in `benchmarks/returns/`, and the dated note
+`benchmarks/closing-survey-2026-11-24.md` is written. Verdict: no confirmed clear defect; one
+shared-tree documentation item (repository map names `material.rs`, which this branch lacks; owner is
+the release merge), several nits, and a user-review list. Acceptance render:
+`/tmp/opencode/plan-b-acceptance.png` (PPM md5 `13b3bc0a3cf5c41df684e179c1d3e93d`, same as the B3
+before/after render); keep it until the user answers, then remove it with the PPM and
+`/tmp/opencode/ppm2png.py`.
 
 Open items to carry:
 - Release must ask the user which material the scene triangle gets
   (`PLANS/shared/plan-a-A2+plan-b-B2.md`).
 - `/workflow-reload` for the shared `project.md` edits is still a question for the user.
-- The shared repository map lists `material.rs`, which this branch does not have (plan-a owns it);
-  area 4 should report it as an out-of-scope observation.
 
 ## Learned rules
 
@@ -34,3 +35,5 @@ Open items to carry:
   fixture instead of spending the cap.
 - Parallel-plan splits: each branch stays compiling on its own; obligations only the release merge can
   satisfy live in the shared design file, never as placeholders in code.
+- A shared instruction-tree line that is true for another plan's worktree is reported, not "fixed"
+  from this branch.

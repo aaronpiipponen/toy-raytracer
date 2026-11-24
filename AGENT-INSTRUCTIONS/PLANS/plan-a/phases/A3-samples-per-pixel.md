@@ -1,10 +1,10 @@
 ## Phase A3 - Samples per pixel
 
-**Status:** active.
+**Status:** planned.
 **Depends on:** A1 (`done/A1-diffuse-and-metal-materials.md`) and A2 (`done/A2-glass.md`).
 **Scope:** `render` in `src/main.rs` takes a sample count and averages that many jittered rays per pixel, with one seeded generator shared across the whole image. `main` passes a new default of 16. No command-line option, no output-format change, no material, scene or bounce-limit change.
 **Gate level:** standard - bounded runtime behaviour in the render loop, with no schema, durable state, security boundary or cross-package contract. The rendered-image conditional gate applies because the render loop changes.
-**Simplicity statement:** The sample count has one supported range, at least one sample, guarded by a single assertion. The phase adds no clamping, retry, fallback or per-pixel generator. Width or height of zero remains unhandled as it is today; the command line validates its own values in the output plan. No code is deleted.
+**Simplicity statement:** The sample count has one supported range, at least one sample, validated only by the command line in the merged product. `render` carries no sample-count guard. The phase adds no clamping, retry, fallback or per-pixel generator. Width or height of zero remains unhandled as it is today; the command line validates its own values in the output plan. No code is deleted.
 
 **Current state (verified):**
 - `src/main.rs:22-25` - `const WIDTH: usize = 200`, `const HEIGHT: usize = 100`, `const SEED: u64 = 7`, `const MAX_BOUNCES: usize = 50`.
@@ -29,16 +29,21 @@
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/done/A2-glass.md` - the frozen material and scene contract, including the glass sphere the rendered image must still show.
 
 **Build plan:**
-1. `src/main.rs:23` - add `const SAMPLES: usize = 16;` directly below `const HEIGHT: usize = 100;`. It is the default sample count and the value `main` passes.
+1. `src/main.rs:23` - add `const SAMPLES: usize = 16;` directly below `const HEIGHT: usize = 100;`. On branch `plan-a` the constant is this branch's local default, and its only use is the `main` call `render(WIDTH, HEIGHT, SAMPLES)`. The merged code has no `SAMPLES`, and the release takes plan-c's `DEFAULT_SAMPLES = 16`.
 2. `src/main.rs:80` - change the signature from `fn render(width: usize, height: usize) -> Vec<Colour>` to `fn render(width: usize, height: usize, samples: usize) -> Vec<Colour>`.
-3. `src/main.rs:80-93`, inside `render` - keep the single `let mut rng = Rng::new(SEED);` before both loops. At the top of the function add `assert!(samples > 0, "the sample count must be at least 1");`. For each pixel, replace the single `ray_colour` call with an accumulation over `for _ in 0..samples`:
+3. `src/main.rs:80-93`, inside `render` - keep the single `let mut rng = Rng::new(SEED);` before both loops. `render` adds no sample-count validation. For each pixel, replace the single `ray_colour` call with an accumulation over `for _ in 0..samples`:
    - `let u = (column as f64 + rng.next_f64()) / width as f64;`
    - `let v = (row as f64 + rng.next_f64()) / height as f64;`
    - `pixel = pixel + ray_colour(&camera.ray(u, v), &world, &mut rng);`
    Start `pixel` at `Vec3::new(0.0, 0.0, 0.0)` before the sample loop, and push `pixel / samples as f64` after it. Each sample draws exactly two `next_f64` values, `u` before `v`, before any scattering draws for that sample. Keep the row loop as `for row in (0..height).rev()`.
 4. `src/main.rs:119` - change `let pixels = render(WIDTH, HEIGHT);` to `let pixels = render(WIDTH, HEIGHT, SAMPLES);`.
-5. `src/main.rs:79` - replace the `render` doc comment with `/// Every pixel's colour, the average of \`samples\` jittered rays, row by row from the top.` Keep it one sentence.
-6. `src/main.rs:129` - change the test call `render(WIDTH, HEIGHT)` to `render(WIDTH, HEIGHT, SAMPLES)`.
+5. `src/main.rs:79` - replace the `render` doc comment with exactly these two lines:
+   ```rust
+   /// Every pixel's colour, row by row from the top, each pixel averaging `samples` jittered rays, with
+   /// the share of finished rows reported on standard error.
+   ```
+   This sentence describes the merged product. Branch `plan-a` has no progress line, and the sentence is not changed again at the merge.
+6. `src/main.rs:129` - change the test call to the literal `let pixels = render(200, 100, 16);`, the same line plan-c landed, and keep the assertion unchanged.
 7. `src/main.rs:131` - after `the_top_row_is_sky`, add the two tests named under Tests, using small dimensions so the suite stays fast.
 
 **Callers / wiring to update:**
