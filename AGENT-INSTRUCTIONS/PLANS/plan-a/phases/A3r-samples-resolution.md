@@ -24,11 +24,12 @@ while reading goes to the user through the orchestrator instead of being made he
   `for row in (0..height).rev()` then `for column in 0..width`, maps
   `u = column as f64 / (width - 1) as f64` and `v = row as f64 / (height - 1) as f64`, and pushes
   one `ray_colour` call per pixel.
-- `src/main.rs:118-120` holds `main`, which calls `render(WIDTH, HEIGHT)` and writes PPM to standard
+- `src/main.rs:118-121` holds `main`, which calls `render(WIDTH, HEIGHT)` and writes PPM to standard
   output. There is no command line, no `SAMPLES` and no progress write on this branch.
 - `src/main.rs:124-132` holds the test module and `the_top_row_is_sky`, which calls
   `render(WIDTH, HEIGHT)` and asserts the first pixel is bluer than it is red.
-- `phases/A3-samples-per-pixel.md` is the detailed A3 phase. Its jitter mapping and its two new test
+- `phases/A3-samples-per-pixel.md` is the detailed A3 phase. Its `**Status:**` line is `active` and
+  becomes `planned`. Its jitter mapping and its two new test
   calls already match the shared design. Its assertion, its doc sentence, its `main` and test call
   sites and its constant description need the amendments below.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md:19-20` holds the A3r row `active` with
@@ -57,7 +58,8 @@ while reading goes to the user through the orchestrator instead of being made he
    - **Simplicity statement** (the `The sample count has one supported range` sentences): replace
      "at least one sample, guarded by a single assertion" with "at least one sample, validated only
      by the command line in the merged product". Add that `render` carries no sample-count guard.
-   - **Build plan step 1**: keep `const SAMPLES: usize = 16;` below `const HEIGHT`. State that on
+   - **Build plan step 1**: keep the planned `const SAMPLES: usize = 16;` below
+     `const HEIGHT`. State that on
      branch `plan-a` the constant is the branch's local default and its only use is the `main` call
      `render(WIDTH, HEIGHT, SAMPLES)`, that the merged code has no `SAMPLES`, and that the release
      takes plan-c's `DEFAULT_SAMPLES = 16`.
