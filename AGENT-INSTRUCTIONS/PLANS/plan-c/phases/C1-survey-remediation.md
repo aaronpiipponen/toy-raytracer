@@ -3,10 +3,10 @@
 **Status:** active (remediation - C1 landed and was surveyed; six small defects were confirmed).
 **Depends on:** C1's frozen contract in `done/C1-png-writer-and-command-line.md` and the closing
 survey note `AGENT-INSTRUCTIONS/PLANS/plan-c/benchmarks/closing-survey-2026-11-24.md`.
-**Scope:** the six confirmed survey findings that belong to C1's own work, and nothing else. Five are
-edits inside the existing tests and one is a small simplification of `parse_args`. The sixth item is
-the plan record, which the orchestrator already corrected, so this phase does not edit it. No product
-behaviour, message, exit status, default, option or output byte changes.
+**Scope:** the confirmed survey findings that belong to C1's own work, and nothing else: four test
+edits (F1 to F4) and one small simplification of `parse_args` (F5). The sixth confirmed finding is
+the plan record, which the orchestrator already corrected, so this phase does not edit it (F6 is
+verify-only). No product behaviour, message, exit status, default, option or output byte changes.
 **Gate level:** standard - the phase edits tests and one argument-parser function whose behaviour must
 stay identical, so targeted tests plus the fast gate and the rendered-image gate fit.
 **Simplicity statement:** the phase adds no test function (C1 already used the three the budget allows)
@@ -232,12 +232,13 @@ Broken / latent (root causes):
   known-answer assertions for the checksum helpers, and the unpinned zlib header.
 - `src/main.rs` - changed: `parse_args` matches the five options once, with the duplicate whitelist
   match and the `unreachable!` arm deleted; behaviour and messages identical.
-- `AGENT-INSTRUCTIONS/PLANS/plan-c/phases/C1-survey-remediation.md` - changed on completion: this
-  phase file, compressed.
+- `AGENT-INSTRUCTIONS/PLANS/plan-c/phases/C1-survey-remediation.md` - unchanged on completion: this
+  detailed file stays in `phases/`, as the earlier phases' detailed files do; the frozen copy is the
+  `done/` file below.
 - `AGENT-INSTRUCTIONS/PLANS/plan-c/done/C1-survey-remediation.md` - created on passing evidence: the
   frozen remediation contract.
-- `AGENT-INSTRUCTIONS/PLANS/plan-c/full-plan.md` - changed on passing evidence: the C1 and Z1 status
-  rows and the C1 phase file path.
+- `AGENT-INSTRUCTIONS/PLANS/plan-c/full-plan.md` - changed on passing evidence: the C1 and Z1 table
+  rows, the C1 phase file path, and the C1 and Z1 scoped `**Status:**` lines.
 - Adds: nothing.
 <!-- touched-files:end -->
 
@@ -314,9 +315,11 @@ showing the sphere over the blue-to-white sky and the green ground plane (`file`
 - [ ] Safety commit on branch `plan-c` exists; revision-bound verification receipt names the base and
       tested head.
 - [ ] On passing evidence: compress this file into `done/C1-survey-remediation.md` (frozen contract
-      only), set the C1 row in `full-plan.md` back to `done` with phase file
-      `done/C1-survey-remediation.md`, and set the Z1 row back to `active` with phase file
-      `phases/Z1-closing-survey.md`.
+      only; the `phases/` file stays as written, as the earlier phases' detailed files do), set the C1
+      row in `full-plan.md` back to `done` with phase file `done/C1-survey-remediation.md`, set the C1
+      scoped `**Status:**` line back to `done` naming that file, set the Z1 row back to `active` with
+      phase file `phases/Z1-closing-survey.md`, and set the Z1 scoped `**Status:**` line back to
+      `active`.
 
 **Exit:** the two checksum helpers are proven independently by published known answers, the PNG test
 proves empty standard output, the rejected-input test proves status 2, the decoder no longer pins the
