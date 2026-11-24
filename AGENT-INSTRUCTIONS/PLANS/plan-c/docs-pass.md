@@ -26,7 +26,3 @@ each one and deletes its entry here.
 - `src/vec3.rs` (the cross product) - the comment "For the triangle normals the geometry plan adds."
   names a future plan in product code, beside `#[allow(dead_code)]` on the method. Remove the comment
   at the release **only once the allowance beside it is gone**; do not delete the allowance early.
-- `README.md` (the run example) - the two commands use bare `cargo`, which does not run verbatim in an
-  environment where cargo is not on `PATH` (the workspace gate notes that it may not be). Make the
-  README's commands work as written, for example by stating the `PATH` assumption; the run example
-  itself is correct.

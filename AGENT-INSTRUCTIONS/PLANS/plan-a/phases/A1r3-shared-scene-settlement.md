@@ -10,11 +10,10 @@ the release merge's obligations on plan-a's side. Documentation only.
 code, test, `docs/` page, configuration or dependency.
 **Simplicity statement:** this phase records one scene composition and the merge points it touches.
 It does not reopen the hit-record settlement of A1r and B1r or the render settlement of A1r2 and
-plan-c's C3r,
-does not add a shape, material, test or `docs/` page, and does not implement the geometry plan's
-branch work. It names only the composition points the merge changes: the ground object, the
-material argument on the two new shapes, the four scene materials and the scene list's record
-handling and box test.
+plan-c's C3r. It adds no shape, material, test or `docs/` page, and it does not implement the
+geometry plan's branch work. It names only the composition points the merge changes: the ground
+object, the material argument on the two new shapes, the four scene materials and the scene list's
+record handling and box test.
 
 **Current state (verified):**
 - `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md` - the shared design: the target merged
@@ -37,9 +36,9 @@ handling and box test.
   and `Triangle` with no material, the six-argument `HitRecord::new`, the ground plane at `y = -0.5`
   and the triangle in the scene, the centre sphere kept, and `Vec3::cross` losing its dead-code
   allowance and purpose comment.
-- `src/main.rs:32-37` and `src/hittable.rs:34-42` - the pre-A1 branch tree: two ground-bearing
-  spheres in `scene()` and the by-value `nearest.map_or(...)` in `HittableList::hit`. A1 changes both
-  as detailed; this phase changes neither.
+- `src/main.rs:32-37` and `src/hittable.rs:34-42` - the pre-A1 branch tree: the centre sphere and the
+  ground sphere in `scene()` and the by-value `nearest.map_or(...)` in `HittableList::hit`. A1
+  changes both as detailed; this phase changes neither.
 - `src/vec3.rs:21-29` - `Vec3::cross`, which B2 uses and whose comment this phase does not touch.
 
 **Read first (do not invent):**
@@ -87,19 +86,16 @@ handling and box test.
 
 **Touched files:**
 <!-- touched-files:start -->
-- `AGENT-INSTRUCTIONS/PLANS/plan-a/phases/A1r3-shared-scene-settlement.md` - created: records plan-a's branch scene shape and the release merge's obligations on plan-a's side
-- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md` - changed: A1r3 status row and scoped entry, A1 set to planned behind A1r3
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/phases/A1r3-shared-scene-settlement.md` - changed: records plan-a's branch scene shape and the release merge's obligations on plan-a's side
 - Adds: nothing
 <!-- touched-files:end -->
-
 **Rules / MUST NOT:**
 - Documentation only: change no product code, test, `docs/` page, `Cargo.toml` entry or
   configuration.
 - Do not change `phases/A1-diffuse-and-metal-materials.md`; its detail stays byte-identical. Do not
   re-detail A1, A2 or A3 here.
 - Do not reopen the hit-record settlement of A1r and B1r or the render settlement of A1r2 and
-  plan-c's C3r.
-  Reference them; do not restate a competing contract.
+  plan-c's C3r. Reference them; do not restate a competing contract.
 - Do not implement, describe as implemented, or claim a product behaviour change for the merged
   scene on this branch. The scene composition below is the release merge's contract.
 - Do not edit plan-b's files, including `full-plan.md`, `scope.md`, `done/` and its phase files.
@@ -152,7 +148,8 @@ The release merge combines this branch with the geometry plan's branch. On plan-
 
 - No `docs/` page change: `docs/requirements.md` item 1 already says every object has a material,
   item 9 that the scene holds planes and triangles, and item 10 the box test. B2 deletes the
-  `// For the triangle normals.` comment on `Vec3::cross`, so no note about it remains.
+  `Vec3::cross` dead-code allowance and the purpose comment above it, so no note about either
+  remains.
 - Neither branch's permanent files name this settlement. The release merge is bound by
   `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md`.
 - This phase changes plan documents only: no product code, test, `docs/` page, `Cargo.toml` or
@@ -175,8 +172,8 @@ The release merge combines this branch with the geometry plan's branch. On plan-
 **Completion checklist (gate):**
 - [ ] Gate level `minimal` requirements from `PLAN-PHASE-DETAILING.md` §3a are satisfied.
 - [ ] The shared scene design in
-      `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md` is recorded for plan-a's branch half and for the
-      release merge's obligations on plan-a's side.
+      `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A1+plan-b-B2.md` is recorded for plan-a's branch half
+      and for the release merge's obligations on plan-a's side.
 - [ ] A1's detail file is byte-identical and the A1 row is `planned` behind A1r3 with its existing
       phase file.
 - [ ] `full-plan.md` carries the A1r3 row and scoped entry, and A3 still depends on `A1 + A1r2`.
