@@ -49,6 +49,14 @@ fn writes_a_png_whose_pixels_match_the_ppm_render() {
         png_path.to_str().unwrap(),
     ]);
     assert!(result.status.success(), "{result:?}");
+    assert!(
+        result.stdout.is_empty(),
+        "the image goes only to the output file"
+    );
+    assert!(
+        !result.stderr.is_empty(),
+        "the render reports progress on standard error"
+    );
 
     let png_bytes = fs::read(&png_path).expect("the PNG exists");
     let (width, height, png_pixels) = decode_png(&png_bytes);
