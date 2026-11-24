@@ -1,6 +1,6 @@
 ## Phase Z1 - Closing survey and user acceptance
 
-**Status:** active.
+**Status:** next.
 **Depends on:** A1 (`done/A1-diffuse-and-metal-materials.md`), A2 (`done/A2-glass.md`) and A3
 (`done/A3-samples-per-pixel.md`), whose frozen contracts the survey checks the code against.
 **Scope:** the binding closing survey of every area this plan added or changed, a dated note in the
