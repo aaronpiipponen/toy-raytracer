@@ -2,22 +2,25 @@
 
 ## Next action
 
-Spawn a fresh `phase-advancer` to detail the initial active phase A1, then run the
-acceptance check on its phase document before the first implementer.
+Start the A1 implementer. Phase A1 is detailed and passed the orchestrator's acceptance
+check, but a coordinator hold is armed against geometry phase B1, so the `phase_subagent`
+call is expected to be refused with `COORDINATOR HOLD`; make the call so the stop is
+recorded, then wait for the coordinator or plan-b's orchestrator to resume.
 
 ## Current state
 
-The plan is scoped; no phase is detailed and nothing is implemented. `full-plan.md` has
-Z1 rewritten as the closing survey with the user's acceptance as the final gate, and A2
-records that glass uses today's outward normal while the face-side shape with the
-geometry plan is settled through the coordinator before A2 is detailed. The user enabled
-autonomous mode for the routine serial loop and asked to be asked about every product
-decision. The session is linked to the coordinator.
+A1 is detailed in `phases/A1-diffuse-and-metal-materials.md` and accepted. No code is
+implemented yet. The user's Z1 survey rewrite and the A2 glass/front-face hand-off are in
+`full-plan.md`. `docs-pass.md` records one stale plan mention in `src/vec3.rs` for the
+release. Autonomous mode is enabled for routine loop choices only; every product decision
+goes to the user. The session is linked to the coordinator; plan-b leads the A1/B1 overlap.
 
 ## Learned rules
 
 - The user's word overrides `docs/requirements.md`; report a conflict as information.
 - Autonomous mode covers only small, easily undoable, behaviour-neutral choices; record
   each in `autonomous-decisions.md`. Every product decision goes to the user.
-- The lead-annotation rule: tell advancers and implementers the work kind (product here)
-  and the gate level from the status table.
+- Tell advancers and implementers the work kind (product here) and the gate level from the
+  status table.
+- A held phase's implementer start is still attempted so the refusal records the stop;
+  after that, start nothing else until resumed.
