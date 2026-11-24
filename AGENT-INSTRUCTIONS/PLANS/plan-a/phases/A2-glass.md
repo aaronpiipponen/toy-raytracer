@@ -20,7 +20,7 @@
 - `src/main.rs:16` - `use material::{Lambertian, Metal};`.
 - `src/main.rs:54-72` - `scene()` adds a diffuse centre sphere, a diffuse ground sphere and a metal sphere at `(0.85, -0.25, -1.3)` of radius `0.25`.
 - `src/main.rs:29-46` - `ray_colour` reads only `hit.material` and `hit.point` through `scatter`, so the record's new fields do not change it.
-- `src/vec3.rs:82` - `pub type Colour = Vec3`; `Vec3` implements `Add`, `Sub`, `Mul<f64>`, `Div<f64>`, `Neg`, `dot`, `unit`.
+- `src/vec3.rs:82-83` - `pub type Colour = Vec3`; `Vec3` implements `Add`, `Sub`, `Mul<f64>`, `Div<f64>`, `Neg`, `dot`, `unit`.
 - `src/rng.rs:19-22` - `next_f64(&mut self) -> f64` returns a value in `0..1`.
 - `docs/requirements.md` items 4 and 7 - glass refracts, reflects on total internal reflection, picks reflection by Schlick, does not attenuate, and every hit records its face side with a normal against the ray.
 - `Cargo.toml` has no dependency; `src/plane.rs` and `src/triangle.rs` do not exist on this branch.
@@ -98,6 +98,8 @@
    The formula is the shared one and applies to both roots, so `(u, v)` is computed once after `t` is settled.
 5. `src/material.rs`, after `impl Material for Metal` (line 56) and before `fn reflect` (line 58) - add the glass material with a doc comment saying it refracts by its refractive index and reflects by total internal reflection or Schlick's approximation:
    ```rust
+   /// A glass that refracts by its refractive index and reflects by total internal reflection or
+   /// Schlick's approximation.
    pub struct Dielectric {
        pub refractive_index: f64,
    }
@@ -133,8 +135,8 @@
    `eta_ratio` is the ratio of the index the ray leaves to the index it enters. On a front face the ray enters glass, so it is `1.0 / refractive_index`; on a back face it leaves glass, so it is `refractive_index`.
 6. `src/material.rs:58-61`, below `reflect` - add the two private helpers:
    ```rust
-   /// The refracted direction of a unit ray `v` crossing a surface with unit normal `n`, from a
-   /// medium with index 1 into one with index `1 / eta_ratio`.
+   /// The refracted direction of a unit ray `v` crossing a surface with unit normal `n`, for the
+   /// ratio `eta_ratio` of the index the ray leaves to the index it enters.
    fn refract(v: Vec3, n: Vec3, eta_ratio: f64) -> Vec3 {
        let cos_theta = (-v.dot(n)).min(1.0);
        let perpendicular = (v + n * cos_theta) * eta_ratio;
@@ -199,7 +201,7 @@
 - `HitRecord.normal` always faces against `ray.direction`. Compute `front_face` as `ray.direction.dot(outward_normal) < 0.0` in the one constructor, and never flip a normal anywhere else.
 - Glass derives entering from leaving from `hit.front_face` alone and adds no face flag of its own. It returns unit attenuation `Colour::new(1.0, 1.0, 1.0)` and never `None`.
 - Do not clamp or validate `refractive_index`, and do not clamp a scattered direction. The only numeric guard is the `max(0.0)` inside `refract`.
-- Keep the seeded generator as the only randomness, and draw exactly one value per glass scatter, only for the Schlick choice. Do not reseed.
+- Keep the seeded generator as the only randomness, and draw at most one value per glass scatter, only for the Schlick choice. A total-internal-reflection path draws none. Do not reseed.
 - Keep rendering single-threaded, keep `unsafe` absent, and add no dependency.
 - Do not add version or history words, plan names or phase ids to code comments.
 - Do not change the bounce limit, the scene's other three spheres, gamma or the PPM writer.

@@ -2,12 +2,18 @@
 
 **Status:** active.
 **Depends on:** B1 (`done/B1-face-side-and-texture-coordinates.md`): `HitRecord` carries `front_face`,
-`u` and `v`, and `HitRecord::new` is the only constructor.
+`u` and `v`, and `HitRecord::new` is the only constructor. The cross-plan shape is settled in
+`PLANS/shared/plan-a-A2+plan-b-B2.md`.
 **Scope:** add `src/plane.rs` (a point and a unit normal, hit by ray, (u, v) from the hit point along
 two in-plane axes modulo 1) and `src/triangle.rs` (three vertices, Möller-Trumbore, barycentric (u, v)),
 declare both modules in `src/main.rs`, put one triangle in the scene, and drop the two plan references
 that sit in code comments in the files this phase edits. No material, no bounding box, no new output,
 no command line, no plane in the scene.
+**Release merge:** both shapes stay material-less on this branch and build records through the
+six-argument `HitRecord::new`. The release merge adds `material: Rc<dyn Material>` to `Plane`,
+`Triangle` and their `new` signatures, passes it to the seven-argument `HitRecord::new`, and passes a
+material in the two tests, as `PLANS/shared/plan-a-A2+plan-b-B2.md` states. Do not add a placeholder
+material field, a type parameter or a future-material comment here.
 **Gate level:** standard - two new shape modules built on the frozen `HitRecord` contract, bounded
 runtime behaviour, no durable state, config, security or data-access seam; targeted shape tests plus
 the fast gate, the rendered-image conditional gate and the repository-map update are enough.
