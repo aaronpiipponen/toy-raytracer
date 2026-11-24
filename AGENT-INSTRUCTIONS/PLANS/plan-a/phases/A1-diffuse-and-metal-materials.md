@@ -173,7 +173,9 @@ or duplicate scatter path is added.
 - No second scatter path or per-material special case in `main.rs`; the loop knows only `Material`.
 - Do not clamp, validate or debug-print albedo, fuzz or the bounce count; no near-zero-direction guard.
 - Do not re-derive the sky colour in more than one place.
-- Permanent code comments and docs never mention a plan or phase.
+- Permanent code comments and docs this phase writes never mention a plan or phase. Leave
+  `Vec3::cross` and the comment above it in `src/vec3.rs` alone; the geometry plan's branch removes
+  that comment.
 
 **Tests:**
 - New/changed/deleted:
@@ -194,7 +196,7 @@ or duplicate scatter path is added.
     `Rc::new(Lambertian::new(Colour::new(0.8, 0.8, 0.8)))` to `Sphere::new`.
   - Kept unchanged: `src/main.rs` - `the_top_row_is_sky`; `src/rng.rs` - `the_same_seed_gives_the_same_sequence`.
   - Budget: 3 new test functions (the §3a cap; not a quota), 1 deleted; no other test is added.
-- Fast gate: `~/.cargo/bin/cargo test material`, `~/.cargo/bin/cargo test`, then
+- Fast gate: `~/.cargo/bin/cargo test --lib material`, `~/.cargo/bin/cargo test`, then
   `~/.cargo/bin/cargo build`, `~/.cargo/bin/cargo clippy -- -D warnings`,
   `~/.cargo/bin/cargo fmt --check`, `git diff --check`.
 - Conditional gates: rendered image - required, because the render loop, the colours and the scene
@@ -217,8 +219,8 @@ or duplicate scatter path is added.
   3. Expected picture: a horizontal gradient sky that is white at the horizon and light blue above; a
      grey ground plane filling the lower half with a soft shadowless gradient; a matte red-brown
      sphere in the centre with smooth shading; a small grey metal sphere on the right resting on the
-     ground, showing a sharp reflection of the sky above and the ground below. No normal-gradient
-     colours, no pure-white blowout, no visible black speckles.
+     ground, showing a blurred reflection of the sky above and the ground below. No normal-gradient
+     colours, no pure-white blowout, no large black patches.
 - If step 2's viewer is unavailable, say so and report the failure instead of claiming the image
   looks right; do not substitute unit tests for the visual check.
 
@@ -235,7 +237,7 @@ or duplicate scatter path is added.
 - [ ] Test budget respected (REPO-RULES §3a); receipt reports 3 added and 1 deleted test function.
 - [ ] `docs/requirements.md` and `README.md` are still accurate (no wording change is needed) and the
       repository map in `AGENT-INSTRUCTIONS/LOCAL/project.md` names `material.rs`; no page or comment
-      refers to a plan.
+      this phase writes refers to a plan.
 - [ ] Safety commit on branch `plan-a`.
 - [ ] Revision-bound verification receipt exists (base revision plus tested head SHA, command results,
       omitted conditional gates with reasons, test-budget line); user test evidence is the two-step
