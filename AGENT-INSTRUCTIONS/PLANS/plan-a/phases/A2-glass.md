@@ -36,9 +36,9 @@ appears in `src/main.rs`, and no other material changes.
   `Rng::new(7)` is `0.820247`.
 - `src/vec3.rs` - `Vec3::new`, `dot`, `unit`, `length`; operators `Add`, `Sub`, `Neg`, `Mul<f64>`,
   `Mul<Vec3>`, `Div<f64>`; there is no `f64 * Vec3`, so write the vector first.
-- `src/camera.rs:14-21` - the viewport has height 2 and sits at `z = -1`, so
-  `direction = (2u - 1, 2v - 1, -1)`: a point at depth `|z|` is inside the frame when
-  `|x| < |z|` and `|y| < |z|`.
+- `src/camera.rs:14-21` - the viewport has height 2 and width `2 * aspect`, at `z = -1`, so
+  `direction = (aspect * (2u - 1), 2v - 1, -1)`. At 200 by 100 the aspect is 2 and a point at depth
+  `|z|` is inside the frame when `|x| < 2 * |z|` and `|y| < |z|`.
 - `AGENT-INSTRUCTIONS/LOCAL/project.md` - the repository map line reads
   ``material.rs` (the `Material` trait and the diffuse and metal materials)`.
 
@@ -130,6 +130,10 @@ appears in `src/main.rs`, and no other material changes.
      The centre `y = -0.1` puts the bottom at `y = -0.5`, on the ground; the distance to the centre
      sphere's centre is `sqrt(0.85^2 + 0.1^2 + 0.3^2) = 0.907`, above the `0.9` sum of the radii, and
      the widest point `x = -1.25` at depth `1.3` is inside the frame. No other scene line changes.
+   - Carry-overs from A1 in the same file: reword the `ray_colour` doc comment's first sentence to
+     an imperative sentence that says what the function returns, and add one doc line above
+     `to_byte` naming gamma 2 correction of the clamped linear channel. Neither function's body
+     changes, and `render`, `sky_colour`, `write_ppm` and the tests are untouched.
 3. `AGENT-INSTRUCTIONS/LOCAL/project.md` - load the `agent-instructions` skill first (edits under
    `AGENT-INSTRUCTIONS/` outside `PLANS/` are held otherwise), then change the `src/` map line entry
    from ``material.rs` (the `Material` trait and the diffuse and metal materials)`` to
@@ -143,7 +147,8 @@ appears in `src/main.rs`, and no other material changes.
 - `src/material.rs` already exposes `reflect` and `random_unit_vector` to the new material in the
   same module; no visibility change and no import change is needed there (the tests module picks up
   `Dielectric` through `use super::*;`).
-- No other caller of `Sphere::new`, `HitRecord` or `Material::scatter` exists (grep the tree).
+- `src/sphere.rs` and `src/material.rs` tests call `Sphere::new`, build `HitRecord` literals and
+  call `Material::scatter`; none of them changes, because no signature changes in this phase.
 
 **Config / schema / migrations:**
 - None: no configuration key, migration, generated file or command-line option. The refractive index
@@ -170,7 +175,9 @@ appears in `src/main.rs`, and no other material changes.
   writer or progress output; later phases own those.
 - No clamp, assert, validation or debug print of `refraction_index`, `cos_theta` or
   `refraction_ratio` beyond the `.min(1.0)` shown; no near-zero-direction guard.
-- Do not change `Lambertian`, `Metal`, `ray_colour`, `to_byte` or the existing material tests.
+- Do not change the fields, formulas or behaviour of `Lambertian`, `Metal`, `ray_colour` or
+  `to_byte`, and do not change any existing test body; the only edits to those items are the doc
+  comments named in build plan steps 1 and 2.
 - Permanent code comments and docs this phase writes never mention a plan, phase or merge.
 
 **Tests:**
@@ -209,9 +216,12 @@ appears in `src/main.rs`, and no other material changes.
   1. `~/.cargo/bin/cargo run --release > /tmp/opencode/a2.ppm` and again
      `~/.cargo/bin/cargo run --release > /tmp/opencode/a2-repeat.ppm`; `cmp /tmp/opencode/a2.ppm /tmp/opencode/a2-repeat.ppm`
      must print nothing (same bytes, requirement 6).
-  2. Convert for viewing with the throwaway stdlib PPM to PNG script (`/tmp/opencode/ppm2png.py`,
-     never committed): `python3 /tmp/opencode/ppm2png.py /tmp/opencode/a2.ppm /tmp/opencode/a2.png`,
-     then open `/tmp/opencode/a2.png` with the file-read image viewer.
+  2. Convert for viewing with a throwaway stdlib script in `/tmp/opencode`, never committed. If
+     `/tmp/opencode/ppm2png.py` is absent, write it: a `P3` parser that reads the header and the
+     pixel integers and writes an 8-bit RGB PNG (`IHDR`/`IDAT`/`IEND` chunks, `IDAT` is
+     `zlib.compress` of each row prefixed by a zero filter byte, CRC via `zlib.crc32`). Then run
+     `python3 /tmp/opencode/ppm2png.py /tmp/opencode/a2.ppm /tmp/opencode/a2.png`, and open
+     `/tmp/opencode/a2.png` with the file-read image viewer.
   3. Expected picture: the A1 scene (gradient sky, grey ground, matte red-brown centre sphere, small
      grey metal sphere on the right) plus a transparent glass sphere on the left resting on the
      ground. The glass sphere shows bright sky above and the grey ground below through its upper and
@@ -237,8 +247,8 @@ appears in `src/main.rs`, and no other material changes.
 - [ ] `docs/requirements.md` and `README.md` are still accurate (no wording change is needed), the
       repository map in `AGENT-INSTRUCTIONS/LOCAL/project.md` names the glass material, and no page
       or comment this phase writes refers to a plan.
-- [ ] The A1 carry-over doc comments on `Material::scatter`, `Lambertian::new` and `Metal::new`
-      exist.
+- [ ] The A1 carry-over doc comments exist: `Material::scatter`, `Lambertian::new`, `Metal::new`,
+      an imperative first sentence on `ray_colour`, and a gamma 2 line on `to_byte`.
 - [ ] Safety commit on branch `plan-a`.
 - [ ] Revision-bound verification receipt exists (base revision plus tested head SHA, command
       results, omitted conditional gates with reasons, test-budget line); user test evidence is the

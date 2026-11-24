@@ -68,4 +68,8 @@
 
 - `Material::scatter` and the `Lambertian::new` and `Metal::new` constructors carry no doc comments.
   A2 edits `src/material.rs` and adds them, with `scatter` stating the `(attenuation, scattered_ray)`
-  order of its tuple. No test is added for this.
+  order of its tuple.
+- `ray_colour`'s doc comment opens with a noun phrase rather than the required imperative sentence.
+- `to_byte` applies gamma 2 through `.sqrt()` with no comment naming the correction.
+
+  A2 edits both files and fixes the two comments alongside its own work. No test is added for these.
