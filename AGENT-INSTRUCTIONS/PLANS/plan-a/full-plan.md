@@ -15,8 +15,8 @@
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
 | A1 | Diffuse and metal materials | done | standard | - | done/A1-diffuse-and-metal-materials.md | every object has a material and rays bounce by it | gates green, rendered image shows matte and metal spheres |
-| A2 | Glass | active | standard | A1 | phases/A2-glass.md | a glass sphere refracts | gates green, the rendered image shows a refracting glass sphere |
-| A3 | Samples per pixel | next | standard | A1 | phases/A3-samples-per-pixel.md | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
+| A2 | Glass | done | standard | A1 | done/A2-glass.md | a glass sphere refracts | gates green, the rendered image shows a refracting glass sphere |
+| A3 | Samples per pixel | active | standard | A1 + A2 | phases/A3-samples-per-pixel.md | each pixel averages jittered samples | gates green, edges are smooth in the rendered image |
 | Z1 | Closing survey and user acceptance | planned | minimal | A1 + A2 + A3 | - | the plan's changes surveyed; the user accepts the image | the user accepts the survey findings and the rendered image |
 
 ## How to implement this plan
@@ -115,6 +115,7 @@ the rendered image.
 
 ## Carry-overs
 
-- A2 reads the `front_face` flag and the ray-facing `normal` the settled record carries; the shared
-  shape is in `PLANS/shared/plan-a-A2+plan-b-B2.md`. The glass must keep working when the geometry
-  plan's shapes join the same record.
+- A3 averages jittered samples, which smooths the grain and the isolated black pixel that a single
+  absorbed metal sample produces at one sample per pixel.
+- The glass and the sphere's texture coordinates must keep working when the geometry plan's shapes
+  join the same record at the release merge.

@@ -15,8 +15,8 @@
 | Phase | Title | Status | Gate level | Depends on | Phase file | Exit state | Move-on gate |
 |---|---|---|---|---|---|---|---|
 | B1 | Face side and texture coordinates | done | standard | - | `done/B1-face-side-and-texture-coordinates.md` | every hit records its face side and (u, v) | gates green |
-| B2 | Planes and triangles | active | standard | B1 | `phases/B2-planes-and-triangles.md` | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
-| B3 | Bounding boxes | planned | standard | B2 | - | the scene list skips objects whose box the ray misses | gates green, same image as before |
+| B2 | Planes and triangles | done | standard | B1 | `done/B2-planes-and-triangles.md` | the scene can hold planes and triangles | gates green, rendered image shows a triangle |
+| B3 | Bounding boxes | active | standard | B2 | `phases/B3-bounding-boxes.md` | the scene list skips objects whose box the ray misses | gates green, same image as before |
 | Z1 | Closing survey and user acceptance | planned | minimal | B1 + B2 + B3 | - | the user accepts the result | the user accepts |
 
 ## How to implement this plan
