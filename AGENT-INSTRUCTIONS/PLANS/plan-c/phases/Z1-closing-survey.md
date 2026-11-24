@@ -85,17 +85,7 @@ the user accepts.
 3. The orchestrator dispatches ONE independent read-only `ops-scout` that cross-checks every
    finding from every area, claim by claim, against the code and documents with evidence. It returns
    each claim as confirmed or rejected with `file:line` evidence. There is no per-area checker.
-4. The orchestrator writes the dated note from the saved returns. The note states the surveyed
-   areas and the revision surveyed, then lists:
-   - confirmed findings with `file:line` evidence and their class: unnecessary complexity,
-     duplication, dead code, a redundant check or record, test bloat, a stale document, or drift
-     from the plan's design rules or the user's decisions;
-   - claims the cross-check rejected, so a later reader does not reopen them;
-   - out-of-scope observations with the evidence the area scout had;
-   - a user-review list for anything that needs a phase of its own or a user-owned decision;
-   - the rendered-image evidence from step 5.
-   The note holds no fix and no plan id.
-5. Rendered-image gate on the surveyed revision, run by the orchestrator. Build and run the real
+4. Rendered-image gate on the surveyed revision, run by the orchestrator. Build and run the real
    command line, capture the streams separately and inspect the image:
    ```bash
    ~/.cargo/bin/cargo build --release
@@ -104,11 +94,24 @@ the user accepts.
    Confirm the standard output capture is empty, the standard error capture holds the row share
    with `\r` separators ending in `100%` plus one newline, and open
    `/tmp/opencode/acceptance.png` with the image reader to confirm the sphere and the sky. Compare
-   what runs with requirements 11 to 13. Remove the scratch files under `/tmp/opencode/` after the
-   inspection.
+   what runs with requirements 11 to 13. Keep `/tmp/opencode/acceptance.png` and the two captures
+   until the user answers in the acceptance step below.
+5. The orchestrator writes the dated note from the saved returns. The note states the surveyed
+   areas and the revision surveyed, then lists:
+   - confirmed findings with `file:line` evidence and their class: unnecessary complexity,
+     duplication, dead code, a redundant check or record, test bloat, a stale document, or drift
+     from the plan's design rules or the user's decisions;
+   - claims the cross-check rejected, so a later reader does not reopen them;
+   - out-of-scope observations with the evidence the area scout had;
+   - a user-review list for anything that needs a phase of its own or a user-owned decision;
+   - the rendered-image evidence from step 4: the command run, the empty standard output, the
+     progress line reaching `100%`, and what the opened image shows.
+   The note holds no fix and no plan id.
 6. Report the note and the render to the user with the note's findings, the rejected claims and the
-   user-review list. Fix nothing in this phase. Clear defects and drift from the design rules go to
-   a remediation round after the survey, and the plan is neither closed nor archived here.
+   user-review list, pointing at `/tmp/opencode/acceptance.png`. Fix nothing in this phase. Clear
+   defects and drift from the design rules go to a remediation round after the survey, and the plan
+   is neither closed nor archived here. Remove the scratch files under `/tmp/opencode/` once the
+   user answers.
 
 **Callers / wiring to update:**
 - None. The phase changes no code, test, configuration or published document.
@@ -119,7 +122,7 @@ the user accepts.
   is the record this phase exists to produce. Its consumers are the user's acceptance decision, the
   release's review of `docs-pass.md`, and any later remediation round. It is the only copy and lives
   in the plan folder. The acceptance PNG and the stream captures are transient evidence under
-  `/tmp/opencode/` and are removed after inspection.
+  `/tmp/opencode/` and are removed once the user answers the acceptance step.
 
 **Touched files:**
 <!-- touched-files:start -->
