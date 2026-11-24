@@ -1,13 +1,16 @@
 //! Render a fixed scene and write it to a file as a PNG or PPM image.
 
+mod aabb;
 mod camera;
 mod hittable;
+#[allow(dead_code)]
+mod plane;
 mod png;
 mod ray;
-// Seeded randomness for the scattering and sampling the plans add.
 #[allow(dead_code)]
 mod rng;
 mod sphere;
+mod triangle;
 mod vec3;
 
 use std::fs;
@@ -18,6 +21,7 @@ use camera::Camera;
 use hittable::{Hittable, HittableList};
 use ray::Ray;
 use sphere::Sphere;
+use triangle::Triangle;
 use vec3::{Colour, Vec3};
 
 const DEFAULT_WIDTH: usize = 400;
@@ -54,6 +58,11 @@ fn scene() -> HittableList {
     let mut world = HittableList::default();
     world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
     world.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)));
+    world.add(Box::new(Triangle::new(
+        Vec3::new(0.6, 0.15, -1.0),
+        Vec3::new(1.95, 0.15, -1.0),
+        Vec3::new(1.275, 0.92, -1.0),
+    )));
     world
 }
 
