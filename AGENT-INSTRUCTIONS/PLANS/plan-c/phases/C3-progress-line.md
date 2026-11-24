@@ -5,7 +5,8 @@
 output path.
 **Scope:** while `render` walks the rows, write the share of rows done on standard error on one
 line that overwrites itself, then terminate the line when the last row finishes. Pixels, sampling,
-the command line, the writers and the docs do not change.
+the command line, the writers, `docs/` and the README do not change; the `render` doc comment gains
+one clause naming the progress output.
 **Gate level:** standard. The phase changes runtime output, so `minimal` does not apply. There is no
 durable state, trust boundary or cross-package contract, so `standard` is the right bar.
 **Simplicity statement:** the progress line is one integer percentage prefixed by `\r` and closed by
@@ -109,29 +110,30 @@ test of the text or its cadence. Nothing is deleted.
   produce the baseline `~/.cargo/bin/cargo run --release -- --width 80 --height 40 --samples 4
   --output /tmp/opencode/before.png`; after the change, run the same command with `--output
   /tmp/opencode/after.png` and confirm `cmp /tmp/opencode/before.png /tmp/opencode/after.png`
-  reports no difference. Then run
-  `~/.cargo/bin/cargo run --release -- --width 80 --height 40 --samples 4 --output
-  /tmp/opencode/progress.png` and observe the progress line on standard error updating in place,
-  reaching `100%` and ending with a newline, with nothing on standard output. Open
-  `/tmp/opencode/progress.png` with the image reader and confirm the sphere and sky at 80 by 40.
-  Agent generation: not affected.
+  reports no difference. Then capture the streams separately:
+  ```bash
+  ~/.cargo/bin/cargo run --release -- --width 80 --height 40 --samples 4 --output /tmp/opencode/progress.png > /tmp/opencode/progress.stdout 2> /tmp/opencode/progress.stderr
+  ```
+  Confirm the standard output capture is empty with `test ! -s /tmp/opencode/progress.stdout`.
+  Confirm the progress bytes with `od -An -c /tmp/opencode/progress.stderr`: the percentages are
+  separated by `\r` bytes, the file ends with `100%` and exactly one `\n`, and no other `\n` occurs.
+  In a terminal, the same command shows one line updating in place instead of a new line per row.
+  Open `/tmp/opencode/progress.png` with the image reader and confirm the sphere and sky at 80 by
+  40. Agent generation: not affected.
 - Slow gate (>2 minutes): none. An 80 by 40 render at 4 samples finishes well under a second.
 
 **User test (acceptance):**
-- **Executor:** agent.
-- No separate manual test: the rendered-image gate above is the acceptance step.
-1. Run `~/.cargo/bin/cargo run --release -- --width 80 --height 40 --samples 4 --output
-   /tmp/opencode/accept.png`. Expect exit status 0, a progress line on standard error that reaches
-   `100%` and ends with a newline, no bytes on standard output, and the file `/tmp/opencode/accept.png`.
-2. Open `/tmp/opencode/accept.png` with the image reader. Expect the 80 by 40 scene with the sphere
-   over the blue-to-white sky gradient, not a corrupt or blank image, and the same bytes as the
-   pre-change baseline from the rendered-image gate.
+- **Executor:** not required.
+- Not required - automated phase gates prove acceptance. The rendered-image gate captures standard
+  output and standard error separately and checks the progress bytes, the empty standard output,
+  the unchanged image bytes and the opened image.
 
 **Completion checklist (gate):**
 - [ ] Gate level requirements from `PLAN-PHASE-DETAILING.md` §3a (standard) are satisfied.
-- [ ] Rendering reports the share of finished rows on standard error on one line that overwrites
-      itself and ends with a newline.
-- [ ] Standard output is empty during a successful render and the image file is unchanged.
+- [ ] Rendering reports the share of finished rows on standard error, the captured bytes contain
+      `\r` between values and end with `100%` plus one `\n`, and no other `\n` occurs.
+- [ ] The captured standard output is empty during a successful render and the image file is
+      unchanged.
 - [ ] The image bytes for identical options match the pre-change baseline.
 - [ ] Named tests pass unchanged; no test function is added, changed or deleted.
 - [ ] Test budget respected (REPO-RULES §3a); the receipt reports 0 added, 0 deleted and 0 changed.
@@ -140,8 +142,7 @@ test of the text or its cadence. Nothing is deleted.
 - [ ] `docs/requirements.md` item 13 still describes the behaviour and no `docs/` page or the
       README is stale; `AGENT-INSTRUCTIONS/LOCAL/gates.md` is unchanged.
 - [ ] Safety commit on branch `plan-c`.
-- [ ] Revision-bound verification receipt exists; the agent-run `User test` steps have passing
-      evidence.
+- [ ] Revision-bound verification receipt exists; no separate acceptance is required.
 - [ ] On passing evidence: compress this file into `done/C3-progress-line.md` (frozen contract
       only) and flip the `full-plan.md` status row to `done`.
 
