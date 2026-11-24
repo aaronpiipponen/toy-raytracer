@@ -2,16 +2,17 @@
 
 ## Next action
 
-Run `phase-advancer` in REVIEW AND ADVANCE for phase A3 (base `a1d640a`, tested head `566b11c`); it
-promotes Z1. Then run `phase-advancer` DETAIL ACTIVE for Z1 (the closing survey) and perform the
-survey with read-only `ops-scout`s, writing the dated note.
+Run Z1 (closing survey): dispatch four read-only `ops-scout` area scouts in parallel, save each return
+under `benchmarks/returns/`, dispatch one cross-check `ops-scout`, write
+`benchmarks/closing-survey-<date>.md` myself, run the branch acceptance render, then ask the user for
+acceptance of the note and image.
 
 ## Current state
 
-A1 done (`de1cf31`); A2 done (`a1d640a`); A3r done; A3 implemented at head `566b11c` (12 tests, review
-clean) and awaits review-and-advance. All three coordinator pairs are closed and their designs recorded
-under `PLANS/shared/`. Z1 (closing survey + the user's acceptance of the rendered image) follows and is
-the plan's only user gate. `docs-pass.md` holds one item for the release.
+A1 done (`de1cf31`), A2 done (`a1d640a`), A3 done (`566b11c`); A3r done. All three coordinator pairs are
+closed; designs in `PLANS/shared/`. Z1 (the plan's closing survey and the only user gate) is active and
+detailed at `phases/Z1-closing-survey.md`. `docs-pass.md` holds four documentation items plus the
+answered release-merge carry-over (triangle material: `Lambertian` `(0.7, 0.3, 0.3)`).
 
 ## Learned rules
 
@@ -36,6 +37,8 @@ the plan's only user gate. `docs-pass.md` holds one item for the release.
   phase document in place; run it, then implement the held phase.
 - The branch's `render` doc sentence describes the merged product's progress line (frozen by the shared
   designs); it is deliberately not branch-accurate and must not be edited again at the merge.
+- A survey phase runs no implementer: I dispatch the scouts myself, save their returns, write the note,
+  and stop for the user's subjective image/survey acceptance.
 
 ## Learned rules
 
