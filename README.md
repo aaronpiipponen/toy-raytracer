@@ -3,7 +3,7 @@
 A small, dependency-free Rust raytracer that renders one fixed scene.
 
 ```sh
-cargo run > image.ppm
+cargo run --release -- --output image.png
 cargo test
 ```
 
