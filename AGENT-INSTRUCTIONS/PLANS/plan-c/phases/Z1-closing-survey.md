@@ -162,7 +162,7 @@ the user accepts.
 - Fast gate: not applicable. No code or test changes, so the existing evidence at `0ad0f2b` stands
   and is not rerun.
 - Documentation-only gate for the note: reread the note and run `git diff --check`.
-- Conditional gates: rendered image, required by step 5 as survey evidence and for the user's
+- Conditional gates: rendered image, required by step 4 as survey evidence and for the user's
   acceptance. Agent generation: not affected.
 - Slow gate (>2 minutes): none. An 80 by 40 render at 4 samples and the 400 by 200 acceptance render
   each finish well under a minute.
@@ -172,7 +172,8 @@ the user accepts.
   user-owned judgments that no automated check proves.
 - 1. Open `AGENT-INSTRUCTIONS/PLANS/plan-c/benchmarks/closing-survey-<date>.md` and read the
   confirmed findings, the rejected claims, the out-of-scope observations and the user-review list.
-- 2. Open the acceptance PNG produced by step 5. It shows the sphere over the sky at 400 by 200.
+- 2. Open `/tmp/opencode/acceptance.png` from step 4. It shows the sphere over the sky at 400 by
+  200.
 - 3. Run `cargo run --release -- --output /tmp/opencode/acceptance.png` in the worktree and confirm
   one progress line updates in place on standard error and reaches `100%`, and that standard output
   stays empty.
