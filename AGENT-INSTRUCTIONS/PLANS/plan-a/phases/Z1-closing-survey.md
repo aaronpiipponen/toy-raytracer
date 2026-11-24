@@ -19,8 +19,8 @@ is neither closed nor archived here: that needs the user's explicit closure auth
 survey results are accepted.
 
 **Current state (verified):**
-- The plan's changes sit in branch range `e180476..566b11c` on branch `plan-a`, four commits
-  (`de1cf31`, `a1d640a`, `566b11c` plus the base `e180476`), worktree clean at head `566b11c`. The
+- The plan's changes sit in branch range `e180476..566b11c` on branch `plan-a`, three commits
+  (`de1cf31`, `a1d640a`, `566b11c`), worktree clean at head `566b11c`. The
   changed files are `src/material.rs` (new), `src/hittable.rs`, `src/sphere.rs` and `src/main.rs`.
   `README.md`, `docs/requirements.md`, `Cargo.toml` and `AGENT-INSTRUCTIONS/` are unchanged in the
   range, so `e180476` is the base the range uses.
@@ -47,10 +47,11 @@ survey results are accepted.
   no `tests/` directory on this branch; the binary tests belong to the output plan.
 - `docs/requirements.md:6-19` - items 1 to 6 state the material, sampling and reproducibility
   behaviour this plan implements. `README.md:1-10` shows `cargo run > image.ppm` and `cargo test`.
-- `AGENT-INSTRUCTIONS/PLANS/plan-a/docs-pass.md` - four deferred items for the release: the
-  `src/vec3.rs:21` cross comment, the `AGENT-INSTRUCTIONS/LOCAL/gates.md` rendered-image fallback
-  sentence, the `LOCAL/project.md` map, and the `LOCAL/repo-rules-domain.md` "What this repo is"
-  paragraph. All four are read only here.
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/docs-pass.md` - four documentation items for the release: the
+  `AGENT-INSTRUCTIONS/LOCAL/gates.md` rendered-image fallback sentence; `LOCAL/project.md` gaining
+  `src/png.rs` and an accurate `main.rs` description; `LOCAL/project.md`'s `src/material.rs` line; and
+  the `LOCAL/repo-rules-domain.md` "What this repo is" paragraph. It also carries one release-merge
+  carry-over, the scene triangle's material. All are read only here.
 - `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-c-Z1.md` and
   `AGENT-INSTRUCTIONS/PLANS/shared/plan-a-A3+plan-b-Z1.md` - the two agreed merge designs. The branch's
   `render` doc sentence deliberately describes the merged product's progress line and must not be
@@ -85,8 +86,10 @@ survey results are accepted.
 1. Create the directories `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/` and
    `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/returns/`. The note is
    `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/closing-survey-<date>.md`, dated the day the survey
-   runs, for example `closing-survey-2026-11-24.md`. Each scout's unchanged return is saved as
-   `benchmarks/returns/<area>.md`, beside the note.
+   runs, for example `closing-survey-2026-11-24.md`. Each scout's unchanged return is saved beside it
+   with these exact names: `benchmarks/returns/area-1-materials.md`,
+   `area-2-hit-record-and-sphere.md`, `area-3-render-loop-generator-and-scene.md`,
+   `area-4-tests-and-documents.md` and `cross-check.md`. Never rewrite a return after saving it.
 2. The orchestrator dispatches one independent read-only `ops-scout` per area below, all launched
    together so they run in parallel. Each dispatch prompt names its area and range `e180476..566b11c`,
    tells the scout it may read whatever context outside the area it needs to judge it, tells it to
@@ -111,8 +114,13 @@ survey results are accepted.
      `README.md` and `AGENT-INSTRUCTIONS/PLANS/plan-a/docs-pass.md`: test necessity and focus against
      REPO-RULES §3a (one test function = one behavior, no packing), no fake product behaviour, current
      and accurate README and requirements text, and nothing stale. Drift from the two shared designs
-     and from the user's decisions is reported here. The four `docs-pass.md` items are known deferrals
-     and are not findings.
+     and from the user's decisions is reported here. The four `docs-pass.md` documentation items and
+     its one release-merge carry-over are known and not findings, but a `docs-pass.md` item the branch
+     has already made obsolete or wrong is reported. Also read the code and doc comments in the plan's
+     changed files and in `src/vec3.rs` for plan or phase references and for wording that no longer
+     describes the code; report each with `file:line` evidence. `src/vec3.rs:21` still carries a comment
+     naming "the geometry plan", which a permanent comment must not say; the integration tree already
+     drops it, so report it as an out-of-scope observation, not a plan-a defect.
 3. The orchestrator dispatches ONE independent read-only `ops-scout` that cross-checks every finding
    from every area, claim by claim, against the code and documents with evidence. It returns each claim
    as confirmed or rejected with `file:line` evidence. There is no per-area checker.
@@ -187,7 +195,15 @@ survey results are accepted.
 <!-- touched-files:start -->
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/closing-survey-2026-11-24.md` - created: the dated
   closing survey note, named with the day the survey runs.
-- `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/returns/*.md` - created: the four area returns and the
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/returns/area-1-materials.md` - created: the materials
+  area return, saved unchanged.
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/returns/area-2-hit-record-and-sphere.md` - created: the
+  hit-record and sphere area return, saved unchanged.
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/returns/area-3-render-loop-generator-and-scene.md` -
+  created: the render loop, generator and scene area return, saved unchanged.
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/returns/area-4-tests-and-documents.md` - created: the
+  tests and documents area return, saved unchanged.
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/benchmarks/returns/cross-check.md` - created: the single
   cross-check return, saved unchanged.
 - `AGENT-INSTRUCTIONS/PLANS/plan-a/phases/Z1-closing-survey.md` - changed: this phase file, only when
   compressing it after acceptance.
@@ -257,10 +273,13 @@ survey results are accepted.
 - [ ] The rendered-image gate ran on the surveyed revision: the image was opened and inspected with all
   four spheres present, soft edges, no visible grain and no pure-black pixels.
 - [ ] `docs/requirements.md` items 1 to 6 and the README still describe the behaviour, and
-  `docs-pass.md` still lists its four deferred items.
+  `docs-pass.md` still lists its four documentation items and its release-merge carry-over.
 - [ ] Test budget respected (REPO-RULES §3a); the receipt reports 0 added, 0 deleted and 0 changed.
 - [ ] No product code, test, configuration or permanent document changed in this phase, and
   `git diff --check` is clean.
+- [ ] The note and the returns are written under the plan folder only. They are not staged or committed
+  from the worktree: the workflow plugin commits the workspace root, and plan files never enter a
+  worktree commit.
 - [ ] The note and the render were reported to the user, and the user's answer is recorded on
   acceptance.
 - [ ] The plan is not closed or archived in this phase.
