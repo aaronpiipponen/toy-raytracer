@@ -121,8 +121,8 @@ after this phase, and archive follows the user's explicit authorization.
    - **Area 4, tests and documentation.** The test modules in `src/main.rs`, `src/hittable.rs`,
      `src/sphere.rs`, `src/plane.rs`, `src/triangle.rs`, `src/aabb.rs` and `src/rng.rs`, plus `README.md`,
      `docs/requirements.md` items 7 to 10 and `AGENT-INSTRUCTIONS/LOCAL/project.md`: test necessity
-     and focus against REPO-RULES §3a, no fake product behaviour, accurate and current README,
-     requirements and repository map, and nothing stale. Treat `AGENT-INSTRUCTIONS/LOCAL/gates.md` as
+     and focus against REPO-RULES §3a, no fake product behaviour, an accurate README, requirements and
+     repository map, and nothing stale. Treat `AGENT-INSTRUCTIONS/LOCAL/gates.md` as
      read only.
 3. The orchestrator dispatches ONE independent read-only `ops-scout` that cross-checks every finding
    from every area, claim by claim, against the code and documents with evidence. It returns each
@@ -218,8 +218,8 @@ after this phase, and archive follows the user's explicit authorization.
 
 **Tests:**
 - New/changed/deleted: none. The phase adds no test function, so the budget is 0 added, 0 deleted and
-  0 changed. The survey checks the existing 12 tests against REPO-RULES §3a and may report test
-  bloat in the note, but it changes nothing.
+  0 changed. The survey checks the 12 tests against REPO-RULES §3a and may report test bloat in the
+  note, but it changes nothing.
 - Fast gate: not applicable. No code or test changes, so the B3 receipt's passing evidence at
   `f85a183` stands and is not rerun.
 - Documentation-only gate for the note: reread the changed note and the saved returns. The plan folder
@@ -253,7 +253,7 @@ after this phase, and archive follows the user's explicit authorization.
 - [ ] The rendered-image gate ran on the surveyed revision and the opened image shows the B2 and B3
       scene: the triangle in the sky, the sphere with shaded normal colours and the green ground.
 - [ ] `docs/requirements.md` items 7 to 10, `README.md` and the repository map in
-      `AGENT-INSTRUCTIONS/LOCAL/project.md` still describe the behaviour.
+      `AGENT-INSTRUCTIONS/LOCAL/project.md` describe the behaviour.
 - [ ] Test budget respected (REPO-RULES §3a); the phase adds, deletes and changes no test function.
 - [ ] No product code, test, configuration or permanent document changed in this phase:
       `git status --porcelain` in the worktree lists no path under `src/`, `Cargo.toml`, `README.md`
