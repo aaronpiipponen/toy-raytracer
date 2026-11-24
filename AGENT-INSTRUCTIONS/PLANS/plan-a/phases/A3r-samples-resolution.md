@@ -31,6 +31,10 @@ while reading goes to the user through the orchestrator instead of being made he
 - `phases/A3-samples-per-pixel.md` is the detailed A3 phase. Its jitter mapping and its two new test
   calls already match the shared design. Its assertion, its doc sentence, its `main` and test call
   sites and its constant description need the amendments below.
+- `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md:19-20` holds the A3r row `active` with
+  `phases/A3r-samples-resolution.md` and the A3 row `planned` with
+  `phases/A3-samples-per-pixel.md`. `full-plan.md:65` holds the scoped A3 `**Status:** planned.`
+  line.
 - The shared design's "Release merge" section fixes the merge split. Plan-c's branch holds the
   command line, the PNG writer and the progress write.
 
@@ -110,13 +114,14 @@ while reading goes to the user through the orchestrator instead of being made he
      normal colouring with materials.
    - Neither branch adds a second `render` path, a second sample default, a second generator or a
      second progress write.
-3. Update `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md`:
-   - Insert the A3r row directly above the A3 row:
-     `| A3r | Samples per pixel resolution | active | minimal | A1 + A2 | phases/A3r-samples-resolution.md | A3 is amended to the shared render design and the release merge contract is recorded | documentation gate green, A3 ready to implement after the pair resolves |`
-   - Set the A3 row status to `planned` and its phase file to `phases/A3-samples-per-pixel.md`.
-     A3's other cells do not change.
-   - Add `**Status:** planned.` to the scoped `### A3 - Samples per pixel` section, matching the A3
-     row. Leave the A1, A2 and Z1 rows and scoped sections unchanged.
+3. Confirm the pre-existing status bookkeeping in
+   `AGENT-INSTRUCTIONS/PLANS/plan-a/full-plan.md`. No status edit is needed before step 5:
+   - `full-plan.md:19` holds the A3r row `active` with `phases/A3r-samples-resolution.md`.
+   - `full-plan.md:20` holds the A3 row `planned` with `phases/A3-samples-per-pixel.md`. A3's other
+     cells do not change.
+   - `full-plan.md:65` holds the scoped A3 `**Status:** planned.` line.
+   - The A1, A2 and Z1 rows and scoped sections are unchanged. If any of these values differ when
+     the phase runs, stop and report the drift instead of inserting a second row.
 4. Documentation-only gate: reread this phase file, the amended `phases/A3-samples-per-pixel.md` and
    the `full-plan.md` edits, then run `git diff --check` at the workspace root
    `/home/opc/projects/toy-raytracer-runs/run004`, which tracks the plan files through the
