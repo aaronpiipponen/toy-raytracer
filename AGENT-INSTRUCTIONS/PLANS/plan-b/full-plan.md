@@ -56,7 +56,10 @@ and `HittableList` testing a box before its object.
 
 ### Z1 - Closing survey and user acceptance
 
-Render the scene, compare it with the requirements, and ask the user to accept.
+The binding closing survey of everything the plan added or changed: one read-only `ops-scout` per
+area in parallel, then one independent `ops-scout` cross-checking every finding against the code, and
+the orchestrator writes the dated note in `benchmarks/`. Findings go to the user; none are fixed in
+this phase. Also render the scene, compare it with the requirements, and ask the user to accept.
 
 ## Carry-overs
 
